@@ -1,0 +1,84 @@
+﻿<Window x:Class="WinTile.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WinTile"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <Border Padding="16">
+        <Grid>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="16" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Canvas x:Name="Canvas" Grid.Row="0" Width="100">
+                <Rectangle Canvas.Top="50" Canvas.Left="0" Width="50" Height="50" Fill="AliceBlue" />
+                <Rectangle Canvas.Top="60" Canvas.Left="60" Width="50" Height="50" Fill="Pink" />
+            </Canvas>
+            <FrameworkElement Grid.Row="1" />
+            <StackPanel Grid.Row="2">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="16" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="16" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="16" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="X" />
+                        <TextBox TextChanged="XTextBox_OnTextChanged" x:Name="XTextBox" Padding="2" />
+                    </StackPanel>
+                    <FrameworkElement Grid.Column="1" />
+
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="Y" />
+                        <TextBox x:Name="YTextBox" TextChanged="YTextBox_OnTextChanged" Padding="2" />
+                    </StackPanel>
+                    <FrameworkElement Grid.Column="3" />
+
+                    <StackPanel Grid.Column="4">
+                        <TextBlock Text="Width" />
+                        <TextBox x:Name="WidthTextBox" TextChanged="WidthTextBox_OnTextChanged" Padding="2" />
+                    </StackPanel>
+                    <FrameworkElement Grid.Column="5" />
+
+                    <StackPanel Grid.Column="6">
+                        <TextBlock Text="Height" />
+                        <TextBox x:Name="HeightTextBox" TextChanged="HeightTextBox_OnTextChanged" Padding="2" />
+                    </StackPanel>
+                </Grid>
+                <FrameworkElement Height="16" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="16" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="16" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="16" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button x:Name="AddWindowButton" Click="AddWindowButton_OnClick" Grid.Column="0" Content="Add" />
+                    <FrameworkElement Grid.Column="1" />
+                    <Button x:Name="RemoveWindowButton" Click="RemoveWindowButton_OnClick" Grid.Column="2"
+                            Content="Remove" />
+                    <FrameworkElement Grid.Column="3" />
+                    <Button x:Name="TogglePxPercentButton" Click="TogglePxPercentButton_OnClick" Grid.Column="4"
+                            Content="px / %" />
+                    <FrameworkElement Grid.Column="5" />
+                    <Button x:Name="ApplyLayoutButton" Click="ApplyLayoutButton_OnClick" Grid.Column="6"
+                            Content="Apply" />
+                </Grid>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>
