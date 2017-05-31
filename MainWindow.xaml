@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WinTile"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="350" Width="525" d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True, Type=local:ViewModel}">
     <Border Padding="16">
         <Grid>
 
@@ -15,10 +15,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Canvas x:Name="Canvas" Grid.Row="0" Width="100">
-                <Rectangle Canvas.Top="50" Canvas.Left="0" Width="50" Height="50" Fill="AliceBlue" />
-                <Rectangle Canvas.Top="60" Canvas.Left="60" Width="50" Height="50" Fill="Pink" />
-            </Canvas>
+            <Canvas x:Name="Canvas" Grid.Row="0" />
             <FrameworkElement Grid.Row="1" />
             <StackPanel Grid.Row="2">
                 <Grid>
@@ -33,26 +30,26 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="X" />
-                        <TextBox TextChanged="XTextBox_OnTextChanged" x:Name="XTextBox" Padding="2" />
+                        <TextBlock Text="Left" />
+                        <TextBox  Text ="{Binding Left, UpdateSourceTrigger=PropertyChanged}" x:Name="XTextBox" Padding="2" />
                     </StackPanel>
                     <FrameworkElement Grid.Column="1" />
 
                     <StackPanel Grid.Column="2">
-                        <TextBlock Text="Y" />
-                        <TextBox x:Name="YTextBox" TextChanged="YTextBox_OnTextChanged" Padding="2" />
+                        <TextBlock Text="Top" />
+                        <TextBox Text ="{Binding Top, UpdateSourceTrigger=PropertyChanged}" x:Name="YTextBox" Padding="2" />
                     </StackPanel>
                     <FrameworkElement Grid.Column="3" />
 
                     <StackPanel Grid.Column="4">
-                        <TextBlock Text="Width" />
-                        <TextBox x:Name="WidthTextBox" TextChanged="WidthTextBox_OnTextChanged" Padding="2" />
+                        <TextBlock Text="Right" />
+                        <TextBox Text ="{Binding Right, UpdateSourceTrigger=PropertyChanged}" x:Name="WidthTextBox" Padding="2" />
                     </StackPanel>
                     <FrameworkElement Grid.Column="5" />
 
                     <StackPanel Grid.Column="6">
-                        <TextBlock Text="Height" />
-                        <TextBox x:Name="HeightTextBox" TextChanged="HeightTextBox_OnTextChanged" Padding="2" />
+                        <TextBlock Text="Bottom" />
+                        <TextBox Text ="{Binding Bottom, UpdateSourceTrigger=PropertyChanged}" x:Name="HeightTextBox" Padding="2" />
                     </StackPanel>
                 </Grid>
                 <FrameworkElement Height="16" />
@@ -72,8 +69,7 @@
                     <Button x:Name="RemoveWindowButton" Click="RemoveWindowButton_OnClick" Grid.Column="2"
                             Content="Remove" />
                     <FrameworkElement Grid.Column="3" />
-                    <Button x:Name="TogglePxPercentButton" Click="TogglePxPercentButton_OnClick" Grid.Column="4"
-                            Content="px / %" />
+                    <FrameworkElement Grid.Column="4" />
                     <FrameworkElement Grid.Column="5" />
                     <Button x:Name="ApplyLayoutButton" Click="ApplyLayoutButton_OnClick" Grid.Column="6"
                             Content="Apply" />
