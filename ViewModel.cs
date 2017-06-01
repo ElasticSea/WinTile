@@ -1,28 +1,26 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.ComponentModel;
-using WinTile.Model;
-using System.Windows.Input;
-using static System.Windows.SystemParameters;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Windows.Input;
+using Newtonsoft.Json;
+using WinTile.Model;
+using WinTile.Properties;
+using static System.Windows.SystemParameters;
 
 namespace WinTile
 {
     public class ViewModel : INotifyPropertyChanged
     {
-        public event Action<WindowTile> WindowAdded = rect => { };
-        public event Action<WindowTile> WindowRemoved = rect => { };
-        public event Action<WindowTile> WindowChanged = rect => { };
+        private float _bottom;
+        private float _left;
+        private float _right;
+        private float _top;
 
-        public event PropertyChangedEventHandler PropertyChanged = (sender, args) => { };
+        private readonly List<HotKey> hotkeys = new List<HotKey>();
 
         private Layout layout;
 
         private WindowTile selected;
-        private float _left = 0f;
-        private float _top = 0f;
-        private float _right = 0f;
-        private float _bottom = 0f;
 
         public Layout Layout
         {
@@ -34,42 +32,18 @@ namespace WinTile
             }
         }
 
-        private List<HotKey> hotkeys = new List<HotKey>();
-
         public string JsonLayout
         {
             get => JsonConvert.SerializeObject(Layout, Formatting.Indented);
             set => Layout = JsonConvert.DeserializeObject<Layout>(value) ?? new Layout();
         }
 
-        internal void Load()
-        {
-            JsonLayout = Properties.Settings.Default.Layout ?? "{}";
-        }
-
-        private void OnNewLayout()
-        {
-            hotkeys.ForEach(h => h.Unregister());
-            foreach (var windowTile in Layout.windows)
-            {
-                hotkeys.Add(new HotKey(windowTile.hotkey, KeyModifier.Shift | KeyModifier.Win, key => PositionWindow(windowTile)));
-                WindowAdded(windowTile);
-            }
-        }
-
-        private void PositionWindow(WindowTile windowTile)
-        {
-            var pxRect = windowTile.tile.extend(VirtualScreenWidth, VirtualScreenHeight);
-            Console.WriteLine($"Moving window to [{pxRect}]");
-            User32Utils.SetCurrentWindowPos((int) pxRect.Left, (int) pxRect.Top, (int) pxRect.Width, (int) pxRect.Height);
-        }
-
         public float Left
         {
-            get { return _left; }
+            get => _left;
             set
             {
-                if(value == _left) return;
+                if (value == _left) return;
 
                 _left = Math.Max(value, 0f);
                 Right = Math.Max(_left, _right);
@@ -78,24 +52,9 @@ namespace WinTile
             }
         }
 
-        private void TriggerTileChanged(Key hotkey = Key.None)
-        {
-            if (selected != null)
-            {
-                selected.tile.Left  = Left / 100;
-                selected.tile.Right = Right / 100;
-                selected.tile.Top = Top / 100;
-                selected.tile.Bottom = Bottom / 100;
-
-                if (hotkey != Key.None) selected.hotkey = hotkey;
-
-                WindowChanged(selected);
-            }
-        }
-
         public float Top
         {
-            get { return _top; }
+            get => _top;
             set
             {
                 if (value == _top) return;
@@ -109,7 +68,7 @@ namespace WinTile
 
         public float Right
         {
-            get { return _right; }
+            get => _right;
             set
             {
                 if (value == _right) return;
@@ -123,7 +82,7 @@ namespace WinTile
 
         public float Bottom
         {
-            get { return _bottom; }
+            get => _bottom;
             set
             {
                 if (value == _bottom) return;
@@ -137,7 +96,7 @@ namespace WinTile
 
         internal WindowTile Selected
         {
-            get { return selected; }
+            get => selected;
             set
             {
                 selected = value;
@@ -154,6 +113,50 @@ namespace WinTile
                     PropertyChanged(this, new PropertyChangedEventArgs(nameof(Right)));
                     PropertyChanged(this, new PropertyChangedEventArgs(nameof(Bottom)));
                 }
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged = (sender, args) => { };
+        public event Action<WindowTile> WindowAdded = rect => { };
+        public event Action<WindowTile> WindowRemoved = rect => { };
+        public event Action<WindowTile> WindowChanged = rect => { };
+
+        public void Load()
+        {
+            JsonLayout = Settings.Default.Layout ?? "{}";
+        }
+
+        private void OnNewLayout()
+        {
+            hotkeys.ForEach(h => h.Unregister());
+            foreach (var windowTile in Layout.windows)
+            {
+                hotkeys.Add(new HotKey(windowTile.hotkey, KeyModifier.Shift | KeyModifier.Win,
+                    key => PositionWindow(windowTile)));
+                WindowAdded(windowTile);
+            }
+        }
+
+        private void PositionWindow(WindowTile windowTile)
+        {
+            var pxRect = windowTile.tile.extend(VirtualScreenWidth, VirtualScreenHeight);
+            Console.WriteLine($"Moving window to [{pxRect}]");
+            User32Utils.SetCurrentWindowPos((int) pxRect.Left, (int) pxRect.Top, (int) pxRect.Width,
+                (int) pxRect.Height);
+        }
+
+        private void TriggerTileChanged(Key hotkey = Key.None)
+        {
+            if (selected != null)
+            {
+                selected.tile.Left = Left / 100;
+                selected.tile.Right = Right / 100;
+                selected.tile.Top = Top / 100;
+                selected.tile.Bottom = Bottom / 100;
+
+                if (hotkey != Key.None) selected.hotkey = hotkey;
+
+                WindowChanged(selected);
             }
         }
 
@@ -177,8 +180,8 @@ namespace WinTile
 
         internal void Save()
         {
-            Properties.Settings.Default.Layout = JsonLayout;
-            Properties.Settings.Default.Save();
+            Settings.Default.Layout = JsonLayout;
+            Settings.Default.Save();
         }
     }
 }
