@@ -139,7 +139,7 @@ namespace WinTile
 
         private void PositionWindow(WindowTile windowTile)
         {
-            var pxRect = windowTile.tile.extend(VirtualScreenWidth, VirtualScreenHeight);
+            var pxRect = windowTile.tile.extend(WorkArea.Width, WorkArea.Height);
             Console.WriteLine($"Moving window to [{pxRect}]");
             User32Utils.SetCurrentWindowPos((int) pxRect.Left, (int) pxRect.Top, (int) pxRect.Width,
                 (int) pxRect.Height);
