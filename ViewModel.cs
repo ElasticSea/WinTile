@@ -3,6 +3,7 @@ using System;
 using System.ComponentModel;
 using WinTile.Model;
 using System.Windows.Input;
+using static System.Windows.SystemParameters;
 
 namespace WinTile
 {
@@ -33,8 +34,9 @@ namespace WinTile
 
         private void PositionWindow(WindowTile windowTile)
         {
-            var pxRect = windowTile.tile.extend(3840, 2160);
-            User32Utils.SetCurrentWindowPos((int) pxRect.Left, (int)pxRect.Top, (int)pxRect.Width, (int)pxRect.Height);
+            var pxRect = windowTile.tile.extend(VirtualScreenWidth, VirtualScreenHeight);
+            Console.WriteLine($"Moving window to [{pxRect}]");
+            User32Utils.SetCurrentWindowPos((int) pxRect.Left, (int) pxRect.Top, (int) pxRect.Width, (int) pxRect.Height);
         }
 
         public float Left
