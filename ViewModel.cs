@@ -4,6 +4,7 @@ using System.ComponentModel;
 using WinTile.Model;
 using System.Windows.Input;
 using static System.Windows.SystemParameters;
+using System.Collections.Generic;
 
 namespace WinTile
 {
@@ -15,7 +16,7 @@ namespace WinTile
 
         public event PropertyChangedEventHandler PropertyChanged = (sender, args) => { };
 
-        private readonly Layout layout = JsonConvert.DeserializeObject<Layout>(Properties.Settings.Default.Layout ?? "{}") ?? new Layout();
+        private Layout layout;
 
         private WindowTile selected;
         private float _left = 0f;
@@ -23,11 +24,35 @@ namespace WinTile
         private float _right = 0f;
         private float _bottom = 0f;
 
+        public Layout Layout
+        {
+            get => layout;
+            set
+            {
+                layout = value;
+                OnNewLayout();
+            }
+        }
+
+        private List<HotKey> hotkeys = new List<HotKey>();
+
+        public string JsonLayout
+        {
+            get => JsonConvert.SerializeObject(Layout, Formatting.Indented);
+            set => Layout = JsonConvert.DeserializeObject<Layout>(value) ?? new Layout();
+        }
+
         internal void Load()
         {
-            foreach (var windowTile in layout.windows)
+            JsonLayout = Properties.Settings.Default.Layout ?? "{}";
+        }
+
+        private void OnNewLayout()
+        {
+            hotkeys.ForEach(h => h.Unregister());
+            foreach (var windowTile in Layout.windows)
             {
-                var _hotKey = new HotKey(windowTile.hotkey, KeyModifier.Shift | KeyModifier.Win, key => PositionWindow(windowTile));
+                hotkeys.Add(new HotKey(windowTile.hotkey, KeyModifier.Shift | KeyModifier.Win, key => PositionWindow(windowTile)));
                 WindowAdded(windowTile);
             }
         }
@@ -140,19 +165,19 @@ namespace WinTile
         public void AddWindow()
         {
             var window = new WindowTile(new Rect(Left, Top, Right, Bottom) / 100f);
-            layout.windows.Add(window);
+            Layout.windows.Add(window);
             WindowAdded(window);
         }
 
         public void removeWindow(WindowTile window)
         {
-            layout.windows.Remove(window);
+            Layout.windows.Remove(window);
             WindowRemoved(window);
         }
 
         internal void Save()
         {
-            Properties.Settings.Default.Layout = JsonConvert.SerializeObject(layout);
+            Properties.Settings.Default.Layout = JsonLayout;
             Properties.Settings.Default.Save();
         }
     }

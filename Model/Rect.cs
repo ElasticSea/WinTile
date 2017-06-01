@@ -1,15 +1,19 @@
-﻿namespace WinTile.Model
+﻿using Newtonsoft.Json;
+
+namespace WinTile.Model
 {
     public class Rect
     {
         public float Left, Top, Right, Bottom;
 
+        [JsonIgnore]
         public float Width
         {
             get => Right - Left;
             set => Right = value + Left;
         }
 
+        [JsonIgnore]
         public float Height
         {
             get => Bottom - Top;

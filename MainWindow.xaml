@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WinTile"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525" d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True, Type=local:ViewModel}">
+        Title="MainWindow" Height="350" Width="525"
+        d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True, Type=local:ViewModel}">
     <Border Padding="16">
         <Grid>
 
@@ -23,11 +24,20 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="16" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="16" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="16" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    
-                    <Button x:Name="PrevWindow" Grid.Column="0" Content="Prev Window" Click="PrevWindow_OnClick"/>
+
+                    <Button x:Name="PrevWindow" Grid.Column="0" Content="Previous" Click="PrevWindow_OnClick" />
                     <FrameworkElement Grid.Column="1" />
-                    <Button x:Name="NextWindow" Grid.Column="2" Content="Next Window" Click="NextWindow_OnClick" />
+                    <Button x:Name="NextWindow" Grid.Column="2" Content="Next" Click="NextWindow_OnClick" />
+                    <FrameworkElement Grid.Column="3" />
+                    <Button x:Name="AddWindowButton" Click="AddWindowButton_OnClick" Grid.Column="4" Content="Add" />
+                    <FrameworkElement Grid.Column="5" />
+                    <Button x:Name="RemoveWindowButton" Click="RemoveWindowButton_OnClick" Grid.Column="6"
+                            Content="Remove" />
                 </Grid>
                 <FrameworkElement Height="16" />
                 <Grid>
@@ -43,25 +53,29 @@
 
                     <StackPanel Grid.Column="0">
                         <TextBlock Text="Left" />
-                        <TextBox  Text ="{Binding Left, UpdateSourceTrigger=PropertyChanged}" x:Name="XTextBox" Padding="2" />
+                        <TextBox Text="{Binding Left, UpdateSourceTrigger=PropertyChanged}" x:Name="XTextBox"
+                                 Padding="2" />
                     </StackPanel>
                     <FrameworkElement Grid.Column="1" />
 
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Top" />
-                        <TextBox Text ="{Binding Top, UpdateSourceTrigger=PropertyChanged}" x:Name="YTextBox" Padding="2" />
+                        <TextBox Text="{Binding Top, UpdateSourceTrigger=PropertyChanged}" x:Name="YTextBox"
+                                 Padding="2" />
                     </StackPanel>
                     <FrameworkElement Grid.Column="3" />
 
                     <StackPanel Grid.Column="4">
                         <TextBlock Text="Right" />
-                        <TextBox Text ="{Binding Right, UpdateSourceTrigger=PropertyChanged}" x:Name="WidthTextBox" Padding="2" />
+                        <TextBox Text="{Binding Right, UpdateSourceTrigger=PropertyChanged}" x:Name="WidthTextBox"
+                                 Padding="2" />
                     </StackPanel>
                     <FrameworkElement Grid.Column="5" />
 
                     <StackPanel Grid.Column="6">
                         <TextBlock Text="Bottom" />
-                        <TextBox Text ="{Binding Bottom, UpdateSourceTrigger=PropertyChanged}" x:Name="HeightTextBox" Padding="2" />
+                        <TextBox Text="{Binding Bottom, UpdateSourceTrigger=PropertyChanged}" x:Name="HeightTextBox"
+                                 Padding="2" />
                     </StackPanel>
                 </Grid>
                 <FrameworkElement Height="16" />
@@ -76,10 +90,9 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <Button x:Name="AddWindowButton" Click="AddWindowButton_OnClick" Grid.Column="0" Content="Add" />
+                    <Button x:Name="ExportButton" Grid.Column="0" Content="Export" Click="ExportButton_OnClick" />
                     <FrameworkElement Grid.Column="1" />
-                    <Button x:Name="RemoveWindowButton" Click="RemoveWindowButton_OnClick" Grid.Column="2"
-                            Content="Remove" />
+                    <Button x:Name="ImportButton" Grid.Column="2" Content="Import" Click="ImportButton_OnClick" />
                     <FrameworkElement Grid.Column="3" />
                     <FrameworkElement Grid.Column="4" />
                     <FrameworkElement Grid.Column="5" />

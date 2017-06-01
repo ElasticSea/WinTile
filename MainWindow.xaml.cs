@@ -137,5 +137,24 @@ namespace WinTile
             toggle.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
         }
 
+        private void ExportButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog()
+            {
+                FileName = "Wintile Layout Profile",
+                DefaultExt = ".json", 
+                Filter = "Json Files(*.json)|*.json|All(*.*)|*"
+            };
+
+            if (dlg.ShowDialog() == true)
+            {
+                System.IO.File.WriteAllText(dlg.FileName, viewModel.JsonLayout);
+            }
+        }
+
+        private void ImportButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
