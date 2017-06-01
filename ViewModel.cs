@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -68,12 +67,13 @@ namespace WinTile
         {
             try
             {
-            JsonLayout = Settings.Default.Layout ?? "{}";
+                JsonLayout = Settings.Default.Layout ?? "{}";
             }
             catch (JsonSerializationException e)
             {
                 JsonLayout = "{}";
-                MessageBox.Show("User Profile is corrupted: " + e.Message, "Corrupted Data", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("User Profile is corrupted: " + e.Message, "Corrupted Data", MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
             }
         }
 
@@ -95,7 +95,6 @@ namespace WinTile
         private void PositionWindow(WindowTile windowTile)
         {
             var pxRect = windowTile.rect.extend(WorkArea.Width, WorkArea.Height);
-            Console.WriteLine($"Moving window to [{pxRect}]");
             User32Utils.SetCurrentWindowPos((int) pxRect.Left, (int) pxRect.Top, (int) pxRect.Width,
                 (int) pxRect.Height);
         }

@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using Microsoft.Win32;
 using WinTile.Model;
 
 namespace WinTile
@@ -23,23 +25,21 @@ namespace WinTile
             {
                 var modifiers = new List<KeyModifier>();
 
-                if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)) modifiers.Add(KeyModifier.Ctrl);
+                if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+                    modifiers.Add(KeyModifier.Ctrl);
                 if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt)) modifiers.Add(KeyModifier.Alt);
-                if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) modifiers.Add(KeyModifier.Shift);
-                if (Keyboard.IsKeyDown(Key.LWin) || Keyboard.IsKeyDown(Key.RWin))  modifiers.Add(KeyModifier.Win);
+                if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+                    modifiers.Add(KeyModifier.Shift);
+                if (Keyboard.IsKeyDown(Key.LWin) || Keyboard.IsKeyDown(Key.RWin)) modifiers.Add(KeyModifier.Win);
 
                 if (modifiers.Any())
-                {
                     viewModel.TriggerHotkeyChanged(args.Key, modifiers);
-                }
             };
 
             SizeChanged += (sender, args) =>
             {
                 foreach (var keyValuePair in Windows)
-                {
                     activateToggle(keyValuePair.Key, keyValuePair.Value);
-                }
             };
 
             viewModel.WindowAdded += AddWindow;
@@ -49,14 +49,9 @@ namespace WinTile
             InitializeComponent();
 
             if (!DesignerProperties.GetIsInDesignMode(this))
-            {
                 DataContext = viewModel;
-            }
 
-            Loaded += (sender, args) =>
-            {
-                viewModel.Load();
-            };
+            Loaded += (sender, args) => { viewModel.Load(); };
         }
 
         private void AddWindowButton_OnClick(object sender, RoutedEventArgs e)
@@ -71,10 +66,7 @@ namespace WinTile
 
             Windows.Add(window, button);
 
-            button.Click += (sender, args) =>
-            {
-                selectWindow(button);
-            };
+            button.Click += (sender, args) => { selectWindow(button); };
 
             Canvas.Children.Add(button);
         }
@@ -88,13 +80,13 @@ namespace WinTile
             else
             {
                 // Deselect other buttons
-                Canvas.SetZIndex(button, 1000);
+                Panel.SetZIndex(button, 1000);
                 Windows.Values.ToList()
                     .Where(b => b != button)
                     .ForEach(b =>
                     {
                         b.IsChecked = false;
-                        Canvas.SetZIndex(b, 0);
+                        Panel.SetZIndex(b, 0);
                     });
 
                 viewModel.Selected = Windows.Reverse[button];
@@ -117,7 +109,7 @@ namespace WinTile
 
             if (window.hotkey != null)
             {
-                var content = $"[{window.hotkey.key}] {String.Join(" ", window.hotkey.modifiers)}";
+                var content = $"[{window.hotkey.key}] {string.Join(" ", window.hotkey.modifiers)}";
                 button.Content = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(content);
             }
         }
@@ -125,7 +117,7 @@ namespace WinTile
         private void WindowChanged(WindowTile window)
         {
             var toggle = CurrentToggle();
-            if(toggle!=null) activateToggle(window, toggle);
+            if (toggle != null) activateToggle(window, toggle);
         }
 
         private ToggleButton CurrentToggle()
@@ -152,7 +144,7 @@ namespace WinTile
         private void SelectNextToggle(int direction)
         {
             var toggles = Windows.Values
-                .OrderBy( key =>
+                .OrderBy(key =>
                 {
                     var tile = Windows.Reverse[key].rect;
                     return tile.Left + tile.Top;
@@ -167,22 +159,7 @@ namespace WinTile
 
         private void ExportButton_OnClick(object sender, RoutedEventArgs e)
         {
-            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog()
-            {
-                FileName = "Wintile Layout Profile",
-                DefaultExt = ".json", 
-                Filter = "Json Files(*.json)|*.json|All(*.*)|*"
-            };
-
-            if (dlg.ShowDialog() == true)
-            {
-                System.IO.File.WriteAllText(dlg.FileName, viewModel.JsonLayout);
-            }
-        }
-
-        private void ImportButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog()
+            var dlg = new SaveFileDialog
             {
                 FileName = "Wintile Layout Profile",
                 DefaultExt = ".json",
@@ -190,9 +167,20 @@ namespace WinTile
             };
 
             if (dlg.ShowDialog() == true)
+                File.WriteAllText(dlg.FileName, viewModel.JsonLayout);
+        }
+
+        private void ImportButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var dlg = new OpenFileDialog
             {
-                viewModel.JsonLayout = System.IO.File.ReadAllText(dlg.FileName);
-            }
+                FileName = "Wintile Layout Profile",
+                DefaultExt = ".json",
+                Filter = "Json Files(*.json)|*.json|All(*.*)|*"
+            };
+
+            if (dlg.ShowDialog() == true)
+                viewModel.JsonLayout = File.ReadAllText(dlg.FileName);
         }
 
         private void SaveLayoutButton_OnClick(object sender, RoutedEventArgs e)
@@ -202,7 +190,7 @@ namespace WinTile
 
         private void ResetLayoutButton_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         private void ApplyDimensions_OnClick(object sender, RoutedEventArgs e)
