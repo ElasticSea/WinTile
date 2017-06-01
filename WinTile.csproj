@@ -58,15 +58,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Extensions.cs" />
-    <Compile Include="HotKey.cs" />
-    <Compile Include="Map.cs" />
+    <Compile Include="Utils\Extensions.cs" />
+    <Compile Include="Utils\HotKey.cs" />
+    <Compile Include="Utils\Map.cs" />
     <Compile Include="Model\Layout.cs" />
     <Compile Include="Model\Rect.cs" />
     <Compile Include="Model\WindowTile.cs" />
     <Compile Include="ViewModel.cs" />
-    <Compile Include="User32Utils.cs" />
-    <Page Include="MainWindow.xaml">
+    <Compile Include="Utils\User32Utils.cs" />
+    <Page Include="View.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -74,8 +74,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
+    <Compile Include="View.xaml.cs">
+      <DependentUpon>View.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
