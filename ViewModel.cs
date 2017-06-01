@@ -85,7 +85,7 @@ namespace WinTile
                 (int) pxRect.Height);
         }
 
-        private void TriggerTileChanged(Key hotkey = Key.None)
+        public void TriggerTileChanged(Key hotkey = Key.None)
         {
             if (selected != null)
             {

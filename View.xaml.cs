@@ -4,21 +4,22 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Media;
 using WinTile.Model;
 
 namespace WinTile
 {
     public partial class MainWindow : Window
     {
-        private ViewModel viewModel = new ViewModel();
-        private Map<WindowTile, ToggleButton> Windows = new Map<WindowTile, ToggleButton>();
+        private readonly ViewModel viewModel = new ViewModel();
+        private readonly Map<WindowTile, ToggleButton> Windows = new Map<WindowTile, ToggleButton>();
 
         public MainWindow()
         {
-            KeyDown += (sender, args) =>
-            {
-                viewModel.updateHotKey(args);
-            };
+//            KeyDown += (sender, args) =>
+//            {
+//                viewModel.updateHotKey(args);
+//            };
 
             SizeChanged += (sender, args) =>
             {
@@ -52,8 +53,7 @@ namespace WinTile
 
         private void AddWindow(WindowTile window)
         {
-
-            var button = new ToggleButton();
+            var button = new ToggleButton {Background = Brushes.Transparent};
             activateToggle(window, button);
 
             Windows.Add(window, button);
@@ -121,11 +121,6 @@ namespace WinTile
             if (toggle != null) viewModel.removeWindow(Windows.Reverse[toggle]);
         }
 
-        private void ApplyLayoutButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            viewModel.Save();
-        }
-
         private void PrevWindow_OnClick(object sender, RoutedEventArgs e)
         {
             SelectNextToggle(-1);
@@ -170,6 +165,21 @@ namespace WinTile
         private void ImportButton_OnClick(object sender, RoutedEventArgs e)
         {
             throw new System.NotImplementedException();
+        }
+
+        private void SaveLayoutButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            viewModel.Save();
+        }
+
+        private void ResetLayoutButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private void ApplyDimensions_OnClick(object sender, RoutedEventArgs e)
+        {
+            viewModel.TriggerTileChanged();
         }
     }
 }

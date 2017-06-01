@@ -10,96 +10,89 @@
     <Border Padding="16">
         <Grid>
 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="16" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
 
-            <Canvas x:Name="Canvas" Grid.Row="0" />
-            <FrameworkElement Grid.Row="1" />
-            <StackPanel Grid.Row="2">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="16" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="16" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="16" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
+            <Grid  Grid.Column="0" >
 
-                    <Button x:Name="PrevWindow" Grid.Column="0" Content="Previous" Click="PrevWindow_OnClick" />
-                    <FrameworkElement Grid.Column="1" />
-                    <Button x:Name="NextWindow" Grid.Column="2" Content="Next" Click="NextWindow_OnClick" />
-                    <FrameworkElement Grid.Column="3" />
-                    <Button x:Name="AddWindowButton" Click="AddWindowButton_OnClick" Grid.Column="4" Content="Add" />
-                    <FrameworkElement Grid.Column="5" />
-                    <Button x:Name="RemoveWindowButton" Click="RemoveWindowButton_OnClick" Grid.Column="6"
-                            Content="Remove" />
-                </Grid>
-                <FrameworkElement Height="16" />
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="16" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="16" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="16" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="16" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-                    <StackPanel Grid.Column="0">
-                        <TextBlock Text="Left" />
-                        <TextBox Text="{Binding Left, UpdateSourceTrigger=PropertyChanged}" x:Name="XTextBox"
-                                 Padding="2" />
-                    </StackPanel>
-                    <FrameworkElement Grid.Column="1" />
+                <Canvas x:Name="Canvas" Grid.Row="0" />
+                <FrameworkElement Grid.Row="1" />
+                <StackPanel Grid.Row="2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="16" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="16" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="16" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="16" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
 
-                    <StackPanel Grid.Column="2">
-                        <TextBlock Text="Top" />
-                        <TextBox Text="{Binding Top, UpdateSourceTrigger=PropertyChanged}" x:Name="YTextBox"
-                                 Padding="2" />
-                    </StackPanel>
-                    <FrameworkElement Grid.Column="3" />
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Left" />
+                            <TextBox Text="{Binding Left, UpdateSourceTrigger=PropertyChanged}" x:Name="XTextBox"
+                                     Padding="2" />
+                        </StackPanel>
+                        <FrameworkElement Grid.Column="1" />
 
-                    <StackPanel Grid.Column="4">
-                        <TextBlock Text="Right" />
-                        <TextBox Text="{Binding Right, UpdateSourceTrigger=PropertyChanged}" x:Name="WidthTextBox"
-                                 Padding="2" />
-                    </StackPanel>
-                    <FrameworkElement Grid.Column="5" />
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Top" />
+                            <TextBox Text="{Binding Top, UpdateSourceTrigger=PropertyChanged}" x:Name="YTextBox"
+                                     Padding="2" />
+                        </StackPanel>
+                        <FrameworkElement Grid.Column="3" />
 
-                    <StackPanel Grid.Column="6">
-                        <TextBlock Text="Bottom" />
-                        <TextBox Text="{Binding Bottom, UpdateSourceTrigger=PropertyChanged}" x:Name="HeightTextBox"
-                                 Padding="2" />
-                    </StackPanel>
-                </Grid>
-                <FrameworkElement Height="16" />
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="16" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="16" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="16" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="4">
+                            <TextBlock Text="Right" />
+                            <TextBox Text="{Binding Right, UpdateSourceTrigger=PropertyChanged}" x:Name="WidthTextBox"
+                                     Padding="2" />
+                        </StackPanel>
+                        <FrameworkElement Grid.Column="5" />
 
-                    <Button x:Name="ExportButton" Grid.Column="0" Content="Export" Click="ExportButton_OnClick" />
-                    <FrameworkElement Grid.Column="1" />
-                    <Button x:Name="ImportButton" Grid.Column="2" Content="Import" Click="ImportButton_OnClick" />
-                    <FrameworkElement Grid.Column="3" />
-                    <FrameworkElement Grid.Column="4" />
-                    <FrameworkElement Grid.Column="5" />
-                    <Button x:Name="ApplyLayoutButton" Click="ApplyLayoutButton_OnClick" Grid.Column="6"
-                            Content="Apply" />
-                </Grid>
+                        <StackPanel Grid.Column="6">
+                            <TextBlock Text="Bottom" />
+                            <TextBox Text="{Binding Bottom, UpdateSourceTrigger=PropertyChanged}" x:Name="HeightTextBox"
+                                     Padding="2" />
+                        </StackPanel>
+                        
+                        <FrameworkElement Grid.Column="7" />
+
+                        <Button Grid.Column="8" x:Name="ApplyDimensions" Click="ApplyDimensions_OnClick">
+                            <TextBlock>Apply<LineBreak/>Dimensions</TextBlock>
+                        </Button>
+                    </Grid>
+                </StackPanel>
+            </Grid>
+            <FrameworkElement Grid.Column="1" />
+            <StackPanel Grid.Column="2" Width="64">
+
+                <Button x:Name="PrevWindow" Content="Previous" Click="PrevWindow_OnClick" />
+                <Button x:Name="NextWindow" Content="Next" Click="NextWindow_OnClick" />
+                <FrameworkElement  Height="16"/>
+                <Button x:Name="AddWindowButton" Click="AddWindowButton_OnClick" Content="Add" />
+                <Button x:Name="RemoveWindowButton" Click="RemoveWindowButton_OnClick" Content="Remove" />
+                <FrameworkElement  Height="16"/>
+                <Button x:Name="ExportButton" Content="Export" Click="ExportButton_OnClick" />
+                <Button x:Name="ImportButton" Content="Import" Click="ImportButton_OnClick" />
+                <FrameworkElement  Height="16"/>
+                <Button x:Name="SaveLayoutButton" Click="SaveLayoutButton_OnClick" Content="Save" />
+                <Button x:Name="ResetLayoutButton" Click="ResetLayoutButton_OnClick" Content="Reset" />
+                <FrameworkElement  Height="16"/>
             </StackPanel>
+
         </Grid>
+
     </Border>
 </Window>
