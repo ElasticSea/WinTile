@@ -1,19 +1,13 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using System.Windows.Input;
-
-namespace WinTile.Model
+﻿namespace WinTile.Model
 {
     public class WindowTile
     {
-        public Rect tile;
+        public Rect rect;
+        public Hotkey hotkey;
 
-        [JsonConverter(typeof(StringEnumConverter))]
-        public Key hotkey;
-
-        public WindowTile(Rect tile, Key hotkey = Key.None)
+        public WindowTile(Rect rect, Hotkey hotkey = null)
         {
-            this.tile = tile;
+            this.rect = rect;
             this.hotkey = hotkey;
         }
     }

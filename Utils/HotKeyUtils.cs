@@ -9,9 +9,9 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
 
-    public class HotKey : IDisposable
+    public class HotKeyUtils : IDisposable
     {
-        private static Dictionary<int, HotKey> _dictHotKeyToCalBackProc;
+        private static Dictionary<int, HotKeyUtils> _dictHotKeyToCalBackProc;
 
         [DllImport("user32.dll")]
         private static extern bool RegisterHotKey(IntPtr hWnd, int id, UInt32 fsModifiers, UInt32 vlc);
@@ -25,11 +25,11 @@ using System.Windows.Interop;
 
         public Key Key { get; private set; }
         public KeyModifier KeyModifiers { get; private set; }
-        public Action<HotKey> Action { get; private set; }
+        public Action<HotKeyUtils> Action { get; private set; }
         public int Id { get; set; }
 
         // ******************************************************************
-        public HotKey(Key k, KeyModifier keyModifiers, Action<HotKey> action, bool register = true)
+        public HotKeyUtils(Key k, KeyModifier keyModifiers, Action<HotKeyUtils> action, bool register = true)
         {
             Key = k;
             KeyModifiers = keyModifiers;
@@ -49,7 +49,7 @@ using System.Windows.Interop;
 
             if (_dictHotKeyToCalBackProc == null)
             {
-                _dictHotKeyToCalBackProc = new Dictionary<int, HotKey>();
+                _dictHotKeyToCalBackProc = new Dictionary<int, HotKeyUtils>();
                 ComponentDispatcher.ThreadFilterMessage += new ThreadMessageEventHandler(ComponentDispatcherThreadFilterMessage);
             }
 
@@ -62,8 +62,8 @@ using System.Windows.Interop;
         // ******************************************************************
         public void Unregister()
         {
-            HotKey hotKey;
-            if (_dictHotKeyToCalBackProc.TryGetValue(Id, out hotKey))
+            HotKeyUtils hotKeyUtils;
+            if (_dictHotKeyToCalBackProc.TryGetValue(Id, out hotKeyUtils))
             {
                 UnregisterHotKey(IntPtr.Zero, Id);
             }
@@ -76,13 +76,13 @@ using System.Windows.Interop;
             {
                 if (msg.message == WmHotKey)
                 {
-                    HotKey hotKey;
+                    HotKeyUtils hotKeyUtils;
 
-                    if (_dictHotKeyToCalBackProc.TryGetValue((int)msg.wParam, out hotKey))
+                    if (_dictHotKeyToCalBackProc.TryGetValue((int)msg.wParam, out hotKeyUtils))
                     {
-                        if (hotKey.Action != null)
+                        if (hotKeyUtils.Action != null)
                         {
-                            hotKey.Action.Invoke(hotKey);
+                            hotKeyUtils.Action.Invoke(hotKeyUtils);
                         }
                         handled = true;
                     }

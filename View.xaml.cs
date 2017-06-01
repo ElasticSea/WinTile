@@ -1,9 +1,12 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Media;
 using WinTile.Model;
 
@@ -16,10 +19,20 @@ namespace WinTile
 
         public MainWindow()
         {
-//            KeyDown += (sender, args) =>
-//            {
-//                viewModel.updateHotKey(args);
-//            };
+            KeyDown += (sender, args) =>
+            {
+                var modifiers = new List<KeyModifier>();
+
+                if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)) modifiers.Add(KeyModifier.Ctrl);
+                if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt)) modifiers.Add(KeyModifier.Alt);
+                if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) modifiers.Add(KeyModifier.Shift);
+                if (Keyboard.IsKeyDown(Key.LWin) || Keyboard.IsKeyDown(Key.RWin))  modifiers.Add(KeyModifier.Win);
+
+                if (modifiers.Any())
+                {
+                    viewModel.TriggerHotkeyChanged(args.Key, modifiers);
+                }
+            };
 
             SizeChanged += (sender, args) =>
             {
@@ -96,12 +109,17 @@ namespace WinTile
 
         private void activateToggle(WindowTile window, ToggleButton button)
         {
-            var scaledWindow = window.tile.extend(Canvas.ActualWidth, Canvas.ActualHeight);
+            var scaledWindow = window.rect.extend(Canvas.ActualWidth, Canvas.ActualHeight);
             Canvas.SetLeft(button, scaledWindow.Left);
             Canvas.SetTop(button, scaledWindow.Top);
             button.Width = scaledWindow.Width;
             button.Height = scaledWindow.Height;
-            button.Content = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(window.hotkey.ToString());
+
+            if (window.hotkey != null)
+            {
+                var content = $"[{window.hotkey.key}] {String.Join(" ", window.hotkey.modifiers)}";
+                button.Content = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(content);
+            }
         }
 
         private void WindowChanged(WindowTile window)
@@ -136,7 +154,7 @@ namespace WinTile
             var toggles = Windows.Values
                 .OrderBy( key =>
                 {
-                    var tile = Windows.Reverse[key].tile;
+                    var tile = Windows.Reverse[key].rect;
                     return tile.Left + tile.Top;
                 })
                 .ToList();
@@ -164,7 +182,17 @@ namespace WinTile
 
         private void ImportButton_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog()
+            {
+                FileName = "Wintile Layout Profile",
+                DefaultExt = ".json",
+                Filter = "Json Files(*.json)|*.json|All(*.*)|*"
+            };
+
+            if (dlg.ShowDialog() == true)
+            {
+                viewModel.JsonLayout = System.IO.File.ReadAllText(dlg.FileName);
+            }
         }
 
         private void SaveLayoutButton_OnClick(object sender, RoutedEventArgs e)

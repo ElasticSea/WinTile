@@ -1,19 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using Newtonsoft.Json;
 using PropertyChanged;
 using WinTile.Model;
 using WinTile.Properties;
 using static System.Windows.SystemParameters;
+using Rect = WinTile.Model.Rect;
 
 namespace WinTile
 {
     [ImplementPropertyChanged]
     public class ViewModel
     {
-        private readonly List<HotKey> hotkeys = new List<HotKey>();
+        private readonly List<HotKeyUtils> hotkeys = new List<HotKeyUtils>();
 
         private Layout layout;
 
@@ -49,10 +52,10 @@ namespace WinTile
 
                 if (selected != null)
                 {
-                    Left = selected.tile.Left * 100;
-                    Right = selected.tile.Right * 100;
-                    Top = selected.tile.Top * 100;
-                    Bottom = selected.tile.Bottom * 100;
+                    Left = selected.rect.Left * 100;
+                    Right = selected.rect.Right * 100;
+                    Top = selected.rect.Top * 100;
+                    Bottom = selected.rect.Bottom * 100;
                 }
             }
         }
@@ -63,7 +66,15 @@ namespace WinTile
 
         public void Load()
         {
+            try
+            {
             JsonLayout = Settings.Default.Layout ?? "{}";
+            }
+            catch (JsonSerializationException e)
+            {
+                JsonLayout = "{}";
+                MessageBox.Show("User Profile is corrupted: " + e.Message, "Corrupted Data", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
 
         private void OnNewLayout()
@@ -71,38 +82,44 @@ namespace WinTile
             hotkeys.ForEach(h => h.Unregister());
             foreach (var windowTile in Layout.windows)
             {
-                hotkeys.Add(new HotKey(windowTile.hotkey, KeyModifier.Shift | KeyModifier.Win,
-                    key => PositionWindow(windowTile)));
+                if (windowTile.hotkey != null)
+                {
+                    var key = windowTile.hotkey.key;
+                    var keyModifiers = windowTile.hotkey.modifiers.Aggregate((a, b) => a | b);
+                    hotkeys.Add(new HotKeyUtils(key, keyModifiers, k => PositionWindow(windowTile)));
+                }
                 WindowAdded(windowTile);
             }
         }
 
         private void PositionWindow(WindowTile windowTile)
         {
-            var pxRect = windowTile.tile.extend(WorkArea.Width, WorkArea.Height);
+            var pxRect = windowTile.rect.extend(WorkArea.Width, WorkArea.Height);
             Console.WriteLine($"Moving window to [{pxRect}]");
             User32Utils.SetCurrentWindowPos((int) pxRect.Left, (int) pxRect.Top, (int) pxRect.Width,
                 (int) pxRect.Height);
         }
 
-        public void TriggerTileChanged(Key hotkey = Key.None)
+        public void TriggerTileChanged()
         {
             if (selected != null)
             {
-                selected.tile.Left = Left / 100;
-                selected.tile.Right = Right / 100;
-                selected.tile.Top = Top / 100;
-                selected.tile.Bottom = Bottom / 100;
-
-                if (hotkey != Key.None) selected.hotkey = hotkey;
+                selected.rect.Left = Left / 100;
+                selected.rect.Right = Right / 100;
+                selected.rect.Top = Top / 100;
+                selected.rect.Bottom = Bottom / 100;
 
                 WindowChanged(selected);
             }
         }
 
-        public void updateHotKey(KeyEventArgs args)
+        public void TriggerHotkeyChanged(Key key, List<KeyModifier> modifiers)
         {
-            TriggerTileChanged(args.Key);
+            if (selected != null && key != Key.None)
+            {
+                selected.hotkey = new Hotkey(key, modifiers);
+                WindowChanged(selected);
+            }
         }
 
         public void AddWindow()
