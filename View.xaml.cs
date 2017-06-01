@@ -20,6 +20,14 @@ namespace WinTile
                 viewModel.updateHotKey(args);
             };
 
+            SizeChanged += (sender, args) =>
+            {
+                foreach (var keyValuePair in Windows)
+                {
+                    activateToggle(keyValuePair.Key, keyValuePair.Value);
+                }
+            };
+
             viewModel.WindowAdded += AddWindow;
             viewModel.WindowRemoved += removeWindow;
             viewModel.WindowChanged += WindowChanged;
