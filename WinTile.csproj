@@ -65,7 +65,7 @@
     <Compile Include="Model\Rect.cs" />
     <Compile Include="Model\WindowTile.cs" />
     <Compile Include="ViewModel.cs" />
-    <Compile Include="WindowList.cs" />
+    <Compile Include="User32Utils.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -1,11 +1,13 @@
-﻿namespace WinTile.Model
+﻿using System.Windows.Input;
+
+namespace WinTile.Model
 {
     public class WindowTile
     {
         public Rect tile;
-        private string hotkey;
+        public Key hotkey;
 
-        public WindowTile(Rect tile, string hotkey = null)
+        public WindowTile(Rect tile, Key hotkey = Key.None)
         {
             this.tile = tile;
             this.hotkey = hotkey;

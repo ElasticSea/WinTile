@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,6 +15,11 @@ namespace WinTile
 
         public MainWindow()
         {
+            KeyDown += (sender, args) =>
+            {
+                viewModel.updateHotKey(args);
+            };
+
             viewModel.WindowAdded += AddWindow;
             viewModel.WindowRemoved += removeWindow;
             viewModel.WindowChanged += WindowChanged;
@@ -79,6 +83,7 @@ namespace WinTile
             Canvas.SetTop(button, scaledWindow.Top);
             button.Width = scaledWindow.Width;
             button.Height = scaledWindow.Height;
+            button.Content = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(window.hotkey.ToString());
         }
 
         private void WindowChanged(WindowTile window)

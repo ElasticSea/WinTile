@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using WinTile.Model;
+using System.Windows.Input;
 
 namespace WinTile
 {
@@ -14,6 +15,7 @@ namespace WinTile
         public event PropertyChangedEventHandler PropertyChanged = (sender, args) => { };
 
         private readonly Layout layout = JsonConvert.DeserializeObject<Layout>(Properties.Settings.Default.Layout ?? "{}") ?? new Layout();
+
         private WindowTile selected;
         private float _left = 0f;
         private float _top = 0f;
@@ -24,8 +26,15 @@ namespace WinTile
         {
             foreach (var windowTile in layout.windows)
             {
+                var _hotKey = new HotKey(windowTile.hotkey, KeyModifier.Shift | KeyModifier.Win, key => PositionWindow(windowTile));
                 WindowAdded(windowTile);
             }
+        }
+
+        private void PositionWindow(WindowTile windowTile)
+        {
+            var pxRect = windowTile.tile.extend(3840, 2160);
+            User32Utils.SetCurrentWindowPos((int) pxRect.Left, (int)pxRect.Top, (int)pxRect.Width, (int)pxRect.Height);
         }
 
         public float Left
@@ -42,7 +51,7 @@ namespace WinTile
             }
         }
 
-        private void TriggerTileChanged()
+        private void TriggerTileChanged(Key hotkey = Key.None)
         {
             if (selected != null)
             {
@@ -50,6 +59,8 @@ namespace WinTile
                 selected.tile.Right = Right / 100;
                 selected.tile.Top = Top / 100;
                 selected.tile.Bottom = Bottom / 100;
+
+                if (hotkey != Key.None) selected.hotkey = hotkey;
 
                 WindowChanged(selected);
             }
@@ -117,6 +128,11 @@ namespace WinTile
                     PropertyChanged(this, new PropertyChangedEventArgs(nameof(Bottom)));
                 }
             }
+        }
+
+        public void updateHotKey(KeyEventArgs args)
+        {
+            TriggerTileChanged(args.Key);
         }
 
         public void AddWindow()
