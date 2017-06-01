@@ -3,19 +3,16 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Input;
 using Newtonsoft.Json;
+using PropertyChanged;
 using WinTile.Model;
 using WinTile.Properties;
 using static System.Windows.SystemParameters;
 
 namespace WinTile
 {
-    public class ViewModel : INotifyPropertyChanged
+    [ImplementPropertyChanged]
+    public class ViewModel
     {
-        private float _bottom;
-        private float _left;
-        private float _right;
-        private float _top;
-
         private readonly List<HotKey> hotkeys = new List<HotKey>();
 
         private Layout layout;
@@ -38,61 +35,10 @@ namespace WinTile
             set => Layout = JsonConvert.DeserializeObject<Layout>(value) ?? new Layout();
         }
 
-        public float Left
-        {
-            get => _left;
-            set
-            {
-                if (value == _left) return;
-
-                _left = Math.Max(value, 0f);
-                Right = Math.Max(_left, _right);
-                TriggerTileChanged();
-                PropertyChanged(this, new PropertyChangedEventArgs(nameof(Left)));
-            }
-        }
-
-        public float Top
-        {
-            get => _top;
-            set
-            {
-                if (value == _top) return;
-
-                _top = Math.Max(value, 0f);
-                Bottom = Math.Max(_top, _bottom);
-                TriggerTileChanged();
-                PropertyChanged(this, new PropertyChangedEventArgs(nameof(Top)));
-            }
-        }
-
-        public float Right
-        {
-            get => _right;
-            set
-            {
-                if (value == _right) return;
-
-                _right = Math.Min(value, 100f);
-                Left = Math.Min(_left, _right);
-                TriggerTileChanged();
-                PropertyChanged(this, new PropertyChangedEventArgs(nameof(Right)));
-            }
-        }
-
-        public float Bottom
-        {
-            get => _bottom;
-            set
-            {
-                if (value == _bottom) return;
-
-                _bottom = Math.Min(value, 100f);
-                Top = Math.Min(_top, _bottom);
-                TriggerTileChanged();
-                PropertyChanged(this, new PropertyChangedEventArgs(nameof(Bottom)));
-            }
-        }
+        public float Left { get; set; }
+        public float Top { get; set; }
+        public float Right { get; set; }
+        public float Bottom { get; set; }
 
         internal WindowTile Selected
         {
@@ -103,20 +49,14 @@ namespace WinTile
 
                 if (selected != null)
                 {
-                    _left = selected.tile.Left * 100;
-                    _right = selected.tile.Right * 100;
-                    _top = selected.tile.Top * 100;
-                    _bottom = selected.tile.Bottom * 100;
-
-                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(Left)));
-                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(Top)));
-                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(Right)));
-                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(Bottom)));
+                    Left = selected.tile.Left * 100;
+                    Right = selected.tile.Right * 100;
+                    Top = selected.tile.Top * 100;
+                    Bottom = selected.tile.Bottom * 100;
                 }
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged = (sender, args) => { };
         public event Action<WindowTile> WindowAdded = rect => { };
         public event Action<WindowTile> WindowRemoved = rect => { };
         public event Action<WindowTile> WindowChanged = rect => { };
