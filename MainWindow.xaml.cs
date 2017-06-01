@@ -130,7 +130,14 @@ namespace WinTile
 
         private void SelectNextToggle(int direction)
         {
-            var toggles = Windows.Values.ToList();
+            var toggles = Windows.Values
+                .OrderBy( key =>
+                {
+                    var tile = Windows.Reverse[key].tile;
+                    return tile.Left + tile.Top;
+                })
+                .ToList();
+
             var index = toggles.FindIndex(b => b.IsChecked == true);
             var toggle = toggles[(index + direction + toggles.Count) % toggles.Count];
             toggle.IsChecked = true;
