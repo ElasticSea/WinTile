@@ -46,28 +46,38 @@ namespace WinTile
         {
 
             var button = new ToggleButton();
-            rescaleToggle(window, button);
+            activateToggle(window, button);
 
             Windows.Add(window, button);
 
             button.Click += (sender, args) =>
             {
-                if (sender == button && button.IsChecked == false)
-                {
-                    viewModel.Selected = null;
-                }
-                else
-                {
-                    // Deselect other buttons
-                    Windows.Values.ToList()
-                        .Where(b => b != button)
-                        .ForEach(b => b.IsChecked = false);
-
-                    viewModel.Selected = Windows.Reverse[button];
-                }
+                selectWindow(button);
             };
 
             Canvas.Children.Add(button);
+        }
+
+        private void selectWindow(ToggleButton button)
+        {
+            if (CurrentToggle() == button && button.IsChecked == false)
+            {
+                viewModel.Selected = null;
+            }
+            else
+            {
+                // Deselect other buttons
+                Canvas.SetZIndex(button, 1000);
+                Windows.Values.ToList()
+                    .Where(b => b != button)
+                    .ForEach(b =>
+                    {
+                        b.IsChecked = false;
+                        Canvas.SetZIndex(b, 0);
+                    });
+
+                viewModel.Selected = Windows.Reverse[button];
+            }
         }
 
         private void removeWindow(WindowTile window)
@@ -76,7 +86,7 @@ namespace WinTile
             Canvas.Children.Remove(toggle);
         }
 
-        private void rescaleToggle(WindowTile window, ToggleButton button)
+        private void activateToggle(WindowTile window, ToggleButton button)
         {
             var scaledWindow = window.tile.extend(Canvas.ActualWidth, Canvas.ActualHeight);
             Canvas.SetLeft(button, scaledWindow.Left);
@@ -89,7 +99,7 @@ namespace WinTile
         private void WindowChanged(WindowTile window)
         {
             var toggle = CurrentToggle();
-            if(toggle!=null) rescaleToggle(window, toggle);
+            if(toggle!=null) activateToggle(window, toggle);
         }
 
         private ToggleButton CurrentToggle()
@@ -107,5 +117,25 @@ namespace WinTile
         {
             viewModel.Save();
         }
+
+        private void PrevWindow_OnClick(object sender, RoutedEventArgs e)
+        {
+            SelectNextToggle(-1);
+        }
+
+        private void NextWindow_OnClick(object sender, RoutedEventArgs e)
+        {
+            SelectNextToggle(1);
+        }
+
+        private void SelectNextToggle(int direction)
+        {
+            var toggles = Windows.Values.ToList();
+            var index = toggles.FindIndex(b => b.IsChecked == true);
+            var toggle = toggles[(index + direction + toggles.Count) % toggles.Count];
+            toggle.IsChecked = true;
+            toggle.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+        }
+
     }
 }

@@ -23,6 +23,18 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="16" />
                         <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <Button x:Name="PrevWindow" Grid.Column="0" Content="Prev Window" Click="PrevWindow_OnClick"/>
+                    <FrameworkElement Grid.Column="1" />
+                    <Button x:Name="NextWindow" Grid.Column="2" Content="Next Window" Click="NextWindow_OnClick" />
+                </Grid>
+                <FrameworkElement Height="16" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="16" />
+                        <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="16" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="16" />
