@@ -33,7 +33,7 @@ namespace WinTile
                 if (Keyboard.IsKeyDown(Key.LWin) || Keyboard.IsKeyDown(Key.RWin)) modifiers.Add(KeyModifier.Win);
 
                 if (modifiers.Any())
-                    viewModel.TriggerHotkeyChanged(args.Key, modifiers);
+                        viewModel.TriggerHotkeyChanged(args.Key, modifiers);
             };
 
             SizeChanged += (sender, args) =>

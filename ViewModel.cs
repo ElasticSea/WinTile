@@ -20,6 +20,7 @@ namespace WinTile
         private Layout layout;
 
         private WindowTile selected;
+        private BiDirectionCyclicList<WindowTile> linkedList;
 
         public Layout Layout
         {
@@ -27,6 +28,7 @@ namespace WinTile
             set
             {
                 layout = value;
+                linkedList = new BiDirectionCyclicList<WindowTile>(layout.windows);
                 OnNewLayout();
             }
         }
@@ -90,6 +92,9 @@ namespace WinTile
                 }
                 WindowAdded(windowTile);
             }
+
+            new HotKeyUtils(Key.Right, KeyModifier.Win | KeyModifier.Shift |KeyModifier.Alt, k => PositionWindow(linkedList.Next));
+            new HotKeyUtils(Key.Left, KeyModifier.Win | KeyModifier.Shift | KeyModifier.Alt, k => PositionWindow(linkedList.Prev));
         }
 
         private void PositionWindow(WindowTile windowTile)
