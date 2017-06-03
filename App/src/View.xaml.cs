@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using App.Model;
@@ -16,6 +18,15 @@ namespace App
 {
     public partial class MainWindow : Window
     {
+        public static readonly DependencyProperty UsernameProperty =
+            DependencyProperty.Register(nameof(XTextBox), typeof(string), typeof(MainWindow), new UIPropertyMetadata(string.Empty, Coolback));
+
+        private static void Coolback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Debug.Print("OldValue: {0}", e.OldValue);
+            Debug.Print("NewValue: {0}", e.NewValue);
+        }
+
         private readonly ViewModel viewModel = new ViewModel();
         private readonly Map<Tile, ToggleButton> Windows = new Map<Tile, ToggleButton>();
 
@@ -54,26 +65,30 @@ namespace App
                 viewModel.Tiles.CollectionChanged += (sender, args) =>
                 {
                     Canvas.Children.Clear();
-                    foreach (var tile in viewModel.Tiles)
-                    {
-                        var button = new ToggleButton { Background = Brushes.Transparent };
-                        activateToggle(tile, button);
-
-                        Windows.Add(tile, button);
-
-                        button.Click += (sender1, args1) => { selectWindow(button); };
-
-                        Canvas.Children.Add(button);
-                    }
+                    buildToggles();
                 };
+                buildToggles();
             }
+        }
 
-//            Loaded += (sender, args) => { viewModel.Load(); };
+        private void buildToggles()
+        {
+            foreach (var tile in viewModel.Tiles)
+            {
+                var button = new ToggleButton {Background = Brushes.Transparent};
+                activateToggle(tile, button);
+
+                Windows.Add(tile, button);
+
+                button.Click += (sender1, args1) => { selectWindow(button); };
+
+                Canvas.Children.Add(button);
+            }
         }
 
         private void AddWindowButton_OnClick(object sender, RoutedEventArgs e)
         {
-            viewModel.AddWindow();
+            viewModel.AddTile();
         }
 
         private void selectWindow(ToggleButton button)
@@ -111,17 +126,17 @@ namespace App
 
         private void activateToggle(Tile window, ToggleButton button)
         {
-            var scaledWindow = window.rect.extend(Canvas.ActualWidth, Canvas.ActualHeight);
+            var scaledWindow = window.Rect.extend(Canvas.ActualWidth, Canvas.ActualHeight);
             Canvas.SetLeft(button, scaledWindow.Left);
             Canvas.SetTop(button, scaledWindow.Top);
             button.Width = scaledWindow.Width;
             button.Height = scaledWindow.Height;
 
-            if (window.hotkey != null)
-            {
-                var content = $"[{window.hotkey.key}] {string.Join(" ", window.hotkey.modifiers)}";
-                button.Content = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(content);
-            }
+//            if (window.Hotkey != null)
+//            {
+//                var content = $"[{window.Hotkey.key}] {string.Join(" ", window.Hotkey.modifiers)}";
+//                button.Content = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(content);
+//            }
         }
 
         private void WindowChanged(Tile window)
@@ -138,7 +153,7 @@ namespace App
         private void RemoveWindowButton_OnClick(object sender, RoutedEventArgs e)
         {
             var toggle = CurrentToggle();
-            if (toggle != null) viewModel.removeWindow(Windows.Reverse[toggle]);
+            if (toggle != null) viewModel.RemoveTile(Windows.Reverse[toggle]);
         }
 
         private void PrevWindow_OnClick(object sender, RoutedEventArgs e)
@@ -156,7 +171,7 @@ namespace App
             var toggles = Windows.Values
                 .OrderBy(key =>
                 {
-                    var tile = Windows.Reverse[key].rect;
+                    var tile = Windows.Reverse[key].Rect;
                     return tile.Left + tile.Top;
                 })
                 .ToList();
@@ -177,7 +192,7 @@ namespace App
             };
 
             if (dlg.ShowDialog() == true)
-                File.WriteAllText(dlg.FileName, viewModel.JsonLayout);
+                File.WriteAllText(dlg.FileName, viewModel.export());
         }
 
         private void ImportButton_OnClick(object sender, RoutedEventArgs e)
@@ -190,7 +205,7 @@ namespace App
             };
 
             if (dlg.ShowDialog() == true)
-                viewModel.JsonLayout = File.ReadAllText(dlg.FileName);
+                viewModel.import(File.ReadAllText(dlg.FileName));
         }
 
         private void SaveLayoutButton_OnClick(object sender, RoutedEventArgs e)
@@ -200,17 +215,12 @@ namespace App
 
         private void ResetLayoutButton_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
-        }
-
-        private void ApplyDimensions_OnClick(object sender, RoutedEventArgs e)
-        {
-//            viewModel.TriggerTileChanged();
+            viewModel.reload();
         }
 
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (Windows.Forward.Contains(e.AddedItems[0] as Tile))
+            if (e.AddedItems.Count > 0)
             {
                 var toggle = Windows.Forward[e.AddedItems[0] as Tile];
                 toggle.IsChecked = true;

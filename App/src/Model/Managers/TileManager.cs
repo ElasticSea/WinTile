@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace App.Model.Managers
@@ -7,28 +8,47 @@ namespace App.Model.Managers
     {
         public Tile Selected;
 
-        public ObservableCollection<Tile> Tiles { get; } = new ObservableCollection<Tile>();
+        private ObservableCollection<Tile> tiles;
+
+        public TileManager(ObservableCollection<Tile> tiles)
+        {
+            this.tiles = tiles;
+        }
 
         public void Add(Tile tile)
         {
-            Tiles.Add(tile);
+            tiles.Add(tile);
             Selected = tile;
+        }
+
+        public void Add(IEnumerable<Tile> tiles)
+        {
+            foreach (var tile in tiles)
+            {
+                Add(tile);
+            }
+        }
+
+        public void Set(IEnumerable<Tile> tiles)
+        {
+            Clear();
+            Add(tiles);
         }
 
         public void Remove(Tile tile)
         {
-            Tiles.Remove(tile);
-            Selected = Tiles.FirstOrDefault(t => t == Selected);
+            tiles.Remove(tile);
+            Selected = tiles.FirstOrDefault(t => t == Selected);
         }
 
         public void MovePrev() => Selected = NextInDirection(-1);
         public void MoveNext() => Selected = NextInDirection(+1);
-        private Tile NextInDirection(int dir) => Tiles[(Tiles.IndexOf(Selected) + dir + Tiles.Count) % Tiles.Count];
+        private Tile NextInDirection(int dir) => tiles[(tiles.IndexOf(Selected) + dir + tiles.Count) % tiles.Count];
 
         public void Clear()
         {
             Selected = null;
-            Tiles.Clear();
+            tiles.Clear();
         }
     }
 }

@@ -7,6 +7,11 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="650"
         d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True, Type=local:ViewModel}">
+
+    <Window.Resources>
+        <local:PercentConverter x:Key="PercentConverter" />
+    </Window.Resources>
+    
     <Border Padding="16">
         <Grid>
 
@@ -36,43 +41,36 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="16" />
                             <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="16" />
-                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Grid.Column="0">
                             <TextBlock Text="Left" />
-                            <TextBox Text="{Binding Left, UpdateSourceTrigger=PropertyChanged}" x:Name="XTextBox"
+                            <TextBox Text="{Binding Selected.Rect.Left, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource PercentConverter}}" x:Name="XTextBox"
                                      Padding="2" />
                         </StackPanel>
                         <FrameworkElement Grid.Column="1" />
 
                         <StackPanel Grid.Column="2">
                             <TextBlock Text="Top" />
-                            <TextBox Text="{Binding Top, UpdateSourceTrigger=PropertyChanged}" x:Name="YTextBox"
+                            <TextBox Text="{Binding Selected.Rect.Top, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource PercentConverter}}" x:Name="YTextBox"
                                      Padding="2" />
                         </StackPanel>
                         <FrameworkElement Grid.Column="3" />
 
                         <StackPanel Grid.Column="4">
                             <TextBlock Text="Right" />
-                            <TextBox Text="{Binding Right, UpdateSourceTrigger=PropertyChanged}" x:Name="WidthTextBox"
+                            <TextBox Text="{Binding Selected.Rect.Right, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource PercentConverter}}" x:Name="WidthTextBox"
                                      Padding="2" />
                         </StackPanel>
                         <FrameworkElement Grid.Column="5" />
 
                         <StackPanel Grid.Column="6">
                             <TextBlock Text="Bottom" />
-                            <TextBox Text="{Binding Bottom, UpdateSourceTrigger=PropertyChanged}"
+                            <TextBox Text="{Binding Selected.Rect.Bottom, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource PercentConverter}}"
                                      x:Name="HeightTextBox"
                                      Padding="2" />
                         </StackPanel>
 
-                        <FrameworkElement Grid.Column="7" />
-
-                        <Button Grid.Column="8" x:Name="ApplyDimensions" Click="ApplyDimensions_OnClick">
-                            <TextBlock>Apply<LineBreak />Dimensions</TextBlock>
-                        </Button>
                     </Grid>
                 </StackPanel>
             </Grid>
@@ -95,6 +93,21 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <ListBox x:Name="ListView"   Grid.Row="0" Width="240"  SelectedItem="{Binding Selected}" ItemsSource="{Binding Tiles}" SelectionChanged="ListView_SelectionChanged" >
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <Run Text="["/>
+                                    <Run Text="{Binding Rect.Left, Converter={StaticResource PercentConverter}}"/>
+                                    <Run Text="%"/>
+                                    <Run Text="{Binding Rect.Right, Converter={StaticResource PercentConverter}}"/>
+                                    <Run Text="%"/>
+                                    <Run Text="{Binding Rect.Top, Converter={StaticResource PercentConverter}}"/>
+                                    <Run Text="%"/>
+                                    <Run Text="{Binding Rect.Bottom, Converter={StaticResource PercentConverter}}"/>
+                                    <Run Text="% ]"/>
+                                </TextBlock>
+                            </DataTemplate>
+                            </ListBox.ItemTemplate>
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
                                 <Style.Triggers>
@@ -141,70 +154,8 @@
                     <FrameworkElement Height="16" />
                     <Button x:Name="SaveLayoutButton" Click="SaveLayoutButton_OnClick" Content="Save" />
                     <Button x:Name="ResetLayoutButton" Click="ResetLayoutButton_OnClick" Content="Reset" />
-                    <FrameworkElement Height="16" />
-                    <TextBlock Text="{Binding Selected}" />
                 </StackPanel>
 
-            </Grid>
-            <Grid Grid.Column="0" Margin="-1,0,1,0">
-
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="16" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <Canvas x:Name="Canvas1" Grid.Row="0" />
-                <FrameworkElement Grid.Row="1" />
-                <StackPanel Grid.Row="2">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="16" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="16" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="16" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="16" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-
-                        <StackPanel Grid.Column="0">
-                            <TextBlock Text="Left" />
-                            <TextBox Text="{Binding Left, UpdateSourceTrigger=PropertyChanged}" x:Name="XTextBox1"
-                                Padding="2" />
-                        </StackPanel>
-                        <FrameworkElement Grid.Column="1" />
-
-                        <StackPanel Grid.Column="2">
-                            <TextBlock Text="Top" />
-                            <TextBox Text="{Binding Top, UpdateSourceTrigger=PropertyChanged}" x:Name="YTextBox1"
-                                Padding="2" />
-                        </StackPanel>
-                        <FrameworkElement Grid.Column="3" />
-
-                        <StackPanel Grid.Column="4">
-                            <TextBlock Text="Right" />
-                            <TextBox Text="{Binding Right, UpdateSourceTrigger=PropertyChanged}" x:Name="WidthTextBox1"
-                                Padding="2" />
-                        </StackPanel>
-                        <FrameworkElement Grid.Column="5" />
-
-                        <StackPanel Grid.Column="6">
-                            <TextBlock Text="Bottom" />
-                            <TextBox Text="{Binding Bottom, UpdateSourceTrigger=PropertyChanged}"
-                                x:Name="HeightTextBox1"
-                                Padding="2" />
-                        </StackPanel>
-
-                        <FrameworkElement Grid.Column="7" />
-
-                        <Button Grid.Column="8" x:Name="ApplyDimensions1" Click="ApplyDimensions_OnClick">
-                            <TextBlock><Run Text="Apply"/><LineBreak /><Run Text="Dimensions"/></TextBlock>
-                        </Button>
-                    </Grid>
-                </StackPanel>
             </Grid>
         </Grid>
 

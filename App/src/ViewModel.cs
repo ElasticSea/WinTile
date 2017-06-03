@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Windows;
 using App.Model;
 using App.Model.Managers;
 using App.Properties;
 using Newtonsoft.Json;
 using PropertyChanged;
+using Rect = App.Model.Rect;
 
 namespace App
 {
@@ -39,22 +39,20 @@ namespace App
         //            }
         //        }
 
-        //        public event Action<Tile> WindowAdded = rect => { };
-        //        public event Action<Tile> WindowRemoved = rect => { };
-        //        public event Action<Tile> WindowChanged = rect => { };
 
-
-        private Layout layout;
-
-        private Tile selected;
         private TileManager tileManager;
         private PositionWIndowManager positionManager;
 
         public ViewModel()
         {
-            tileManager = new TileManager();
-            positionManager = new PositionWIndowManager(tileManager);
+            reload();
 
+            tileManager = new TileManager(Layout.tiles);
+            positionManager = new PositionWIndowManager(tileManager);
+        }
+
+        public void reload()
+        {
             try
             {
                 JsonLayout = Settings.Default.Layout ?? "{}";
@@ -62,12 +60,13 @@ namespace App
             catch (JsonSerializationException e)
             {
                 JsonLayout = "{}";
-                MessageBox.Show("User Profile is corrupted: " + e.Message, "Corrupted Data", MessageBoxButton.OK,
-                    MessageBoxImage.Warning);
+                System.Windows.MessageBox.Show("User Profile is corrupted: " + e.Message, "Corrupted Data",
+                    System.Windows.MessageBoxButton.OK,
+                    System.Windows.MessageBoxImage.Warning);
             }
         }
 
-        public ObservableCollection<Tile> Tiles => tileManager.Tiles;
+        public ObservableCollection<Tile> Tiles => Layout.tiles;
 
         public Tile Selected
         {
@@ -75,25 +74,14 @@ namespace App
             set => tileManager.Selected = value;
         }
 
+
         public string JsonLayout
         {
             get => JsonConvert.SerializeObject(Layout, Formatting.Indented);
             set => Layout = JsonConvert.DeserializeObject<Layout>(value) ?? new Layout();
         }
 
-        public Layout Layout
-        {
-            get => layout;
-            set
-            {
-                layout = value;
-                tileManager.Clear();
-                foreach (var tile in layout.windows)
-                {
-                    tileManager.Add(tile);
-                }
-            }
-        }
+        private Layout Layout { get; set; }
 
 //        private void PositionWindow(Tile tile)
 //        {
@@ -121,17 +109,16 @@ namespace App
 //            }
 //        }
 
-        public void AddWindow()
+        public void AddTile()
         {
-//            var window = new Tile(new Model.Rect(Left, Top, Right, Bottom) / 100f);
-//            Layout.windows.Add(window);
-//            WindowAdded(window);
+            var r = Selected?.Rect ?? new Rect();
+            var rect = new Rect(r.Left, r.Top, r.Right, r.Bottom);
+            Tiles.Add(new Tile(rect));
         }
 
-        public void removeWindow(Tile window)
+        public void RemoveTile(Tile window)
         {
-//            Layout.windows.Remove(window);
-//            WindowRemoved(window);
+            Tiles.Remove(window);
         }
 
         internal void Save()
@@ -164,6 +151,16 @@ namespace App
             var index = Tiles.IndexOf(Selected);
             if(index < Tiles.Count - 1)
             Tiles.Move(index, index + 1);
+        }
+
+        public void import(string json)
+        {
+            JsonLayout = json;
+        }
+
+        public string export()
+        {
+            return JsonLayout;
         }
     }
 }

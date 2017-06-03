@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 
 namespace App.Model
 {
     public class Layout
     {
-        public List<Tile> windows = new List<Tile>();
+        public ObservableCollection<Tile> tiles = new ObservableCollection<Tile>();
     }
 }

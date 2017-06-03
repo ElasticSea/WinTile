@@ -2,18 +2,18 @@
 {
     public class Tile
     {
-        public Rect rect;
-        public Hotkey hotkey;
+        public Rect Rect { get; }
+        public Hotkey Hotkey { get; }
 
         public Tile(Rect rect, Hotkey hotkey = null)
         {
-            this.rect = rect;
-            this.hotkey = hotkey;
+            Rect = rect;
+            Hotkey = hotkey;
         }
 
         public override string ToString()
         {
-            return $"{nameof(rect)}: {rect}, {nameof(hotkey)}: {hotkey}";
+            return $"{nameof(Rect)}: {Rect}, {nameof(Hotkey)}: {Hotkey}";
         }
     }
 }

@@ -26,7 +26,7 @@ namespace App.Model.Managers
 
         private void PositionWindow(Tile tile)
         {
-            var pxRect = tile.rect.extend(WorkArea.Width, WorkArea.Height);
+            var pxRect = tile.Rect.extend(WorkArea.Width, WorkArea.Height);
             User32Utils.SetCurrentWindowPos((int)pxRect.Left, (int)pxRect.Top, (int)pxRect.Width,
                 (int)pxRect.Height);
         }
