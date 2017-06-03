@@ -16,7 +16,7 @@ namespace App
         public object ConvertBack(object value, Type targetType, object parameter,
             CultureInfo culture)
         {
-            return float.Parse(value.ToString()) / 100;
+            return (value as string).ToFloat(0) / 100;
         }
     }
 }

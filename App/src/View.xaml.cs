@@ -118,15 +118,9 @@ namespace App
                 });
         }
 
-        private void removeWindow(Tile window)
-        {
-            var toggle = Windows.Forward[window];
-            Canvas.Children.Remove(toggle);
-        }
-
         private void activateToggle(Tile window, ToggleButton button)
         {
-            var scaledWindow = window.Rect.extend(Canvas.ActualWidth, Canvas.ActualHeight);
+            var scaledWindow = window.Rect.extend((int)Canvas.ActualWidth, (int)Canvas.ActualHeight) / 100;
             Canvas.SetLeft(button, scaledWindow.Left);
             Canvas.SetTop(button, scaledWindow.Top);
             button.Width = scaledWindow.Width;
@@ -164,22 +158,6 @@ namespace App
         private void NextWindow_OnClick(object sender, RoutedEventArgs e)
         {
             viewModel.NextTile();
-        }
-
-        private void SelectNextToggle(int direction)
-        {
-            var toggles = Windows.Values
-                .OrderBy(key =>
-                {
-                    var tile = Windows.Reverse[key].Rect;
-                    return tile.Left + tile.Top;
-                })
-                .ToList();
-
-            var index = toggles.FindIndex(b => b.IsChecked == true);
-            var toggle = toggles[(index + direction + toggles.Count) % toggles.Count];
-            toggle.IsChecked = true;
-            toggle.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
         }
 
         private void ExportButton_OnClick(object sender, RoutedEventArgs e)

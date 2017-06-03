@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using App.Model;
@@ -57,7 +58,7 @@ namespace App
             {
                 JsonLayout = Settings.Default.Layout ?? "{}";
             }
-            catch (JsonSerializationException e)
+            catch (Exception e)
             {
                 JsonLayout = "{}";
                 System.Windows.MessageBox.Show("User Profile is corrupted: " + e.Message, "Corrupted Data",
@@ -155,6 +156,7 @@ namespace App
 
         public void import(string json)
         {
+            JsonLayout = json;
             JsonLayout = json;
         }
 

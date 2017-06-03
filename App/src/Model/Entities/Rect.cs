@@ -4,26 +4,26 @@ namespace App.Model
 {
     public class Rect
     {
-        public float Left { get; set; }
-        public float Top { get; set; }
-        public float Right { get; set; }
-        public float Bottom { get; set; }
+        public int Left { get; set; }
+        public int Top { get; set; }
+        public int Right { get; set; }
+        public int Bottom { get; set; }
 
         [JsonIgnore]
-        public float Width
+        public int Width
         {
             get => Right - Left;
             set => Right = value + Left;
         }
 
         [JsonIgnore]
-        public float Height
+        public int Height
         {
             get => Bottom - Top;
             set => Bottom = value + Top;
         }
 
-        public Rect(float left = 0, float top = 0, float right = 0, float bottom = 0)
+        public Rect(int left = 0, int top = 0, int right = 0, int bottom = 0)
         {
             Left = left;
             Top = top;
@@ -31,17 +31,17 @@ namespace App.Model
             Bottom = bottom;
         }
 
-        public Rect extend(double width, double height)
+        public Rect extend(int width, int height)
         {
-            return new Rect(Left * (float)width, Top * (float)height, Right * (float)width, Bottom * (float)height);
+            return new Rect(Left * width, Top * height, Right * width, Bottom * height);
         }
 
-        public static Rect operator *(Rect r0, float value)
+        public static Rect operator *(Rect r0, int value)
         {
             return new Rect(r0.Left * value, r0.Top * value, r0.Right * value, r0.Bottom * value);
         }
 
-        public static Rect operator /(Rect r0, float value)
+        public static Rect operator /(Rect r0, int value)
         {
             return new Rect(r0.Left / value, r0.Top / value, r0.Right / value, r0.Bottom / value);
         }
