@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace WinTile
+namespace App
 {
     public class Map<T1, T2> : IEnumerable<KeyValuePair<T1, T2>>
     {

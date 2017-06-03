@@ -9,32 +9,32 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using App.Model;
 using Microsoft.Win32;
-using WinTile.Model;
 
-namespace WinTile
+namespace App
 {
     public partial class MainWindow : Window
     {
         private readonly ViewModel viewModel = new ViewModel();
-        private readonly Map<WindowTile, ToggleButton> Windows = new Map<WindowTile, ToggleButton>();
+        private readonly Map<Tile, ToggleButton> Windows = new Map<Tile, ToggleButton>();
 
         public MainWindow()
         {
-            KeyDown += (sender, args) =>
-            {
-                var modifiers = new List<KeyModifier>();
-
-                if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
-                    modifiers.Add(KeyModifier.Ctrl);
-                if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt)) modifiers.Add(KeyModifier.Alt);
-                if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
-                    modifiers.Add(KeyModifier.Shift);
-                if (Keyboard.IsKeyDown(Key.LWin) || Keyboard.IsKeyDown(Key.RWin)) modifiers.Add(KeyModifier.Win);
-
-                if (modifiers.Any())
-                        viewModel.TriggerHotkeyChanged(args.Key, modifiers);
-            };
+//            KeyDown += (sender, args) =>
+//            {
+//                var modifiers = new List<KeyModifier>();
+//
+//                if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+//                    modifiers.Add(KeyModifier.Ctrl);
+//                if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt)) modifiers.Add(KeyModifier.Alt);
+//                if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+//                    modifiers.Add(KeyModifier.Shift);
+//                if (Keyboard.IsKeyDown(Key.LWin) || Keyboard.IsKeyDown(Key.RWin)) modifiers.Add(KeyModifier.Win);
+//
+//                if (modifiers.Any())
+//                        viewModel.TriggerHotkeyChanged(args.Key, modifiers);
+//            };
 
             SizeChanged += (sender, args) =>
             {
@@ -42,33 +42,38 @@ namespace WinTile
                     activateToggle(keyValuePair.Key, keyValuePair.Value);
             };
 
-            viewModel.WindowAdded += AddWindow;
-            viewModel.WindowRemoved += removeWindow;
-            viewModel.WindowChanged += WindowChanged;
+//            viewModel.WindowAdded += AddWindow;
+//            viewModel.WindowRemoved += removeWindow;
+//            viewModel.WindowChanged += WindowChanged;
 
             InitializeComponent();
 
             if (!DesignerProperties.GetIsInDesignMode(this))
+            {
                 DataContext = viewModel;
+                viewModel.Tiles.CollectionChanged += (sender, args) =>
+                {
+                    Canvas.Children.Clear();
+                    foreach (var tile in viewModel.Tiles)
+                    {
+                        var button = new ToggleButton { Background = Brushes.Transparent };
+                        activateToggle(tile, button);
 
-            Loaded += (sender, args) => { viewModel.Load(); };
+                        Windows.Add(tile, button);
+
+                        button.Click += (sender1, args1) => { selectWindow(button); };
+
+                        Canvas.Children.Add(button);
+                    }
+                };
+            }
+
+//            Loaded += (sender, args) => { viewModel.Load(); };
         }
 
         private void AddWindowButton_OnClick(object sender, RoutedEventArgs e)
         {
             viewModel.AddWindow();
-        }
-
-        private void AddWindow(WindowTile window)
-        {
-            var button = new ToggleButton {Background = Brushes.Transparent};
-            activateToggle(window, button);
-
-            Windows.Add(window, button);
-
-            button.Click += (sender, args) => { selectWindow(button); };
-
-            Canvas.Children.Add(button);
         }
 
         private void selectWindow(ToggleButton button)
@@ -80,26 +85,31 @@ namespace WinTile
             else
             {
                 // Deselect other buttons
-                Panel.SetZIndex(button, 1000);
-                Windows.Values.ToList()
-                    .Where(b => b != button)
-                    .ForEach(b =>
-                    {
-                        b.IsChecked = false;
-                        Panel.SetZIndex(b, 0);
-                    });
+                DeselectToggles(button);
 
                 viewModel.Selected = Windows.Reverse[button];
             }
         }
 
-        private void removeWindow(WindowTile window)
+        private void DeselectToggles(ToggleButton button)
+        {
+            Panel.SetZIndex(button, 1000);
+            Windows.Values.ToList()
+                .Where(b => b != button)
+                .ForEach(b =>
+                {
+                    b.IsChecked = false;
+                    Panel.SetZIndex(b, 0);
+                });
+        }
+
+        private void removeWindow(Tile window)
         {
             var toggle = Windows.Forward[window];
             Canvas.Children.Remove(toggle);
         }
 
-        private void activateToggle(WindowTile window, ToggleButton button)
+        private void activateToggle(Tile window, ToggleButton button)
         {
             var scaledWindow = window.rect.extend(Canvas.ActualWidth, Canvas.ActualHeight);
             Canvas.SetLeft(button, scaledWindow.Left);
@@ -114,7 +124,7 @@ namespace WinTile
             }
         }
 
-        private void WindowChanged(WindowTile window)
+        private void WindowChanged(Tile window)
         {
             var toggle = CurrentToggle();
             if (toggle != null) activateToggle(window, toggle);
@@ -133,12 +143,12 @@ namespace WinTile
 
         private void PrevWindow_OnClick(object sender, RoutedEventArgs e)
         {
-            SelectNextToggle(-1);
+            viewModel.PrevTile();
         }
 
         private void NextWindow_OnClick(object sender, RoutedEventArgs e)
         {
-            SelectNextToggle(1);
+            viewModel.NextTile();
         }
 
         private void SelectNextToggle(int direction)
@@ -195,7 +205,27 @@ namespace WinTile
 
         private void ApplyDimensions_OnClick(object sender, RoutedEventArgs e)
         {
-            viewModel.TriggerTileChanged();
+//            viewModel.TriggerTileChanged();
+        }
+
+        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (Windows.Forward.Contains(e.AddedItems[0] as Tile))
+            {
+                var toggle = Windows.Forward[e.AddedItems[0] as Tile];
+                toggle.IsChecked = true;
+                DeselectToggles(toggle);
+            }
+        }
+
+        private void ReorderTileUp_OnClick(object sender, RoutedEventArgs e)
+        {
+            viewModel.MoveSelectedUp();
+        }
+
+        private void ReorderTileDown_OnClick(object sender, RoutedEventArgs e)
+        {
+            viewModel.MoveSelectedDown();
         }
     }
 }

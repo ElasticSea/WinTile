@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace WinTile.Model
+namespace App.Model
 {
     public class Rect
     {
@@ -20,7 +20,7 @@ namespace WinTile.Model
             set => Bottom = value + Top;
         }
 
-        public Rect(float left, float top, float right, float bottom)
+        public Rect(float left = 0, float top = 0, float right = 0, float bottom = 0)
         {
             Left = left;
             Top = top;

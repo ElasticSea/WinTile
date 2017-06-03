@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace WinTile
+namespace App
 {
     public class BiDirectionCyclicList<T>
     {

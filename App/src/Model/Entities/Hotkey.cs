@@ -3,7 +3,7 @@ using System.Windows.Input;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace WinTile.Model
+namespace App.Model
 {
     public class Hotkey
     {
@@ -13,7 +13,7 @@ namespace WinTile.Model
         [JsonProperty(ItemConverterType = typeof(StringEnumConverter))]
         public List<KeyModifier> modifiers;
 
-        public Hotkey(Key key, List<KeyModifier> modifiers)
+        public Hotkey(Key key = Key.None, List<KeyModifier> modifiers = null)
         {
             this.key = key;
             this.modifiers = modifiers;
