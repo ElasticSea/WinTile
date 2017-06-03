@@ -17,30 +17,6 @@ namespace App
         private readonly List<HotKeyUtils> hotkeys = new List<HotKeyUtils>();
         public event PropertyChangedEventHandler PropertyChanged = (sender, args) => {};
 
-        //
-        //        public float Left { get; set; }
-        //        public float Top { get; set; }
-        //        public float Right { get; set; }
-        //        public float Bottom { get; set; }
-
-        //        internal Tile Selected
-        //        {
-        //            get => selected;
-        //            set
-        //            {
-        //                selected = value;
-        //
-        //                if (selected != null)
-        //                {
-        //                    Left = selected.rect.Left * 100;
-        //                    Right = selected.rect.Right * 100;
-        //                    Top = selected.rect.Top * 100;
-        //                    Bottom = selected.rect.Bottom * 100;
-        //                }
-        //            }
-        //        }
-
-
         private TileManager tileManager;
         private PositionWIndowManager positionManager;
 
@@ -84,10 +60,6 @@ namespace App
 
         private Layout Layout { get; set; }
 
-//        private void PositionWindow(Tile tile)
-//        {
-//        }
-//
 //        public void TriggerTileChanged()
 //        {
 //            if (selected != null)

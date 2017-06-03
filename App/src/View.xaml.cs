@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Input;
 using System.Windows.Media;
 using App.Model;
 using Microsoft.Win32;
@@ -52,10 +47,6 @@ namespace App
                 foreach (var keyValuePair in Windows)
                     activateToggle(keyValuePair.Key, keyValuePair.Value);
             };
-
-//            viewModel.WindowAdded += AddWindow;
-//            viewModel.WindowRemoved += removeWindow;
-//            viewModel.WindowChanged += WindowChanged;
 
             InitializeComponent();
 
