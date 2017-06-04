@@ -36,17 +36,9 @@
                             <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                        <Border  Grid.Row="0" BorderBrush="Black" BorderThickness="1">
-                            <Canvas x:Name="Canvas" >
-                                <Line
-                                    X2="50" Y2="50"
-                                    Width="100"
-                                    StrokeThickness="4"
-                                    Stroke="Black"
-                                    Canvas.Left="100">
-                                </Line>
-                            </Canvas>
-                            </Border>
+                        <Border Grid.Row="0" BorderBrush="Black" BorderThickness="1">
+                            <Canvas x:Name="Canvas" />
+                        </Border>
                         <FrameworkElement Grid.Row="1" />
 
                         <ListBox x:Name="ListView" Grid.Row="2" MaxWidth="600" SelectedItem="{Binding Selected}" 
