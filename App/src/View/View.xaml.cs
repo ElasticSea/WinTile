@@ -42,22 +42,120 @@ namespace App
                 SizeChanged += (sender, args) =>
                 {
                     Canvas.Children.Clear();
-                    var button = new Rectangle() { Fill = Brushes.DimGray };
                     var canvasRect = new Rect(0, 0, (int)Canvas.ActualWidth, (int)Canvas.ActualHeight);
-                    BindingOperations.SetBinding(button, Canvas.LeftProperty,
-                        createRectBindable("Selected.Rect.Left", canvasRect.Width / 100f));
-                    BindingOperations.SetBinding(button, Canvas.TopProperty,
-                        createRectBindable("Selected.Rect.Top", canvasRect.Height / 100f));
-                    BindingOperations.SetBinding(button, WidthProperty,
-                        createRectBindable("Selected.Rect.Width", canvasRect.Width / 100f));
-                    BindingOperations.SetBinding(button, HeightProperty,
-                        createRectBindable("Selected.Rect.Height", canvasRect.Height / 100f));
-                    Canvas.Children.Add(button);
+
+                    button(canvasRect);
+
+                    lines(canvasRect);
+
+                    texts(canvasRect);
                 };
             }
 
             InstallMeOnStartUp();
         }
+
+        private void button(Rect canvasRect)
+        {
+            var button = new Rectangle() {Fill = Brushes.DimGray};
+            BindingOperations.SetBinding(button, Canvas.LeftProperty,
+                createRectBindable("Selected.Rect.Left", canvasRect.Width / 100f));
+            BindingOperations.SetBinding(button, Canvas.TopProperty,
+                createRectBindable("Selected.Rect.Top", canvasRect.Height / 100f));
+            BindingOperations.SetBinding(button, WidthProperty,
+                createRectBindable("Selected.Rect.Width", canvasRect.Width / 100f));
+            BindingOperations.SetBinding(button, HeightProperty,
+                createRectBindable("Selected.Rect.Height", canvasRect.Height / 100f));
+            Canvas.Children.Add(button);
+        }
+
+        private void lines(Rect canvasRect)
+        {
+            var line = createLine();
+
+            BindingOperations.SetBinding(line, Canvas.TopProperty,
+                createRectBindable("Selected.Rect.Top", canvasRect.Height / 100f));
+            BindingOperations.SetBinding(line, Line.X2Property,
+                createRectBindable("Selected.Rect.Left", canvasRect.Width / 100f));
+            Canvas.Children.Add(line);
+
+            var lineb = createLine();
+
+            BindingOperations.SetBinding(lineb, Canvas.TopProperty,
+                createRectBindable("Selected.Rect.Bottom", canvasRect.Height / 100f));
+            BindingOperations.SetBinding(lineb, Line.X2Property,
+                createRectBindable("Selected.Rect.Left", canvasRect.Width / 100f));
+            Canvas.Children.Add(lineb);
+
+
+            var linec = createLine();
+
+            BindingOperations.SetBinding(linec, Canvas.LeftProperty,
+                createRectBindable("Selected.Rect.Left", canvasRect.Width / 100f));
+            BindingOperations.SetBinding(linec, Line.Y2Property,
+                createRectBindable("Selected.Rect.Top", canvasRect.Height / 100f));
+            Canvas.Children.Add(linec);
+
+
+            var lined = createLine();
+
+            BindingOperations.SetBinding(lined, Canvas.LeftProperty,
+                createRectBindable("Selected.Rect.Right", canvasRect.Width / 100f));
+            BindingOperations.SetBinding(lined, Line.Y2Property,
+                createRectBindable("Selected.Rect.Top", canvasRect.Height / 100f));
+            Canvas.Children.Add(lined);
+        }
+
+        private void texts(Rect canvasRect)
+        {
+            var text = Text();
+
+            BindingOperations.SetBinding(text, Canvas.TopProperty,
+                createRectBindable("Selected.Rect.Top", canvasRect.Height / 100f));
+            BindingOperations.SetBinding(text, TextBlock.TextProperty,
+                createSimple("Selected.Rect.Top"));
+            Canvas.Children.Add(text);
+
+            var texta = Text();
+
+            BindingOperations.SetBinding(texta, Canvas.TopProperty,
+                createRectBindable("Selected.Rect.Bottom", canvasRect.Height / 100f));
+            BindingOperations.SetBinding(texta, TextBlock.TextProperty,
+                createSimple("Selected.Rect.Bottom"));
+            Canvas.Children.Add(texta);
+
+            var textb = Text();
+
+            BindingOperations.SetBinding(textb, Canvas.LeftProperty,
+                createRectBindable("Selected.Rect.Left", canvasRect.Width / 100f));
+            BindingOperations.SetBinding(textb, TextBlock.TextProperty,
+                createSimple("Selected.Rect.Left"));
+            Canvas.Children.Add(textb);
+
+            var textc = Text();
+
+            BindingOperations.SetBinding(textc, Canvas.LeftProperty,
+                createRectBindable("Selected.Rect.Right", canvasRect.Width / 100f));
+            BindingOperations.SetBinding(textc, TextBlock.TextProperty,
+                createSimple("Selected.Rect.Right"));
+            Canvas.Children.Add(textc);
+        }
+
+        private static Line createLine()
+        {
+            return new Line
+            {
+                Stroke = Brushes.Black,
+                StrokeThickness = 1,
+                StrokeDashArray = new DoubleCollection(new double[] { 4, 4 })
+            };
+        }
+
+        private TextBlock Text() => new TextBlock
+        {
+            Text = "OK",
+            Foreground = Brushes.Black
+        };
 
         private Binding createRectBindable(string name, float scale) => new Binding
         {
@@ -65,6 +163,14 @@ namespace App
             Path = new PropertyPath(name),
             Mode = BindingMode.OneWay,
             Converter = new Multiplier(scale),
+            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+        };
+
+        private Binding createSimple(string name) => new Binding
+        {
+            Source = VM,
+            Path = new PropertyPath(name),
+            Mode = BindingMode.OneWay,
             UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
         };
 
