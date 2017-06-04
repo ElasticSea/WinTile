@@ -1,9 +1,11 @@
-﻿namespace App.Model
+﻿using System.Collections.ObjectModel;
+
+namespace App.Model
 {
     public class Layout
     {
         public Hotkey PreviousTile;
         public Hotkey NextTile;
-        public TrulyObservableCollection<Tile> tiles = new TrulyObservableCollection<Tile>();
+        public ObservableCollection<Tile> tiles = new ObservableCollection<Tile>();
     }
 }

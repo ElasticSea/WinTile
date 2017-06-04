@@ -38,7 +38,23 @@
                         <Canvas x:Name="Canvas" Grid.Row="0" />
                         <FrameworkElement Grid.Row="1" />
 
-                        <ListBox x:Name="ListView"   Grid.Row="2"   SelectedItem="{Binding Selected}" ItemsSource="{Binding Tiles}" SelectionChanged="ListView_SelectionChanged" >
+                        <ListBox x:Name="ListView" Grid.Row="2" SelectedItem="{Binding Selected}"
+                                 ItemsSource="{Binding Tiles}" SelectionChanged="ListView_SelectionChanged">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock>
+                                        <Run Text="[" />
+                                        <Run Text="{Binding Rect.Left}" />
+                                        <Run Text="%" />
+                                        <Run Text="{Binding Rect.Right}" />
+                                        <Run Text="%" />
+                                        <Run Text="{Binding Rect.Top}" />
+                                        <Run Text="%" />
+                                        <Run Text="{Binding Rect.Bottom}" />
+                                        <Run Text="% ]" />
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
                             <ListBox.ItemContainerStyle>
                                 <Style TargetType="ListBoxItem">
                                     <Style.Triggers>
