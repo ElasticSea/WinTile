@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Windows;
 using App.Model;
 using App.Model.Managers;
@@ -8,65 +7,36 @@ using App.Properties;
 using Newtonsoft.Json;
 using PropertyChanged;
 using Rect = App.Model.Rect;
-using static System.Windows.SystemParameters;
 
 namespace App
 {
     [ImplementPropertyChanged]
-    public class ViewModel : INotifyPropertyChanged
+    public class ViewModel
     {
-        public HotkeyManager hotkeyManager { get; }
-
         private readonly TileManager tileManager;
+        private readonly HotkeyManager hotkeyManager;
 
         public ViewModel()
         {
             Reload();
 
-            hotkeyManager = new HotkeyManager();
             tileManager = new TileManager(Layout.tiles);
-
-            PrevTile = Layout.PreviousTile;
-            NextTile = Layout.NextTile;
+            hotkeyManager = new HotkeyManager(Layout, tileManager);
         }
 
+        private Layout Layout { get; set; }
         public ObservableCollection<Tile> Tiles => Layout.tiles;
+
         public Hotkey PrevTile
         {
             get => Layout.PreviousTile;
-            set
-            {
-                if (value == null)
-                {
-                    hotkeyManager.Unregister(PrevTile);
-                    Layout.PreviousTile = null;
-                }
-                else if (hotkeyManager.Register(value, h => tileManager.MovePrev().let(PositionWindow)))
-                {
-                    hotkeyManager.Unregister(PrevTile);
-                    Layout.PreviousTile = value;
-                }
-                // TODO raise error
-            }
+            set => Layout.PreviousTile = value;
         }
 
         public Hotkey NextTile
         {
             get => Layout.NextTile;
-            set
-            {
-                if (value == null)
-                {
-                    hotkeyManager.Unregister(NextTile);
-                    Layout.NextTile = null;
-                }
-                else if (hotkeyManager.Register(value, h => tileManager.MoveNext().let(PositionWindow)))
-                {
-                    hotkeyManager.Unregister(NextTile);
-                    Layout.NextTile = value;
-                }
-                // TODO raise error
-            }
+            set => Layout.NextTile = value;
         }
 
         public Tile Selected
@@ -75,28 +45,10 @@ namespace App
             set => tileManager.Selected = value;
         }
 
-        public int Left
-        {
-            get => Selected?.Rect.Left ?? 0;
-            set
-            {
-                Selected?.@let(s => s.Rect.Left = value);
-//                Tiles.CollectionChanged()
-//                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Selected)));
-//                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Tiles)));
-            }
-        }
-
-        private void PositionWindow(Tile tile)
-        {
-            var pxRect = tile.Rect.extend((int) WorkArea.Width, (int) WorkArea.Height) / 100;
-            User32Utils.SetCurrentWindowPos(pxRect.Left, pxRect.Top, pxRect.Width, pxRect.Height);
-        }
-
         public Hotkey SelectedHotkey
         {
             get => Selected?.Hotkey;
-            set => Selected?.@let(s => s.Hotkey = value);
+            set => Selected?.let(s => s.Hotkey = value);
         }
 
         public string JsonLayout
@@ -118,26 +70,14 @@ namespace App
             }
         }
 
-        private Layout Layout { get; set; }
-        public event PropertyChangedEventHandler PropertyChanged = (sender, args) => { };
-
         public void Reload()
         {
-                JsonLayout = Settings.Default.Layout ?? "{}";
+            JsonLayout = Settings.Default.Layout ?? "{}";
         }
 
-//        public void TriggerTileChanged()
-//        {
-//            if (selected != null)
-//            {
-//                selected.rect.Left = Left / 100;
-//                selected.rect.Right = Right / 100;
-//                selected.rect.Top = Top / 100;
-//                selected.rect.Bottom = Bottom / 100;
-//
-//                WindowChanged(selected);
-//            }
-//        }
+        public void BindHotkeys() => hotkeyManager.BindHotkeys();
+
+        public void UnbindHotkeys() => hotkeyManager.UnbindHotkeys();
 
         public void AddTile()
         {

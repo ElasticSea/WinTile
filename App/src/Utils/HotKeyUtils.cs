@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Input;
 using System.Windows.Interop;
+using App.Model;
 
-    public class HotKeyUtils : IDisposable
+public class HotKeyUtils : IDisposable
     {
         public static Dictionary<int, HotKeyUtils> DictHotKeyToCalBackProc
         {
@@ -125,7 +127,56 @@ using System.Windows.Interop;
                 _disposed = true;
             }
         }
-    }
+
+        public static void assignHotkey(KeyEventArgs args, Action<Hotkey> callback)
+        {
+            var modifiers = getActiveKeyModifiers();
+            var keyIsModifier = getModifier(args.Key) != KeyModifier.None;
+
+            if (args.Key == Key.Delete)
+            {
+                callback(null);
+            }
+            if (modifiers.Any() && keyIsModifier == false)
+            {
+                callback(new Hotkey(args.Key, modifiers.Aggregate((a, b) => a | b)));
+            }
+        }
+
+        public static KeyModifier getModifier(Key key)
+        {
+            switch (key)
+            {
+                case Key.LeftCtrl:
+                case Key.RightCtrl:
+                    return KeyModifier.Ctrl;
+
+                case Key.LeftAlt:
+                case Key.RightAlt:
+                case Key.System:
+                    return KeyModifier.Alt;
+
+                case Key.LeftShift:
+                case Key.RightShift:
+                    return KeyModifier.Shift;
+
+                case Key.LWin:
+                case Key.RWin:
+                    return KeyModifier.Win;
+            }
+            return KeyModifier.None;
+        }
+
+        public static List<KeyModifier> getActiveKeyModifiers()
+        {
+            var modifiers = new List<KeyModifier>();
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)) modifiers.Add(KeyModifier.Ctrl);
+            if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt) || Keyboard.IsKeyDown(Key.System)) modifiers.Add(KeyModifier.Alt);
+            if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) modifiers.Add(KeyModifier.Shift);
+            if (Keyboard.IsKeyDown(Key.LWin) || Keyboard.IsKeyDown(Key.RWin)) modifiers.Add(KeyModifier.Win);
+            return modifiers;
+        }
+}
 
     // ******************************************************************
     [Flags]

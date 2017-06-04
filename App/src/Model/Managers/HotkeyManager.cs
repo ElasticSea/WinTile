@@ -6,33 +6,17 @@ namespace App.Model.Managers
 {
     public class HotkeyManager
     {
-        private readonly List<HotKeyUtils> hotkeys = new List<HotKeyUtils>();
+        private readonly Layout layout;
+        private IEnumerable<HotKeyUtils> hotkeys;
+        private TileManager tm;
 
-        public bool Register(Hotkey hotkey, Action<HotKeyUtils> action)
+        public HotkeyManager(Layout layout, TileManager tm)
         {
-            var conflict = hotkeys.FirstOrDefault(h => h.Key == hotkey.key && h.KeyModifiers == hotkey.modifiers);
-
-            if (conflict == null)
-            {
-                hotkeys.Add(new HotKeyUtils(hotkey.key, hotkey.modifiers, action, false));
-                return true;
-            }
-            return false;
+            this.layout = layout;
+            this.tm = tm;
         }
 
-        public bool Unregister(Hotkey hotkey)
-        {
-            var conflict = hotkeys.FirstOrDefault(h => h.Key == hotkey.key && h.KeyModifiers == hotkey.modifiers);
-
-            if (conflict != null)
-            {
-                hotkeys.Remove(conflict);
-                return true;
-            }
-            return false;
-        }
-
-        public void Pause()
+        public void UnbindHotkeys()
         {
             foreach (var hotkey in hotkeys)
             {
@@ -40,12 +24,36 @@ namespace App.Model.Managers
             }
         }
 
-        public void Resume()
+        public void BindHotkeys()
         {
+            hotkeys = createHotkeys();
+
             foreach (var hotkey in hotkeys)
             {
                 hotkey.Register();
             }
+        }
+
+        private IEnumerable<HotKeyUtils> createHotkeys()
+        {
+            IEnumerable<HotKeyUtils> actual;
+            var hotkeys = new List<HotKeyUtils>
+            {
+                create(layout.PreviousTile, h1 => tm.PositionPrev()),
+                create(layout.NextTile, h1 => tm.PositionNext())
+            };
+
+            foreach (var tile in layout.tiles)
+            {
+                hotkeys.Add(create(tile.Hotkey, h1 => tm.PositionWindow(tile)));
+            }
+
+            return hotkeys.Where(h => h != null);
+        }
+
+        private HotKeyUtils create(Hotkey hotkey, Action<object> action)
+        {
+            return hotkey != null ? new HotKeyUtils(hotkey.Key, hotkey.Modifiers, action, false) : null;
         }
     }
 }

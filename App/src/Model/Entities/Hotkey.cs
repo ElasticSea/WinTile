@@ -7,20 +7,20 @@ namespace App.Model
     public class Hotkey
     {
         [JsonConverter(typeof(StringEnumConverter))]
-        public Key key;
+        public Key Key { get; }
 
         [JsonConverter(typeof(StringEnumConverter))]
-        public KeyModifier modifiers;
+        public KeyModifier Modifiers { get; }
 
         public Hotkey(Key key = Key.None, KeyModifier modifiers = KeyModifier.None)
         {
-            this.key = key;
-            this.modifiers = modifiers;
+            Key = key;
+            Modifiers = modifiers;
         }
 
         public override string ToString()
         {
-            return $"{key}, {string.Join(", ",modifiers)}";
+            return $"{Key}, {string.Join(", ",Modifiers)}";
         }
     }
 }

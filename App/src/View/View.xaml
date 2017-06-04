@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:App"
         mc:Ignorable="d"
-        Icon="../Resources/icon.png"
+        Icon="../../Resources/icon.png"
         Title="WinTile" Height="540" Width="720"
         d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True, Type=local:ViewModel}">
 
@@ -35,23 +35,28 @@
                             <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                        <Canvas x:Name="Canvas" Grid.Row="0" />
+                        <Border  Grid.Row="0" BorderBrush="Black" BorderThickness="1">
+                            <Canvas x:Name="Canvas" />
+                            </Border>
                         <FrameworkElement Grid.Row="1" />
 
-                        <ListBox x:Name="ListView" Grid.Row="2" SelectedItem="{Binding Selected}"
-                                 ItemsSource="{Binding Tiles}" SelectionChanged="ListView_SelectionChanged">
+                        <ListBox x:Name="ListView" Grid.Row="2" MaxWidth="600" SelectedItem="{Binding Selected}" 
+                                 SelectionMode="Single"
+                                 IsSynchronizedWithCurrentItem="True"
+                                 ItemsSource="{Binding Tiles}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock>
-                                        <Run Text="[" />
+                                        <Run Text="Left:" />
                                         <Run Text="{Binding Rect.Left}" />
-                                        <Run Text="%" />
+                                        <Run Text="Right:" />
                                         <Run Text="{Binding Rect.Right}" />
-                                        <Run Text="%" />
+                                        <Run Text="Top:" />
                                         <Run Text="{Binding Rect.Top}" />
-                                        <Run Text="%" />
+                                        <Run Text="Bottom:" />
                                         <Run Text="{Binding Rect.Bottom}" />
-                                        <Run Text="% ]" />
+                                        <Run Text="Hotkey:" />
+                                        <Run Text="{Binding Hotkey, Mode=OneWay}" />
                                     </TextBlock>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
@@ -75,7 +80,7 @@
                             </ListBox.ItemContainerStyle>
                         </ListBox>
                         <FrameworkElement Grid.Row="3" />
-                <StackPanel Grid.Row="4">
+                        <StackPanel Grid.Row="4" MaxWidth="600">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -90,7 +95,7 @@
                         <StackPanel Grid.Column="0">
                             <TextBlock Text="Left" />
                             <TextBox x:Name="XTextBox" Padding="2">
-                                <Binding Path="Left" UpdateSourceTrigger="PropertyChanged">
+                                <Binding Path="Selected.Rect.Left" UpdateSourceTrigger="PropertyChanged">
                                     <Binding.ValidationRules>
                                         <local:IntegerValidationRule Min="0" Max="100" />
                                     </Binding.ValidationRules>

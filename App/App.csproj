@@ -75,17 +75,12 @@
     <Compile Include="src\Model\Entities\Tile.cs" />
     <Compile Include="src\Model\Managers\HotkeyManager.cs" />
     <Compile Include="src\Model\Managers\TileManager.cs" />
-    <Compile Include="src\Utils\BaseConverter.cs" />
-    <Compile Include="src\Utils\BiDirectionCyclicList.cs" />
-    <Compile Include="src\Utils\DependencyOBsdf.cs" />
     <Compile Include="src\Utils\Extensions.cs" />
     <Compile Include="src\Utils\HotKeyUtils.cs" />
-    <Compile Include="src\Utils\IntegerValidationRule.cs" />
-    <Compile Include="src\Utils\Map.cs" />
-    <Compile Include="src\Utils\PercentConverter.cs" />
-    <Compile Include="src\Utils\TileConverter.cs" />
+    <Compile Include="src\View\IntegerValidationRule.cs" />
+    <Compile Include="src\View\RectConverter.cs" />
     <Compile Include="src\Utils\User32Utils.cs" />
-    <Compile Include="src\View.xaml.cs">
+    <Compile Include="src\View\View.xaml.cs">
       <DependentUpon>View.xaml</DependentUpon>
     </Compile>
     <Compile Include="src\ViewModel.cs" />
@@ -120,7 +115,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="src\View.xaml">
+    <Page Include="src\View\View.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

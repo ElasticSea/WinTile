@@ -1,5 +1,8 @@
-﻿namespace App.Model
+﻿using PropertyChanged;
+
+namespace App.Model
 {
+    [ImplementPropertyChanged]
     public class Tile
     {
         public Rect Rect { get; }
