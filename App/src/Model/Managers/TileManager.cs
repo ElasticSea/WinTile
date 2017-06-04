@@ -44,41 +44,53 @@ namespace App.Model.Managers
 
         public void PositionClosestRight()
         {
-            tiles
-                .Where(t => t.Rect.Left >= Selected.Rect.Right)
-                .OrderBy(t => t.Rect.Left)
-                .FirstOrDefault()?.let(s => Selected = s);
-            PositionWindow(Selected);
+            GetClosest(new Vector(1, 0))
+                ?.@let(s =>
+                {
+                    Selected = s;
+                    PositionWindow(Selected);
+                });
         }
 
         public void PositionClosestLeft()
         {
-            tiles
-                .Where(t => t.Rect.Right >= Selected.Rect.Left)
-                .GroupBy(t => t.Rect.Right)
-                .FirstOrDefault()?.let(s => Selected = s);
-            PositionWindow(Selected);
+            GetClosest(new Vector(-1, 0))
+                ?.@let(s =>
+                {
+                    Selected = s;
+                    PositionWindow(Selected);
+                });
         }
 
         public void PositionClosestUp()
         {
-            tiles
-                .Where(t => t.Rect.Bottom >= Selected.Rect.Top)
-                .OrderBy(t => t.Rect.Bottom)
-                .FirstOrDefault()?.let(s => Selected = s);
-            PositionWindow(Selected);
+            GetClosest(new Vector(0, -1))
+                ?.@let(s =>
+                {
+                    Selected = s;
+                    PositionWindow(Selected);
+                });
         }
 
         public void PositionClosestDown()
         {
-            tiles
-                .Where(t => t.Rect.Top >= Selected.Rect.Bottom)
-                .OrderBy(t => t.Rect.Top)
-                .FirstOrDefault()?.let(s => Selected = s);
-            PositionWindow(Selected);
+            GetClosest(new Vector(0, 1))
+                ?.@let(s =>
+                {
+                    Selected = s;
+                    PositionWindow(Selected);
+                });
         }
 
-        public float TitleCloserating(Vector direction, Tile original, Tile target)
+        private Tile GetClosest(Vector direction)
+        {
+            return tiles
+                .Select(t => new { Title = t, Penalty = TilePenalty(direction, Selected, t) })
+                .OrderByDescending(a => a.Penalty)
+                .FirstOrDefault(a => a.Penalty > 0)?.Title;
+        }
+
+        public static float TilePenalty(Vector direction, Tile original, Tile target)
         {
             var ocx = original.Rect.Cx;
             var ocy = original.Rect.Cy;
@@ -89,22 +101,37 @@ namespace App.Model.Managers
             var ovec = new Vector(ocx, ocy);
             var tvec = new Vector(tcx, tcy);
             var vec = tvec - ovec;
-
-            ovec.Normalize();
-            tvec.Normalize();
             vec.Normalize();
 
-            var dx = tcx - ocx;
-            var dy = tcy - ocy;
+            var ocor = TileCorners(original);
+            var tcor = TileCorners(target);
 
+            var dist = Double.MaxValue;
+            foreach (var oc in ocor)
+            {
+                foreach (var tc in tcor)
+                {
+                    var length = (tc - oc).Length;
+                    if (length < dist)
+                        dist = length;
+                }
+            }
 
             var dot = direction * vec;
             var angle = Math.Acos(dot);
 
             var limit = Math.PI / 2;
             var dirHeur = (limit - angle) / limit;
-            var distHeur = 1 / Math.Sqrt(dx * dx + dy * dy);
+            var distHeur = 1 / (dist + 1);
             return (float) (dirHeur * distHeur);
         }
+
+        private static Vector[] TileCorners(Tile tile) => new[]
+        {
+            new Vector(tile.Rect.Left, tile.Rect.Bottom),
+            new Vector(tile.Rect.Right, tile.Rect.Bottom),
+            new Vector(tile.Rect.Right, tile.Rect.Top),
+            new Vector(tile.Rect.Left, tile.Rect.Top)
+        };
     }
 }
