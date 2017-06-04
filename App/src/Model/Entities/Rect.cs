@@ -6,6 +6,7 @@ namespace App.Model
     [ImplementPropertyChanged]
     public class Rect
     {
+        private int _cx;
         public int Left { get; set; }
         public int Top { get; set; }
         public int Right { get; set; }
@@ -23,6 +24,28 @@ namespace App.Model
         {
             get => Bottom - Top;
             set => Bottom = value + Top;
+        }
+
+        [JsonIgnore]
+        public int Cx
+        {
+            get => Left +Width / 2;
+            set
+            {
+                Left = value - Width / 2;
+                Right = value + Width / 2;
+            }
+        }
+
+        [JsonIgnore]
+        public int Cy
+        {
+            get => Top +  Height / 2;
+            set
+            {
+                Top = value - Height / 2;
+                Bottom = value + Height / 2;
+            }
         }
 
         public Rect(int left = 0, int top = 0, int right = 0, int bottom = 0)

@@ -20,7 +20,8 @@ namespace App
         {
             Reload();
 
-            tileManager = new TileManager(Layout.tiles);
+            var positionManager = new TilePositionManager();
+            tileManager = new TileManager(Layout.tiles, positionManager);
             hotkeyManager = new HotkeyManager(Layout, tileManager);
         }
 
@@ -37,6 +38,33 @@ namespace App
         {
             get => Layout.NextTile;
             set => Layout.NextTile = value;
+        }
+
+
+        public Hotkey ClosestLeft
+        {
+            get => Layout.ClosestLeft;
+            set => Layout.ClosestLeft = value;
+        }
+
+
+        public Hotkey ClosestRight
+        {
+            get => Layout.ClosestRight;
+            set => Layout.ClosestRight = value;
+        }
+
+
+        public Hotkey ClosestUp
+        {
+            get => Layout.ClosestUp;
+            set => Layout.ClosestUp = value;
+        }
+
+        public Hotkey ClosestDown
+        {
+            get => Layout.ClosestDown;
+            set => Layout.ClosestDown = value;
         }
 
         public Tile Selected

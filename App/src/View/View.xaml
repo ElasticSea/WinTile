@@ -221,14 +221,33 @@
                     <Border Padding="8">
 
                         <StackPanel>
-                            <TextBlock Text="Move To Previous Tile" />
-                            <TextBox x:Name="PreTile" Text="{Binding PrevTile, Mode=OneWay}" PreviewKeyDown="PreTile_OnPreviewKeyDown" Padding="2" IsReadOnly="True"/>
-                            <FrameworkElement Height="16" />
-                            <TextBlock   Text="Move To Next Tile" />
-                            <TextBox x:Name="NextTile" Text="{Binding NextTile, Mode=OneWay}" PreviewKeyDown="NextTile_OnPreviewKeyDown" Padding="2" IsReadOnly="True"/>
-                            <FrameworkElement Height="16" />
-                            <TextBlock    Text="Selected Tile " />
-                            <TextBox x:Name="CurrentTile"  Text="{Binding SelectedHotkey, Mode=OneWay}"  PreviewKeyDown="CurrentTile_OnPreviewKeyDown" Padding="2" IsReadOnly="True"/>
+                            <TextBlock Text="Previous Tile" />
+                            <TextBox x:Name="PreTile" Text="{Binding PrevTile, Mode=OneWay}" PreviewKeyDown="PreTile_OnPreviewKeyDown"
+                                     Padding="2" IsReadOnly="True" />
+                            <FrameworkElement Height="8" />
+                            <TextBlock Text="Next Tile" />
+                            <TextBox x:Name="NextTile"  Text="{Binding NextTile, Mode=OneWay}" PreviewKeyDown="NextTile_OnPreviewKeyDown"
+                                     Padding="2" IsReadOnly="True" />
+                            <FrameworkElement Height="8" />
+                            <TextBlock Text="Closest Tile Left" />
+                            <TextBox x:Name="ClosestLeft"  Text="{Binding ClosestLeft, Mode=OneWay}" PreviewKeyDown="ClosestLeft_OnPreviewKeyDown"
+                                     Padding="2" IsReadOnly="True" />
+                            <FrameworkElement Height="8" />
+                            <TextBlock Text="Closest Tile Right" />
+                            <TextBox x:Name="ClosestRight"  Text="{Binding ClosestRight, Mode=OneWay}" PreviewKeyDown="ClosestRight_OnPreviewKeyDown"
+                                     Padding="2" IsReadOnly="True" />
+                            <FrameworkElement Height="8" />
+                            <TextBlock Text="Closest Tile Up" />
+                            <TextBox x:Name="ClosestUp"  Text="{Binding ClosestUp, Mode=OneWay}" PreviewKeyDown="ClosestUp_OnPreviewKeyDown"
+                                     Padding="2" IsReadOnly="True" />
+                            <FrameworkElement Height="8" />
+                            <TextBlock Text="Closest Tile Down" />
+                            <TextBox x:Name="ClosestDown"  Text="{Binding ClosestDown, Mode=OneWay}" PreviewKeyDown="ClosestDown_OnPreviewKeyDown"
+                                     Padding="2" IsReadOnly="True" />
+                            <FrameworkElement Height="8" />
+                            <TextBlock Text="Selected Tile " />
+                            <TextBox x:Name="CurrentTile"  Text="{Binding SelectedHotkey, Mode=OneWay}"
+                                     PreviewKeyDown="CurrentTile_OnPreviewKeyDown" Padding="2" IsReadOnly="True" />
                         </StackPanel>
                     </Border>
                 </GroupBox>

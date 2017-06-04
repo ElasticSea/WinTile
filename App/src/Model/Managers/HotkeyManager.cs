@@ -40,7 +40,11 @@ namespace App.Model.Managers
             var hotkeys = new List<HotKeyUtils>
             {
                 create(layout.PreviousTile, h1 => tm.PositionPrev()),
-                create(layout.NextTile, h1 => tm.PositionNext())
+                create(layout.NextTile, h1 => tm.PositionNext()),
+                create(layout.ClosestRight, h1 => tm.PositionClosestRight()),
+                create(layout.ClosestLeft, h1 => tm.PositionClosestLeft()),
+                create(layout.ClosestUp, h1 => tm.PositionClosestUp()),
+                create(layout.ClosestDown, h1 => tm.PositionClosestDown())
             };
 
             foreach (var tile in layout.tiles)
