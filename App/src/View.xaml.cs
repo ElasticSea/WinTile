@@ -1,47 +1,54 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Forms;
+using System.Windows.Input;
 using System.Windows.Media;
 using App.Model;
 using Microsoft.Win32;
+using KeyEventArgs = System.Windows.Input.KeyEventArgs;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
+using Panel = System.Windows.Controls.Panel;
+using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 
 namespace App
 {
     public partial class MainWindow : Window
     {
-        public static readonly DependencyProperty UsernameProperty =
-            DependencyProperty.Register(nameof(XTextBox), typeof(string), typeof(MainWindow), new UIPropertyMetadata(string.Empty, Coolback));
-
-        private static void Coolback(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            Debug.Print("OldValue: {0}", e.OldValue);
-            Debug.Print("NewValue: {0}", e.NewValue);
-        }
+//        public static readonly DependencyProperty UsernameProperty =
+//            DependencyProperty.Register(nameof(XTextBox), typeof(string), typeof(MainWindow),
+//                new UIPropertyMetadata(string.Empty, Coolback));
 
         private readonly ViewModel viewModel = new ViewModel();
         private readonly Map<Tile, ToggleButton> Windows = new Map<Tile, ToggleButton>();
 
         public MainWindow()
         {
-//            KeyDown += (sender, args) =>
-//            {
+            KeyDown += (sender, args) =>
+            {
 //                var modifiers = new List<KeyModifier>();
+//                var keyIsModifier = getModifier(args.Key) != KeyModifier.None;
 //
-//                if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
-//                    modifiers.Add(KeyModifier.Ctrl);
+//                if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))  modifiers.Add(KeyModifier.Ctrl);
 //                if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt)) modifiers.Add(KeyModifier.Alt);
-//                if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
-//                    modifiers.Add(KeyModifier.Shift);
+//                if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))modifiers.Add(KeyModifier.Shift);
 //                if (Keyboard.IsKeyDown(Key.LWin) || Keyboard.IsKeyDown(Key.RWin)) modifiers.Add(KeyModifier.Win);
 //
-//                if (modifiers.Any())
-//                        viewModel.TriggerHotkeyChanged(args.Key, modifiers);
-//            };
+//                Console.WriteLine(string.Join(", ", modifiers) +" " + args.Key);
+//                if (modifiers.Any() && keyIsModifier == false)
+//                {
+//                    if (PreTile.IsFocused) viewModel.PrevTile = new Hotkey(args.Key, modifiers);
+//                    if (NextTile.IsFocused) viewModel.NextTile = new Hotkey(args.Key, modifiers);
+//                    if (CurrentTile.IsFocused) viewModel.SelectedHotkey = new Hotkey(args.Key, modifiers);
+//                }
+            };
 
             SizeChanged += (sender, args) =>
             {
@@ -53,18 +60,17 @@ namespace App
 
             var iconHandle = Properties.Resources.icon.GetHicon();
 
-                        System.Windows.Forms.NotifyIcon ni =
-                            new System.Windows.Forms.NotifyIcon
-                            {
-                                Icon = System.Drawing.Icon.FromHandle(iconHandle),
-                                Visible = true
-                            };
+            var ni = new NotifyIcon
+            {
+                Icon = System.Drawing.Icon.FromHandle(iconHandle),
+                Visible = true
+            };
 
-                        ni.DoubleClick += (sender, args) =>
-                        {
-                            Show();
-                            WindowState = WindowState.Normal;
-                        };
+            ni.DoubleClick += (sender, args) =>
+            {
+                Show();
+                WindowState = WindowState.Normal;
+            };
 
             if (!DesignerProperties.GetIsInDesignMode(this))
             {
@@ -77,6 +83,50 @@ namespace App
                 buildToggles();
             }
 
+            InstallMeOnStartUp();
+        }
+
+        private KeyModifier getModifier(Key key)
+        {
+            switch (key)
+            {
+                case Key.LeftCtrl:
+                case Key.RightCtrl:
+                    return KeyModifier.Ctrl;
+
+                case Key.LeftAlt:
+                case Key.RightAlt:
+                case Key.System:
+                    return KeyModifier.Alt;
+
+                case Key.LeftShift:
+                case Key.RightShift:
+                    return KeyModifier.Shift;
+
+                case Key.LWin:
+                case Key.RWin:
+                    return KeyModifier.Win;
+            }
+            return KeyModifier.None;
+        }
+
+        private static void Coolback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Debug.Print("OldValue: {0}", e.OldValue);
+            Debug.Print("NewValue: {0}", e.NewValue);
+        }
+
+        private void InstallMeOnStartUp()
+        {
+            try
+            {
+                var key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+                var curAssembly = Assembly.GetExecutingAssembly();
+                key.SetValue(curAssembly.GetName().Name, curAssembly.Location);
+            }
+            catch
+            {
+            }
         }
 
         private void buildToggles()
@@ -128,7 +178,7 @@ namespace App
 
         private void activateToggle(Tile window, ToggleButton button)
         {
-            var scaledWindow = window.Rect.extend((int)Canvas.ActualWidth, (int)Canvas.ActualHeight) / 100;
+            var scaledWindow = window.Rect.extend((int) Canvas.ActualWidth, (int) Canvas.ActualHeight) / 100;
             Canvas.SetLeft(button, scaledWindow.Left);
             Canvas.SetTop(button, scaledWindow.Top);
             button.Width = scaledWindow.Width;
@@ -150,7 +200,15 @@ namespace App
         // minimize to system tray when applicaiton is minimized
         protected override void OnStateChanged(EventArgs e)
         {
-            if (WindowState == WindowState.Minimized) this.Hide();
+            if (WindowState == WindowState.Minimized)
+            {
+                Hide();
+                viewModel.hotkeyManager.Resume();
+            }
+            if (WindowState == WindowState.Normal)
+            {
+                viewModel.hotkeyManager.Pause();
+            }
 
             base.OnStateChanged(e);
         }
@@ -162,7 +220,8 @@ namespace App
             // so the application is not closed
             e.Cancel = true;
 
-            this.Hide();
+            Hide();
+            viewModel.hotkeyManager.Resume();
 
             base.OnClosing(e);
         }
@@ -178,16 +237,6 @@ namespace App
             if (toggle != null) viewModel.RemoveTile(Windows.Reverse[toggle]);
         }
 
-        private void PrevWindow_OnClick(object sender, RoutedEventArgs e)
-        {
-            viewModel.PrevTile();
-        }
-
-        private void NextWindow_OnClick(object sender, RoutedEventArgs e)
-        {
-            viewModel.NextTile();
-        }
-
         private void ExportButton_OnClick(object sender, RoutedEventArgs e)
         {
             var dlg = new SaveFileDialog
@@ -198,7 +247,7 @@ namespace App
             };
 
             if (dlg.ShowDialog() == true)
-                File.WriteAllText(dlg.FileName, viewModel.export());
+                File.WriteAllText(dlg.FileName, viewModel.JsonLayout);
         }
 
         private void ImportButton_OnClick(object sender, RoutedEventArgs e)
@@ -211,7 +260,7 @@ namespace App
             };
 
             if (dlg.ShowDialog() == true)
-                viewModel.import(File.ReadAllText(dlg.FileName));
+                viewModel.JsonLayout = File.ReadAllText(dlg.FileName);
         }
 
         private void SaveLayoutButton_OnClick(object sender, RoutedEventArgs e)
@@ -221,7 +270,7 @@ namespace App
 
         private void ResetLayoutButton_OnClick(object sender, RoutedEventArgs e)
         {
-            viewModel.reload();
+            viewModel.Reload();
         }
 
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -242,6 +291,46 @@ namespace App
         private void ReorderTileDown_OnClick(object sender, RoutedEventArgs e)
         {
             viewModel.MoveSelectedDown();
+        }
+
+        private void CurrentTile_OnPreviewKeyDown(object sender, KeyEventArgs args)
+        {
+            tryToAssignHotkey(args, hotkey => viewModel.SelectedHotkey = hotkey);
+        }
+
+        private void NextTile_OnPreviewKeyDown(object sender, KeyEventArgs args)
+        {
+            tryToAssignHotkey(args, hotkey => viewModel.NextTile = hotkey);
+        }
+
+        private void PreTile_OnPreviewKeyDown(object sender, KeyEventArgs args)
+        {
+             tryToAssignHotkey(args, hotkey => viewModel.PrevTile = hotkey);
+        }
+
+        private void tryToAssignHotkey(KeyEventArgs args, Action<Hotkey> callback)
+        {
+            var modifiers = getActiveKeyModifiers();
+            var keyIsModifier = getModifier(args.Key) != KeyModifier.None;
+
+            if (args.Key == Key.Delete)
+            {
+                callback(null);
+            }
+            if (modifiers.Any() && keyIsModifier == false)
+            {
+                callback(new Hotkey(args.Key, modifiers.Aggregate((a, b) => a | b)));
+            }
+        }
+
+        private List<KeyModifier> getActiveKeyModifiers()
+        {
+            var modifiers = new List<KeyModifier>();
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)) modifiers.Add(KeyModifier.Ctrl);
+            if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt) || Keyboard.IsKeyDown(Key.System)) modifiers.Add(KeyModifier.Alt);
+            if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) modifiers.Add(KeyModifier.Shift);
+            if (Keyboard.IsKeyDown(Key.LWin) || Keyboard.IsKeyDown(Key.RWin)) modifiers.Add(KeyModifier.Win);
+            return modifiers;
         }
     }
 }

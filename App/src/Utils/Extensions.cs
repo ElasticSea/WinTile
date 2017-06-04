@@ -24,5 +24,10 @@ namespace App
             float i;
             return float.TryParse(s, out i) ? i : def;
         }
+
+        public static void let<T>(this T item, Action<T> action)
+        {
+            action?.Invoke(item);
+        }
     }
 }

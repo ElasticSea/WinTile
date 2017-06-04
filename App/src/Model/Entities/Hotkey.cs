@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -10,13 +9,18 @@ namespace App.Model
         [JsonConverter(typeof(StringEnumConverter))]
         public Key key;
 
-        [JsonProperty(ItemConverterType = typeof(StringEnumConverter))]
-        public List<KeyModifier> modifiers;
+        [JsonConverter(typeof(StringEnumConverter))]
+        public KeyModifier modifiers;
 
-        public Hotkey(Key key = Key.None, List<KeyModifier> modifiers = null)
+        public Hotkey(Key key = Key.None, KeyModifier modifiers = KeyModifier.None)
         {
             this.key = key;
             this.modifiers = modifiers;
+        }
+
+        public override string ToString()
+        {
+            return $"{key}, {string.Join(", ",modifiers)}";
         }
     }
 }

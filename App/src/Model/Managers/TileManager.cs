@@ -41,8 +41,18 @@ namespace App.Model.Managers
             Selected = tiles.FirstOrDefault(t => t == Selected);
         }
 
-        public void MovePrev() => Selected = NextInDirection(-1);
-        public void MoveNext() => Selected = NextInDirection(+1);
+        public Tile MovePrev()
+        {
+            Selected = NextInDirection(-1);
+            return Selected;
+        }
+
+        public Tile MoveNext()
+        {
+            Selected = NextInDirection(+1);
+            return Selected;
+        }
+
         private Tile NextInDirection(int dir) => tiles[(tiles.IndexOf(Selected) + dir + tiles.Count) % tiles.Count];
 
         public void Clear()

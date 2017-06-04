@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
+using PropertyChanged;
 
 namespace App.Model
 {
+    [ImplementPropertyChanged]
     public class Rect
     {
         public int Left { get; set; }

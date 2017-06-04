@@ -1,17 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Net.Mime;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
 
     public class HotKeyUtils : IDisposable
     {
-        private static Dictionary<int, HotKeyUtils> _dictHotKeyToCalBackProc;
+        public static Dictionary<int, HotKeyUtils> DictHotKeyToCalBackProc
+        {
+            get
+            {
+                if (_dictHotKeyToCalBackProc == null)
+                {
+                    _dictHotKeyToCalBackProc = new Dictionary<int, HotKeyUtils>();
+                    ComponentDispatcher.ThreadFilterMessage += ComponentDispatcherThreadFilterMessage;
+                }
+                return _dictHotKeyToCalBackProc;
+            }
+        }
 
         [DllImport("user32.dll")]
         private static extern bool RegisterHotKey(IntPtr hWnd, int id, UInt32 fsModifiers, UInt32 vlc);
@@ -21,11 +28,12 @@ using System.Windows.Interop;
 
         public const int WmHotKey = 0x0312;
 
-        private bool _disposed = false;
+        private bool _disposed;
+        private static Dictionary<int, HotKeyUtils> _dictHotKeyToCalBackProc;
 
-        public Key Key { get; private set; }
-        public KeyModifier KeyModifiers { get; private set; }
-        public Action<HotKeyUtils> Action { get; private set; }
+        public Key Key { get; }
+        public KeyModifier KeyModifiers { get; }
+        public Action<HotKeyUtils> Action { get; }
         public int Id { get; set; }
 
         // ******************************************************************
@@ -43,19 +51,13 @@ using System.Windows.Interop;
         // ******************************************************************
         public bool Register()
         {
-            int virtualKeyCode = KeyInterop.VirtualKeyFromKey(Key);
-            Id = virtualKeyCode + ((int)KeyModifiers * 0x10000);
-            bool result = RegisterHotKey(IntPtr.Zero, Id, (UInt32)KeyModifiers, (UInt32)virtualKeyCode);
+            var virtualKeyCode = KeyInterop.VirtualKeyFromKey(Key);
+            Id = virtualKeyCode + (int)KeyModifiers * 0x10000;
+            var result = RegisterHotKey(IntPtr.Zero, Id, (uint)KeyModifiers, (uint)virtualKeyCode);
 
-            if (_dictHotKeyToCalBackProc == null)
-            {
-                _dictHotKeyToCalBackProc = new Dictionary<int, HotKeyUtils>();
-                ComponentDispatcher.ThreadFilterMessage += new ThreadMessageEventHandler(ComponentDispatcherThreadFilterMessage);
-            }
+            DictHotKeyToCalBackProc.Add(Id, this);
 
-            _dictHotKeyToCalBackProc.Add(Id, this);
-
-            Debug.Print(result.ToString() + ", " + Id + ", " + virtualKeyCode);
+            Debug.Print($"{result}, {Id}, {virtualKeyCode}");
             return result;
         }
 
@@ -63,31 +65,24 @@ using System.Windows.Interop;
         public void Unregister()
         {
             HotKeyUtils hotKeyUtils;
-            if (_dictHotKeyToCalBackProc.TryGetValue(Id, out hotKeyUtils))
+            if (DictHotKeyToCalBackProc.TryGetValue(Id, out hotKeyUtils))
             {
                 UnregisterHotKey(IntPtr.Zero, Id);
+                DictHotKeyToCalBackProc.Remove(Id);
             }
         }
 
         // ******************************************************************
         private static void ComponentDispatcherThreadFilterMessage(ref MSG msg, ref bool handled)
         {
-            if (!handled)
-            {
-                if (msg.message == WmHotKey)
-                {
-                    HotKeyUtils hotKeyUtils;
+            HotKeyUtils hotKeyUtils;
 
-                    if (_dictHotKeyToCalBackProc.TryGetValue((int)msg.wParam, out hotKeyUtils))
-                    {
-                        if (hotKeyUtils.Action != null)
-                        {
-                            hotKeyUtils.Action.Invoke(hotKeyUtils);
-                        }
-                        handled = true;
-                    }
-                }
-            }
+            if (handled) return;
+            if (msg.message != WmHotKey) return;
+            if (!DictHotKeyToCalBackProc.TryGetValue((int) msg.wParam, out hotKeyUtils)) return;
+
+            hotKeyUtils.Action?.Invoke(hotKeyUtils);
+            handled = true;
         }
 
         // ******************************************************************
@@ -116,7 +111,7 @@ using System.Windows.Interop;
         protected virtual void Dispose(bool disposing)
         {
             // Check to see if Dispose has already been called.
-            if (!this._disposed)
+            if (!_disposed)
             {
                 // If disposing equals true, dispose all managed
                 // and unmanaged resources.
