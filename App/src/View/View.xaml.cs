@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using Microsoft.Win32;
 using Binding = System.Windows.Data.Binding;
+using HorizontalAlignment = System.Windows.HorizontalAlignment;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using Rect = App.Model.Rect;
@@ -44,7 +45,7 @@ namespace App
                     Canvas.Children.Clear();
                     var canvasRect = new Rect(0, 0, (int)Canvas.ActualWidth, (int)Canvas.ActualHeight);
 
-                    button(canvasRect);
+                    tileShape(canvasRect);
 
                     lines(canvasRect);
 
@@ -55,18 +56,40 @@ namespace App
             InstallMeOnStartUp();
         }
 
-        private void button(Rect canvasRect)
+        private void tileShape(Rect canvasRect)
         {
-            var button = new Rectangle() {Fill = Brushes.DimGray};
-            BindingOperations.SetBinding(button, Canvas.LeftProperty,
+            var boder = new Border { Background = Brushes.DimGray };
+            var text = new TextBlock { Foreground = Brushes.White,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                TextWrapping = TextWrapping.Wrap,
+            FontSize = 45};
+
+            squareElement(canvasRect, boder);
+
+            var listViewBinding = new Binding
+            {
+                Source = ListView,
+                Path = new PropertyPath("SelectedIndex"),
+                Mode = BindingMode.OneWay,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            };
+
+            BindingOperations.SetBinding(text, TextBlock.TextProperty, listViewBinding);
+            boder.Child = text;
+            Canvas.Children.Add(boder);
+        }
+
+        private void squareElement(Rect canvasRect, FrameworkElement element)
+        {
+            BindingOperations.SetBinding(element, Canvas.LeftProperty,
                 createRectBindable("Selected.Rect.Left", canvasRect.Width / 100f));
-            BindingOperations.SetBinding(button, Canvas.TopProperty,
+            BindingOperations.SetBinding(element, Canvas.TopProperty,
                 createRectBindable("Selected.Rect.Top", canvasRect.Height / 100f));
-            BindingOperations.SetBinding(button, WidthProperty,
+            BindingOperations.SetBinding(element, WidthProperty,
                 createRectBindable("Selected.Rect.Width", canvasRect.Width / 100f));
-            BindingOperations.SetBinding(button, HeightProperty,
+            BindingOperations.SetBinding(element, HeightProperty,
                 createRectBindable("Selected.Rect.Height", canvasRect.Height / 100f));
-            Canvas.Children.Add(button);
         }
 
         private void lines(Rect canvasRect)
