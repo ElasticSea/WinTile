@@ -26,7 +26,7 @@ namespace Tests.Model.Managers
 
         private readonly List<Tile> tiles = new List<Tile>(){ tileA , tileB , tileC , tileD , tileE , tileF , tileG , tileH, tileI };
 
-        private readonly TilePositionManager mocked = Substitute.For<TilePositionManager>();
+        private readonly WindowsTileSystem mocked = Substitute.For<WindowsTileSystem>();
 
         [TestMethod]
         public void CycleTiles()

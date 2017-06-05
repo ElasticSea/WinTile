@@ -77,7 +77,9 @@
     <Compile Include="src\Model\Managers\TileManager.cs" />
     <Compile Include="src\Utils\Extensions.cs" />
     <Compile Include="src\Utils\HotKeyUtils.cs" />
-    <Compile Include="src\Utils\TilePositionManager.cs" />
+    <Compile Include="src\Utils\ITilePositionManager.cs" />
+    <Compile Include="src\Utils\DummyTileSystem.cs" />
+    <Compile Include="src\Utils\WindowsTileSystem.cs" />
     <Compile Include="src\View\IntegerValidationRule.cs" />
     <Compile Include="src\View\RectConverter.cs" />
     <Compile Include="src\Utils\User32Utils.cs" />

@@ -9,6 +9,7 @@ namespace App.Model.Managers
         private readonly Layout layout;
         private IEnumerable<HotKeyUtils> hotkeys;
         private TileManager tm;
+        private bool binded;
 
         public HotkeyManager(Layout layout, TileManager tm)
         {
@@ -18,19 +19,27 @@ namespace App.Model.Managers
 
         public void UnbindHotkeys()
         {
-            foreach (var hotkey in hotkeys)
+            if (binded)
             {
-                hotkey.Unregister();
+                foreach (var hotkey in hotkeys)
+                {
+                    hotkey.Unregister();
+                }
+                binded = false;
             }
         }
 
         public void BindHotkeys()
         {
-            hotkeys = createHotkeys();
-
-            foreach (var hotkey in hotkeys)
+            if (binded == false)
             {
-                hotkey.Register();
+                hotkeys = createHotkeys();
+
+                foreach (var hotkey in hotkeys)
+                {
+                    hotkey.Register();
+                }
+                binded = true;
             }
         }
 

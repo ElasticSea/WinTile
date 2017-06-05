@@ -15,13 +15,18 @@ namespace App
     {
         private readonly TileManager tileManager;
         private readonly HotkeyManager hotkeyManager;
+        private readonly WindowsTileSystem windowsTileManager = new WindowsTileSystem();
+        private bool _activeInEditor;
 
         public ViewModel()
         {
             Reload();
 
-            var positionManager = new TilePositionManager();
-            tileManager = new TileManager(Layout.tiles, positionManager);
+            tileManager = new TileManager(Layout.tiles);
+            tileManager.OnSelected += tile =>
+            {
+                Selected = tile;
+            };
             hotkeyManager = new HotkeyManager(Layout, tileManager);
         }
 
@@ -79,6 +84,24 @@ namespace App
             set => Selected?.let(s => s.Hotkey = value);
         }
 
+        public bool ActiveInEditor
+        {
+            get => _activeInEditor;
+            set
+            {
+                _activeInEditor = value;
+
+                if (ActiveInEditor)
+                {
+                    hotkeyManager.BindHotkeys();
+                }
+                else
+                {
+                    hotkeyManager.UnbindHotkeys();
+                }
+            }
+        }
+
         public string JsonLayout
         {
             get => JsonConvert.SerializeObject(Layout, Formatting.Indented);
@@ -103,9 +126,17 @@ namespace App
             JsonLayout = Settings.Default.Layout ?? "{}";
         }
 
-        public void BindHotkeys() => hotkeyManager.BindHotkeys();
+        public void BindHotkeys()
+        {
+            tileManager.manager = windowsTileManager;
+            hotkeyManager.BindHotkeys();
+        }
 
-        public void UnbindHotkeys() => hotkeyManager.UnbindHotkeys();
+        public void UnbindHotkeys()
+        {
+            tileManager.manager = null;
+            hotkeyManager.UnbindHotkeys();
+        }
 
         public void AddTile()
         {

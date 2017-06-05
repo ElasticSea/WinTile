@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using Microsoft.Win32;
 using Binding = System.Windows.Data.Binding;
+using ContextMenu = System.Windows.Controls.ContextMenu;
 using HorizontalAlignment = System.Windows.HorizontalAlignment;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
@@ -21,20 +22,29 @@ namespace App
     public partial class MainWindow : Window
     {
         private readonly ViewModel VM = new ViewModel();
+        private NotifyIcon notifyIcon;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            var ni = new NotifyIcon
+            notifyIcon = new NotifyIcon
             {
                 Icon = System.Drawing.Icon.FromHandle(Properties.Resources.icon.GetHicon()),
                 Visible = true
             };
-            ni.DoubleClick += (sender, args) =>
+            notifyIcon.DoubleClick += (sender, args) =>
             {
                 Show();
                 WindowState = WindowState.Normal;
+            };
+            notifyIcon.MouseClick += (sender, args) =>
+            {
+                if (args.Button == MouseButtons.Right)
+                {
+                    var menu = this.FindResource("NotifierContextMenu") as ContextMenu;
+                    menu.IsOpen = true;
+                }
             };
 
             if (!DesignerProperties.GetIsInDesignMode(this))
@@ -280,5 +290,12 @@ namespace App
         private void ClosestRight_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ClosestRight = h);
         private void ClosestUp_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ClosestUp= h);
         private void ClosestDown_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ClosestDown= h);
+        
+
+        private void Menu_Exit(object sender, RoutedEventArgs e)
+        {
+            notifyIcon.Visible = false;
+            System.Windows.Application.Current.Shutdown();
+        }
     }
 }

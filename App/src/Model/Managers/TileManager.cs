@@ -2,21 +2,21 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
-using static System.Windows.SystemParameters;
 
 namespace App.Model.Managers
 {
     public class TileManager
     {
-        private readonly TilePositionManager manager;
+        public WindowsTileSystem manager;
 
         private readonly ObservableCollection<Tile> tiles;
-        public Tile Selected;
+        public Tile Selected { get; set; }
+        public event Action<Tile> OnSelected = tile => { };
 
-        public TileManager(ObservableCollection<Tile> tiles, TilePositionManager manager)
+        public TileManager(ObservableCollection<Tile> tiles)
         {
             this.tiles = tiles;
-            this.manager = manager;
+            manager = manager;
         }
 
         private Tile NextInDirection(int dir)
@@ -24,11 +24,7 @@ namespace App.Model.Managers
             return tiles[(tiles.IndexOf(Selected) + dir + tiles.Count) % tiles.Count];
         }
 
-        public void PositionWindow(Tile tile)
-        {
-            var pxRect = tile.Rect.extend((int) WorkArea.Width, (int) WorkArea.Height) / 100;
-            manager.MoveCurrentWindow(pxRect.Left, pxRect.Top, pxRect.Width, pxRect.Height);
-        }
+        public void PositionWindow(Tile tile) => manager?.PositionTile(tile);
 
         public void PositionPrev()
         {
@@ -42,44 +38,16 @@ namespace App.Model.Managers
             PositionWindow(Selected);
         }
 
-        public void PositionClosestRight()
-        {
-            GetClosest(new Vector(1, 0))
-                ?.@let(s =>
-                {
-                    Selected = s;
-                    PositionWindow(Selected);
-                });
-        }
+        public void PositionClosestRight() => GetClosest(new Vector(1, 0))?.@let(@select);
+        public void PositionClosestLeft() => GetClosest(new Vector(-1, 0))?.@let(@select);
+        public void PositionClosestUp() => GetClosest(new Vector(0, -1)) ?.@let(@select);
+        public void PositionClosestDown() => GetClosest(new Vector(0, 1))?.@let(@select);
 
-        public void PositionClosestLeft()
+        private void @select(Tile s)
         {
-            GetClosest(new Vector(-1, 0))
-                ?.@let(s =>
-                {
-                    Selected = s;
-                    PositionWindow(Selected);
-                });
-        }
-
-        public void PositionClosestUp()
-        {
-            GetClosest(new Vector(0, -1))
-                ?.@let(s =>
-                {
-                    Selected = s;
-                    PositionWindow(Selected);
-                });
-        }
-
-        public void PositionClosestDown()
-        {
-            GetClosest(new Vector(0, 1))
-                ?.@let(s =>
-                {
-                    Selected = s;
-                    PositionWindow(Selected);
-                });
+            OnSelected(s);
+            Selected = s;
+            PositionWindow(Selected);
         }
 
         private Tile GetClosest(Vector direction)

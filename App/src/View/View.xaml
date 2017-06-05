@@ -11,11 +11,13 @@
 
     <Window.Resources>
         <local:Multiplier x:Key="converter" />
+        <ContextMenu x:Key="NotifierContextMenu" Placement="MousePoint">
+            <MenuItem Header="Exit" Click="Menu_Exit"/>
+        </ContextMenu>
     </Window.Resources>
     
     <Border Padding="16">
         <Grid>
-
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="16" />
@@ -248,6 +250,9 @@
                             <TextBlock Text="Selected Tile " />
                             <TextBox x:Name="CurrentTile"  Text="{Binding SelectedHotkey, Mode=OneWay}"
                                      PreviewKeyDown="CurrentTile_OnPreviewKeyDown" Padding="2" IsReadOnly="True" />
+
+                            <FrameworkElement Height="8" />
+                            <CheckBox  Content="Active in Editor" IsChecked="{Binding ActiveInEditor}"></CheckBox>
                         </StackPanel>
                     </Border>
                 </GroupBox>
