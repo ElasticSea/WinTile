@@ -62,6 +62,15 @@ namespace App
 
                     texts(canvasRect);
                 };
+
+                VM.PropertyChanged += (sender, args) =>
+                {
+                    if (args.PropertyName == nameof(VM.JsonLayout))
+                    {
+                        DataContext = null;
+                        DataContext = VM;
+                    }
+                };
             }
 
             InstallMeOnStartUp();
