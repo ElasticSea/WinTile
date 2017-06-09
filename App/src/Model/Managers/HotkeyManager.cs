@@ -53,7 +53,11 @@ namespace App.Model.Managers
                 create(layout.ClosestRight, h1 => tm.PositionClosestRight()),
                 create(layout.ClosestLeft, h1 => tm.PositionClosestLeft()),
                 create(layout.ClosestUp, h1 => tm.PositionClosestUp()),
-                create(layout.ClosestDown, h1 => tm.PositionClosestDown())
+                create(layout.ClosestDown, h1 => tm.PositionClosestDown()),
+                create(layout.ExpandRight, h1 => tm.PositionExpandRight()),
+                create(layout.ExpandLeft, h1 => tm.PositionExpandLeft()),
+                create(layout.ExpandUp, h1 => tm.PositionExpandUp()),
+                create(layout.ExpandDown, h1 => tm.PositionExpandDown())
             };
 
             foreach (var tile in layout.tiles)

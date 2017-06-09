@@ -1,75 +1,106 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Windows;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using App.Model;
 using App.Model.Managers;
 using App.Properties;
-using Newtonsoft.Json;
 using PropertyChanged;
-using Rect = App.Model.Rect;
 
 namespace App
 {
     [ImplementPropertyChanged]
-    public class ViewModel
+    public class ViewModel : INotifyPropertyChanged
     {
-        private readonly TileManager tileManager;
-        private readonly HotkeyManager hotkeyManager;
+        public event PropertyChangedEventHandler PropertyChanged = (sender, args) => {};
+
+        private readonly LayoutManager layoutManager = new LayoutManager();
         private readonly WindowsTileSystem windowsTileManager = new WindowsTileSystem();
         private bool _activeInEditor;
+        private HotkeyManager hotkeyManager;
+        private TileManager tileManager;
 
         public ViewModel()
         {
             Reload();
-
-            tileManager = new TileManager(Layout.tiles);
-            tileManager.OnSelected += tile =>
-            {
-                Selected = tile;
-            };
-            hotkeyManager = new HotkeyManager(Layout, tileManager);
         }
 
-        private Layout Layout { get; set; }
-        public ObservableCollection<Tile> Tiles => Layout.tiles;
+        public ObservableCollection<Tile> Tiles => layoutManager.Layout.tiles;
 
         public Hotkey PrevTile
         {
-            get => Layout.PreviousTile;
-            set => Layout.PreviousTile = value;
+            get => layoutManager.Layout.PreviousTile;
+            set => layoutManager.Layout.PreviousTile = value;
+        }
+
+        public string JsonLayout
+        {
+            get => layoutManager.Json;
+            set
+            {
+                layoutManager.Json = value;
+                tileManager = new TileManager(layoutManager.Layout.tiles, windowsTileManager);
+                tileManager.OnSelected += tile => { Selected = tile; };
+                hotkeyManager = new HotkeyManager(layoutManager.Layout, tileManager);
+            }
         }
 
         public Hotkey NextTile
         {
-            get => Layout.NextTile;
-            set => Layout.NextTile = value;
+            get => layoutManager.Layout.NextTile;
+            set => layoutManager.Layout.NextTile = value;
         }
 
 
         public Hotkey ClosestLeft
         {
-            get => Layout.ClosestLeft;
-            set => Layout.ClosestLeft = value;
+            get => layoutManager.Layout.ClosestLeft;
+            set => layoutManager.Layout.ClosestLeft = value;
         }
 
 
         public Hotkey ClosestRight
         {
-            get => Layout.ClosestRight;
-            set => Layout.ClosestRight = value;
+            get => layoutManager.Layout.ClosestRight;
+            set => layoutManager.Layout.ClosestRight = value;
         }
 
 
         public Hotkey ClosestUp
         {
-            get => Layout.ClosestUp;
-            set => Layout.ClosestUp = value;
+            get => layoutManager.Layout.ClosestUp;
+            set => layoutManager.Layout.ClosestUp = value;
         }
 
         public Hotkey ClosestDown
         {
-            get => Layout.ClosestDown;
-            set => Layout.ClosestDown = value;
+            get => layoutManager.Layout.ClosestDown;
+            set => layoutManager.Layout.ClosestDown = value;
+        }
+
+
+        public Hotkey ExpandLeft
+        {
+            get => layoutManager.Layout.ExpandLeft;
+            set => layoutManager.Layout.ExpandLeft = value;
+        }
+
+
+        public Hotkey ExpandRight
+        {
+            get => layoutManager.Layout.ExpandRight;
+            set => layoutManager.Layout.ExpandRight = value;
+        }
+
+
+        public Hotkey ExpandUp
+        {
+            get => layoutManager.Layout.ExpandUp;
+            set => layoutManager.Layout.ExpandUp = value;
+        }
+
+        public Hotkey ExpandDown
+        {
+            get => layoutManager.Layout.ExpandDown;
+            set => layoutManager.Layout.ExpandDown = value;
         }
 
         public Tile Selected
@@ -92,32 +123,9 @@ namespace App
                 _activeInEditor = value;
 
                 if (ActiveInEditor)
-                {
                     hotkeyManager.BindHotkeys();
-                }
                 else
-                {
                     hotkeyManager.UnbindHotkeys();
-                }
-            }
-        }
-
-        public string JsonLayout
-        {
-            get => JsonConvert.SerializeObject(Layout, Formatting.Indented);
-            set
-            {
-                try
-                {
-                    Layout = JsonConvert.DeserializeObject<Layout>(value) ?? new Layout();
-                }
-                catch (Exception e)
-                {
-                    JsonLayout = "{}";
-                    MessageBox.Show("User Profile is corrupted: " + e.Message, "Corrupted Data",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Warning);
-                }
             }
         }
 
@@ -152,7 +160,7 @@ namespace App
 
         internal void Save()
         {
-            Settings.Default.Layout = JsonLayout;
+            Settings.Default.Layout = layoutManager.Json;
             Settings.Default.Save();
         }
 

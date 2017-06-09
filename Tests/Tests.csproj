@@ -61,6 +61,8 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\Model\Managers\ExtendStrategyTests.cs" />
+    <Compile Include="src\Model\Managers\ClosestStrategyTests.cs" />
     <Compile Include="src\Model\Managers\TileManagerTests.cs" />
   </ItemGroup>
   <ItemGroup>

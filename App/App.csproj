@@ -73,7 +73,11 @@
     <Compile Include="src\Model\Entities\Layout.cs" />
     <Compile Include="src\Model\Entities\Rect.cs" />
     <Compile Include="src\Model\Entities\Tile.cs" />
+    <Compile Include="src\Model\Managers\ExtendStrategy.cs" />
+    <Compile Include="src\Model\Managers\ClosestStrategy.cs" />
     <Compile Include="src\Model\Managers\HotkeyManager.cs" />
+    <Compile Include="src\Model\Managers\LayoutManager.cs" />
+    <Compile Include="src\Model\Managers\IPositioningStrategy.cs" />
     <Compile Include="src\Model\Managers\TileManager.cs" />
     <Compile Include="src\Utils\Extensions.cs" />
     <Compile Include="src\Utils\HotKeyUtils.cs" />

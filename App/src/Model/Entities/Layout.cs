@@ -10,6 +10,10 @@ namespace App.Model
         public Hotkey ClosestRight;
         public Hotkey ClosestUp;
         public Hotkey ClosestDown;
+        public Hotkey ExpandLeft;
+        public Hotkey ExpandRight;
+        public Hotkey ExpandUp;
+        public Hotkey ExpandDown;
         public ObservableCollection<Tile> tiles = new ObservableCollection<Tile>();
     }
 }

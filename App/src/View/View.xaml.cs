@@ -6,8 +6,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Forms;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using Microsoft.Win32;
 using Binding = System.Windows.Data.Binding;
 using ContextMenu = System.Windows.Controls.ContextMenu;
@@ -49,11 +51,10 @@ namespace App
 
             if (!DesignerProperties.GetIsInDesignMode(this))
             {
-                DataContext = VM;
                 SizeChanged += (sender, args) =>
                 {
                     Canvas.Children.Clear();
-                    var canvasRect = new Rect(0, 0, (int)Canvas.ActualWidth, (int)Canvas.ActualHeight);
+                    var canvasRect = new Rect(0, 0, (int) Canvas.ActualWidth, (int) Canvas.ActualHeight);
 
                     tileShape(canvasRect);
 
@@ -286,11 +287,15 @@ namespace App
         private void CurrentTile_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.SelectedHotkey = h);
         private void NextTile_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.NextTile = h);
         private void PreTile_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.PrevTile = h);
-        private void ClosestLeft_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ClosestLeft= h);
+        private void ClosestLeft_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ClosestLeft = h);
         private void ClosestRight_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ClosestRight = h);
-        private void ClosestUp_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ClosestUp= h);
-        private void ClosestDown_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ClosestDown= h);
-        
+        private void ClosestUp_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ClosestUp = h);
+        private void ClosestDown_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ClosestDown = h);
+
+        private void ExpandLeft_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ExpandLeft = h);
+        private void ExpandRight_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ExpandRight = h);
+        private void ExpandUp_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ExpandUp = h);
+        private void ExpandDown_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ExpandDown = h);
 
         private void Menu_Exit(object sender, RoutedEventArgs e)
         {

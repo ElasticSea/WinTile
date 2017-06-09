@@ -6,16 +6,16 @@
         xmlns:local="clr-namespace:App"
         mc:Ignorable="d"
         Icon="../../Resources/icon.png"
-        Title="WinTile" Height="540" Width="720"
+        Title="WinTile" Height="1040" Width="720"
         d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True, Type=local:ViewModel}">
 
     <Window.Resources>
         <local:Multiplier x:Key="converter" />
         <ContextMenu x:Key="NotifierContextMenu" Placement="MousePoint">
-            <MenuItem Header="Exit" Click="Menu_Exit"/>
+            <MenuItem Header="Exit" Click="Menu_Exit" />
         </ContextMenu>
     </Window.Resources>
-    
+
     <Border Padding="16">
         <Grid>
             <Grid.ColumnDefinitions>
@@ -28,22 +28,22 @@
             <GroupBox Grid.Column="0" Header="Tile Editor">
                 <Border Padding="8">
 
-                    <Grid >
+                    <Grid>
 
-                <Grid.RowDefinitions>
+                        <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                             <RowDefinition Height="16" />
                             <RowDefinition Height="128" />
-                    <RowDefinition Height="16" />
+                            <RowDefinition Height="16" />
                             <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+                        </Grid.RowDefinitions>
 
                         <Border Grid.Row="0" BorderBrush="Black" BorderThickness="1">
                             <Canvas x:Name="Canvas" />
                         </Border>
                         <FrameworkElement Grid.Row="1" />
 
-                        <ListBox x:Name="ListView" Grid.Row="2" MaxWidth="600" SelectedItem="{Binding Selected}" 
+                        <ListBox x:Name="ListView" Grid.Row="2" MaxWidth="600" SelectedItem="{Binding Selected}"
                                  SelectionMode="Single"
                                  IsSynchronizedWithCurrentItem="True"
                                  ItemsSource="{Binding Tiles}">
@@ -66,109 +66,116 @@
                             <ListBox.ItemContainerStyle>
                                 <Style TargetType="ListBoxItem">
                                     <Style.Triggers>
-                                        <Trigger Property="IsSelected" Value="True" >
+                                        <Trigger Property="IsSelected" Value="True">
                                             <Setter Property="FontWeight" Value="Bold" />
                                             <Setter Property="Background" Value="Transparent" />
                                             <Setter Property="Foreground" Value="Black" />
                                         </Trigger>
                                     </Style.Triggers>
                                     <Style.Resources>
-                                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black"/>
+                                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}"
+                                                         Color="Black" />
                                         <!-- Background of selected item when focussed -->
-                                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="LightCyan"/>
+                                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
+                                                         Color="LightCyan" />
                                         <!-- Background of selected item when not focussed -->
-                                        <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="LightGray" />
+                                        <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}"
+                                                         Color="LightGray" />
                                     </Style.Resources>
                                 </Style>
                             </ListBox.ItemContainerStyle>
                         </ListBox>
                         <FrameworkElement Grid.Row="3" />
                         <StackPanel Grid.Row="4" MaxWidth="600">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="16" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="16" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="16" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="16" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="16" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="16" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
 
-                        <StackPanel Grid.Column="0">
-                            <TextBlock Text="Left" />
-                            <TextBox x:Name="XTextBox" Padding="2">
-                                <Binding Path="Selected.Rect.Left" UpdateSourceTrigger="PropertyChanged">
-                                    <Binding.ValidationRules>
-                                        <local:IntegerValidationRule Min="0" Max="100" />
-                                    </Binding.ValidationRules>
-                                </Binding>
-                            </TextBox>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="Left" />
+                                    <TextBox x:Name="XTextBox" Padding="2">
+                                        <Binding Path="Selected.Rect.Left" UpdateSourceTrigger="PropertyChanged">
+                                            <Binding.ValidationRules>
+                                                <local:IntegerValidationRule Min="0" Max="100" />
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox>
+                                </StackPanel>
+                                <FrameworkElement Grid.Column="1" />
+
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="Top" />
+                                    <TextBox x:Name="YTextBox" Padding="2">
+                                        <Binding Path="Selected.Rect.Top" UpdateSourceTrigger="PropertyChanged">
+                                            <Binding.ValidationRules>
+                                                <local:IntegerValidationRule Min="0" Max="100" />
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox>
+                                </StackPanel>
+                                <FrameworkElement Grid.Column="3" />
+
+                                <StackPanel Grid.Column="4">
+                                    <TextBlock Text="Right" />
+                                    <TextBox x:Name="WidthTextBox" Padding="2">
+                                        <Binding Path="Selected.Rect.Right" UpdateSourceTrigger="PropertyChanged">
+                                            <Binding.ValidationRules>
+                                                <local:IntegerValidationRule Min="0" Max="100" />
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox>
+                                </StackPanel>
+                                <FrameworkElement Grid.Column="5" />
+
+                                <StackPanel Grid.Column="6">
+                                    <TextBlock Text="Bottom" />
+                                    <TextBox x:Name="HeightTextBox" Padding="2">
+                                        <Binding Path="Selected.Rect.Bottom" UpdateSourceTrigger="PropertyChanged">
+                                            <Binding.ValidationRules>
+                                                <local:IntegerValidationRule Min="0" Max="100" />
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox>
+                                </StackPanel>
+
+                            </Grid>
+
+                            <FrameworkElement Height="16" />
+
+                            <Grid>
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="16" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="16" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="16" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Button Grid.Column="0" x:Name="AddWindowButton" Click="AddWindowButton_OnClick"
+                                        Content="Add" />
+                                <FrameworkElement Grid.Column="1" />
+                                <Button Grid.Column="2" x:Name="RemoveWindowButton" Click="RemoveWindowButton_OnClick"
+                                        Content="Remove" />
+                                <FrameworkElement Grid.Column="3" />
+                                <Button Grid.Column="4" x:Name="ReorderTileUp" Click="ReorderTileUp_OnClick"
+                                        Content="Move Up" />
+                                <FrameworkElement Grid.Column="5" />
+                                <Button Grid.Column="6" x:Name="ReorderTileDown" Click="ReorderTileDown_OnClick"
+                                        Content="Move Down" />
+                            </Grid>
                         </StackPanel>
-                        <FrameworkElement Grid.Column="1" />
-
-                        <StackPanel Grid.Column="2">
-                            <TextBlock Text="Top" />
-                            <TextBox x:Name="YTextBox" Padding="2">
-                                <Binding Path="Selected.Rect.Top" UpdateSourceTrigger="PropertyChanged">
-                                    <Binding.ValidationRules>
-                                        <local:IntegerValidationRule Min="0" Max="100" />
-                                    </Binding.ValidationRules>
-                                </Binding>
-                            </TextBox>
-                        </StackPanel>
-                        <FrameworkElement Grid.Column="3" />
-
-                        <StackPanel Grid.Column="4">
-                            <TextBlock Text="Right" />
-                            <TextBox x:Name="WidthTextBox" Padding="2">
-                                <Binding Path="Selected.Rect.Right" UpdateSourceTrigger="PropertyChanged">
-                                    <Binding.ValidationRules>
-                                        <local:IntegerValidationRule Min="0" Max="100" />
-                                    </Binding.ValidationRules>
-                                </Binding>
-                            </TextBox>
-                        </StackPanel>
-                        <FrameworkElement Grid.Column="5" />
-
-                        <StackPanel Grid.Column="6">
-                            <TextBlock Text="Bottom" />
-                            <TextBox x:Name="HeightTextBox" Padding="2">
-                                <Binding Path="Selected.Rect.Bottom" UpdateSourceTrigger="PropertyChanged">
-                                    <Binding.ValidationRules>
-                                        <local:IntegerValidationRule Min="0" Max="100" />
-                                    </Binding.ValidationRules>
-                                </Binding>
-                            </TextBox>
-                        </StackPanel>
-
                     </Grid>
 
-                    <FrameworkElement Height="16" />
-                    
-                    <Grid>
-
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="16" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="16" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="16" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-
-                        <Button Grid.Column="0" x:Name="AddWindowButton" Click="AddWindowButton_OnClick" Content="Add" />
-                        <FrameworkElement Grid.Column="1"/>
-                        <Button  Grid.Column="2" x:Name="RemoveWindowButton" Click="RemoveWindowButton_OnClick" Content="Remove" />
-                        <FrameworkElement  Grid.Column="3"/>
-                        <Button Grid.Column="4" x:Name="ReorderTileUp" Click="ReorderTileUp_OnClick" Content="Move Up" />
-                        <FrameworkElement Grid.Column="5"/>
-                        <Button Grid.Column="6" x:Name="ReorderTileDown" Click="ReorderTileDown_OnClick" Content="Move Down" />
-                    </Grid>
-                </StackPanel>
-                </Grid>
-           
                 </Border>
             </GroupBox>
             <FrameworkElement Grid.Column="1" />
@@ -176,7 +183,7 @@
             <StackPanel Grid.Column="2">
                 <GroupBox Header="Layout">
                     <Border Padding="8">
-                        <Grid >
+                        <Grid>
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -208,10 +215,14 @@
                                     <ColumnDefinition Width="64" />
                                 </Grid.ColumnDefinitions>
 
-                                <Button Grid.Row="0" Grid.Column="0" x:Name="ExportButton" Content="Export" Click="ExportButton_OnClick" />
-                                <Button Grid.Row="2" Grid.Column="0" x:Name="ImportButton" Content="Import" Click="ImportButton_OnClick" />
-                                <Button Grid.Row="0" Grid.Column="2"  x:Name="SaveLayoutButton" Click="SaveLayoutButton_OnClick" Content="Save" />
-                                <Button Grid.Row="2" Grid.Column="2"  x:Name="ResetLayoutButton" Click="ResetLayoutButton_OnClick" Content="Reset" />
+                                <Button Grid.Row="0" Grid.Column="0" x:Name="ExportButton" Content="Export"
+                                        Click="ExportButton_OnClick" />
+                                <Button Grid.Row="2" Grid.Column="0" x:Name="ImportButton" Content="Import"
+                                        Click="ImportButton_OnClick" />
+                                <Button Grid.Row="0" Grid.Column="2" x:Name="SaveLayoutButton"
+                                        Click="SaveLayoutButton_OnClick" Content="Save" />
+                                <Button Grid.Row="2" Grid.Column="2" x:Name="ResetLayoutButton"
+                                        Click="ResetLayoutButton_OnClick" Content="Reset" />
                             </Grid>
 
                         </Grid>
@@ -223,36 +234,81 @@
                     <Border Padding="8">
 
                         <StackPanel>
-                            <TextBlock Text="Previous Tile" />
-                            <TextBox x:Name="PreTile" Text="{Binding PrevTile, Mode=OneWay}" PreviewKeyDown="PreTile_OnPreviewKeyDown"
-                                     Padding="2" IsReadOnly="True" />
-                            <FrameworkElement Height="8" />
-                            <TextBlock Text="Next Tile" />
-                            <TextBox x:Name="NextTile"  Text="{Binding NextTile, Mode=OneWay}" PreviewKeyDown="NextTile_OnPreviewKeyDown"
-                                     Padding="2" IsReadOnly="True" />
-                            <FrameworkElement Height="8" />
-                            <TextBlock Text="Closest Tile Left" />
-                            <TextBox x:Name="ClosestLeft"  Text="{Binding ClosestLeft, Mode=OneWay}" PreviewKeyDown="ClosestLeft_OnPreviewKeyDown"
-                                     Padding="2" IsReadOnly="True" />
-                            <FrameworkElement Height="8" />
-                            <TextBlock Text="Closest Tile Right" />
-                            <TextBox x:Name="ClosestRight"  Text="{Binding ClosestRight, Mode=OneWay}" PreviewKeyDown="ClosestRight_OnPreviewKeyDown"
-                                     Padding="2" IsReadOnly="True" />
-                            <FrameworkElement Height="8" />
-                            <TextBlock Text="Closest Tile Up" />
-                            <TextBox x:Name="ClosestUp"  Text="{Binding ClosestUp, Mode=OneWay}" PreviewKeyDown="ClosestUp_OnPreviewKeyDown"
-                                     Padding="2" IsReadOnly="True" />
-                            <FrameworkElement Height="8" />
-                            <TextBlock Text="Closest Tile Down" />
-                            <TextBox x:Name="ClosestDown"  Text="{Binding ClosestDown, Mode=OneWay}" PreviewKeyDown="ClosestDown_OnPreviewKeyDown"
-                                     Padding="2" IsReadOnly="True" />
-                            <FrameworkElement Height="8" />
+
+                            <GroupBox Header="Tile In Order">
+                                <Border Padding="8">
+                                    <StackPanel>
+                                        <TextBlock Text="Previous" />
+                                        <TextBox x:Name="PreTile" Text="{Binding PrevTile, Mode=OneWay}"
+                                                 PreviewKeyDown="PreTile_OnPreviewKeyDown"
+                                                 Padding="2" IsReadOnly="True" />
+                                        <FrameworkElement Height="8" />
+                                        <TextBlock Text="Next" />
+                                        <TextBox x:Name="NextTile" Text="{Binding NextTile, Mode=OneWay}"
+                                                 PreviewKeyDown="NextTile_OnPreviewKeyDown"
+                                                 Padding="2" IsReadOnly="True" />
+                                    </StackPanel>
+                                </Border>
+                            </GroupBox>
+
+                            <GroupBox Header="Closest Tile">
+                                <Border Padding="8">
+                                    <StackPanel>
+                                        <TextBlock Text="Left" />
+                                        <TextBox x:Name="ClosestLeft" Text="{Binding ClosestLeft, Mode=OneWay}"
+                                                 PreviewKeyDown="ClosestLeft_OnPreviewKeyDown"
+                                                 Padding="2" IsReadOnly="True" />
+                                        <FrameworkElement Height="8" />
+                                        <TextBlock Text="Right" />
+                                        <TextBox x:Name="ClosestRight" Text="{Binding ClosestRight, Mode=OneWay}"
+                                                 PreviewKeyDown="ClosestRight_OnPreviewKeyDown"
+                                                 Padding="2" IsReadOnly="True" />
+                                        <FrameworkElement Height="8" />
+                                        <TextBlock Text="Up" />
+                                        <TextBox x:Name="ClosestUp" Text="{Binding ClosestUp, Mode=OneWay}"
+                                                 PreviewKeyDown="ClosestUp_OnPreviewKeyDown"
+                                                 Padding="2" IsReadOnly="True" />
+                                        <FrameworkElement Height="8" />
+                                        <TextBlock Text="Down" />
+                                        <TextBox x:Name="ClosestDown" Text="{Binding ClosestDown, Mode=OneWay}"
+                                                 PreviewKeyDown="ClosestDown_OnPreviewKeyDown"
+                                                 Padding="2" IsReadOnly="True" />
+                                    </StackPanel>
+                                </Border>
+                            </GroupBox>
+
+
+                            <GroupBox Header="Expand Tile">
+                                <Border Padding="8">
+                                    <StackPanel>
+                                        <TextBlock Text="Left" />
+                                        <TextBox x:Name="ExpandLeft" Text="{Binding ExpandLeft, Mode=OneWay}"
+                                                 PreviewKeyDown="ExpandLeft_OnPreviewKeyDown"
+                                                 Padding="2" IsReadOnly="True" />
+                                        <FrameworkElement Height="8" />
+                                        <TextBlock Text="Right" />
+                                        <TextBox x:Name="ExpandRight" Text="{Binding ExpandRight, Mode=OneWay}"
+                                                 PreviewKeyDown="ExpandRight_OnPreviewKeyDown"
+                                                 Padding="2" IsReadOnly="True" />
+                                        <FrameworkElement Height="8" />
+                                        <TextBlock Text="Up" />
+                                        <TextBox x:Name="ExpandUp" Text="{Binding ExpandUp, Mode=OneWay}"
+                                                 PreviewKeyDown="ExpandUp_OnPreviewKeyDown"
+                                                 Padding="2" IsReadOnly="True" />
+                                        <FrameworkElement Height="8" />
+                                        <TextBlock Text="Down" />
+                                        <TextBox x:Name="ExpandDown" Text="{Binding ExpandDown, Mode=OneWay}"
+                                                 PreviewKeyDown="ExpandDown_OnPreviewKeyDown"
+                                                 Padding="2" IsReadOnly="True" />
+                                    </StackPanel>
+                                </Border>
+                            </GroupBox>
                             <TextBlock Text="Selected Tile " />
-                            <TextBox x:Name="CurrentTile"  Text="{Binding SelectedHotkey, Mode=OneWay}"
+                            <TextBox x:Name="CurrentTile" Text="{Binding SelectedHotkey, Mode=OneWay}"
                                      PreviewKeyDown="CurrentTile_OnPreviewKeyDown" Padding="2" IsReadOnly="True" />
 
                             <FrameworkElement Height="8" />
-                            <CheckBox  Content="Active in Editor" IsChecked="{Binding ActiveInEditor}"></CheckBox>
+                            <CheckBox Content="Active in Editor" IsChecked="{Binding ActiveInEditor}" />
                         </StackPanel>
                     </Border>
                 </GroupBox>
