@@ -167,11 +167,9 @@
                                 <Button Grid.Column="2" x:Name="RemoveWindowButton" Click="RemoveWindowButton_OnClick"
                                         Content="Remove" />
                                 <FrameworkElement Grid.Column="3" />
-                                <Button Grid.Column="4" x:Name="ReorderTileUp" Click="ReorderTileUp_OnClick"
-                                        Content="Move Up" />
+                                <FrameworkElement Grid.Column="4" />
                                 <FrameworkElement Grid.Column="5" />
-                                <Button Grid.Column="6" x:Name="ReorderTileDown" Click="ReorderTileDown_OnClick"
-                                        Content="Move Down" />
+                                <FrameworkElement Grid.Column="6" />
                             </Grid>
                         </StackPanel>
                     </Grid>
@@ -211,22 +209,6 @@
                     <Border Padding="8">
 
                         <StackPanel>
-
-                            <GroupBox Header="Tile In Order">
-                                <Border Padding="8">
-                                    <StackPanel>
-                                        <TextBlock Text="Previous" />
-                                        <TextBox x:Name="PreTile" Text="{Binding PrevTile, Mode=OneWay}"
-                                                 PreviewKeyDown="PreTile_OnPreviewKeyDown"
-                                                 Padding="2" IsReadOnly="True" />
-                                        <FrameworkElement Height="8" />
-                                        <TextBlock Text="Next" />
-                                        <TextBox x:Name="NextTile" Text="{Binding NextTile, Mode=OneWay}"
-                                                 PreviewKeyDown="NextTile_OnPreviewKeyDown"
-                                                 Padding="2" IsReadOnly="True" />
-                                    </StackPanel>
-                                </Border>
-                            </GroupBox>
 
                             <StackPanel Orientation="Horizontal">
                                 <GroupBox Header="Closest Tile" Width="200px">

@@ -292,11 +292,7 @@ namespace App
         private void AddWindowButton_OnClick(object sender, RoutedEventArgs e) => VM.AddTile();
         private void SaveLayoutButton_OnClick(object sender, RoutedEventArgs e) => VM.Save();
         private void ResetLayoutButton_OnClick(object sender, RoutedEventArgs e) => VM.Load();
-        private void ReorderTileUp_OnClick(object sender, RoutedEventArgs e) => VM.MoveSelectedUp();
-        private void ReorderTileDown_OnClick(object sender, RoutedEventArgs e) => VM.MoveSelectedDown();
 
-        private void NextTile_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.NextTile = h);
-        private void PreTile_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.PrevTile = h);
         private void ClosestLeft_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ClosestLeft = h);
         private void ClosestRight_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ClosestRight = h);
         private void ClosestUp_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ClosestUp = h);

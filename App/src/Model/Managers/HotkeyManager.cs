@@ -10,15 +10,13 @@ namespace App.Model.Managers
         private readonly Layout layout;
         private IEnumerable<HotKeyUtils> hotkeys;
         private bool binded;
-        private PrevNextStrategy prevNextStrategy;
         private ClosestStrategy closestStrategy;
         private ExtendStrategy extendStrategy;
         private LayoutStrategy layoutStrategy;
 
-        public HotkeyManager(Layout layout, PrevNextStrategy prevNextStrategy, ClosestStrategy closestStrategy, ExtendStrategy extendStrategy, LayoutStrategy layoutStrategy)
+        public HotkeyManager(Layout layout, ClosestStrategy closestStrategy, ExtendStrategy extendStrategy, LayoutStrategy layoutStrategy)
         {
             this.layout = layout;
-            this.prevNextStrategy = prevNextStrategy;
             this.closestStrategy = closestStrategy;
             this.extendStrategy = extendStrategy;
             this.layoutStrategy = layoutStrategy;
@@ -52,8 +50,6 @@ namespace App.Model.Managers
 
         private IEnumerable<HotKeyUtils> createHotkeys() => new List<HotKeyUtils>
         {
-            create(layout.PreviousTile, h1 => prevNextStrategy.Prev()),
-            create(layout.NextTile, h1 => prevNextStrategy.Next()),
             create(layout.ClosestRight, h1 => closestStrategy.Right()),
             create(layout.ClosestLeft, h1 => closestStrategy.Left()),
             create(layout.ClosestUp, h1 => closestStrategy.Up()),

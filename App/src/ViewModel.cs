@@ -21,7 +21,6 @@ namespace App
 
         private readonly SelectedHolder holder = new SelectedHolder();
         private readonly CompositeWindowManager windowManager = new CompositeWindowManager(new ConvertWindowManager(new User32Manager()),new WindowManagerDummy());
-        private PrevNextStrategy a;
         private ClosestStrategy b;
         private ExtendStrategy c;
         private LayoutStrategy d;
@@ -45,7 +44,6 @@ namespace App
             {
                 layoutManager.Json = value;
                 
-                a = new PrevNextStrategy(holder, layoutManager.Layout.tiles, windowManager);
                 b = new ClosestStrategy(holder, layoutManager.Layout.tiles, windowManager);
                 c = new ExtendStrategy(holder, layoutManager.Layout.tiles, windowManager);
                 d = new LayoutStrategy(holder, layoutManager.Layout.tiles, windowManager);
@@ -56,7 +54,7 @@ namespace App
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Tiles)));
                 };
 
-                hotkeyManager = new HotkeyManager(layoutManager.Layout, a,b,c,d);
+                hotkeyManager = new HotkeyManager(layoutManager.Layout, b,c,d);
 //                Selected = Selected;
             }
         }
