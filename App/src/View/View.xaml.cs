@@ -308,6 +308,11 @@ namespace App
         private void ExpandUp_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ExpandUp = h);
         private void ExpandDown_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ExpandDown = h);
 
+        private void LayoutLeft_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.LayoutLeft = h);
+        private void LayoutRight_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.LayoutRight = h);
+        private void LayoutUp_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.LayoutUp = h);
+        private void LayoutDown_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.LayoutDown = h);
+
         private void Menu_Exit(object sender, RoutedEventArgs e)
         {
             notifyIcon.Visible = false;

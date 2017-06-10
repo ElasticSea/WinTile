@@ -14,14 +14,16 @@ namespace App.Model.Managers
         private ClosestStrategy closestStrategy;
         private ExtendStrategy extendStrategy;
         private ConcreteStrategy concreteStrategy;
+        private LayoutStrategy layoutStrategy;
 
-        public HotkeyManager(Layout layout, PrevNextStrategy prevNextStrategy, ClosestStrategy closestStrategy, ExtendStrategy extendStrategy, ConcreteStrategy concreteStrategy)
+        public HotkeyManager(Layout layout, PrevNextStrategy prevNextStrategy, ClosestStrategy closestStrategy, ExtendStrategy extendStrategy, ConcreteStrategy concreteStrategy, LayoutStrategy layoutStrategy)
         {
             this.layout = layout;
             this.prevNextStrategy = prevNextStrategy;
             this.closestStrategy = closestStrategy;
             this.extendStrategy = extendStrategy;
             this.concreteStrategy = concreteStrategy;
+            this.layoutStrategy = layoutStrategy;
         }
 
         public void UnbindHotkeys()
@@ -64,7 +66,11 @@ namespace App.Model.Managers
                 create(layout.ExpandRight, h1 => extendStrategy.Right()),
                 create(layout.ExpandLeft, h1 => extendStrategy.Left()),
                 create(layout.ExpandUp, h1 => extendStrategy.Up()),
-                create(layout.ExpandDown, h1 => extendStrategy.Down())
+                create(layout.ExpandDown, h1 => extendStrategy.Down()),
+                create(layout.LayoutRight, h1 => layoutStrategy.Right()),
+                create(layout.LayoutLeft, h1 => layoutStrategy.Left()),
+                create(layout.LayoutUp, h1 => layoutStrategy.Up()),
+                create(layout.LayoutDown, h1 => layoutStrategy.Down())
             };
 
             foreach (var tile in layout.tiles)

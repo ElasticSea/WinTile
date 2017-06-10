@@ -14,6 +14,10 @@ namespace App.Model
         public Hotkey ExpandRight;
         public Hotkey ExpandUp;
         public Hotkey ExpandDown;
+        public Hotkey LayoutLeft;
+        public Hotkey LayoutRight;
+        public Hotkey LayoutUp;
+        public Hotkey LayoutDown;
         public ObservableCollection<Tile> tiles = new ObservableCollection<Tile>();
     }
 }

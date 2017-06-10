@@ -298,6 +298,32 @@
                                     </Border>
                                 </GroupBox>
 
+                                <GroupBox Header="Layout" Width="200px">
+                                    <Border Padding="8">
+                                        <StackPanel>
+                                            <TextBlock Text="Left" />
+                                            <TextBox x:Name="LayoutLeft" Text="{Binding LayoutLeft, Mode=OneWay}"
+                                                     PreviewKeyDown="LayoutLeft_OnPreviewKeyDown"
+                                                     Padding="2" IsReadOnly="True" />
+                                            <FrameworkElement Height="8" />
+                                            <TextBlock Text="Right" />
+                                            <TextBox x:Name="LayoutRight" Text="{Binding LayoutRight, Mode=OneWay}"
+                                                     PreviewKeyDown="LayoutRight_OnPreviewKeyDown"
+                                                     Padding="2" IsReadOnly="True" />
+                                            <FrameworkElement Height="8" />
+                                            <TextBlock Text="Up" />
+                                            <TextBox x:Name="LayoutUp" Text="{Binding LayoutUp, Mode=OneWay}"
+                                                     PreviewKeyDown="LayoutUp_OnPreviewKeyDown"
+                                                     Padding="2" IsReadOnly="True" />
+                                            <FrameworkElement Height="8" />
+                                            <TextBlock Text="Down" />
+                                            <TextBox x:Name="LayoutDown" Text="{Binding LayoutDown, Mode=OneWay}"
+                                                     PreviewKeyDown="LayoutDown_OnPreviewKeyDown"
+                                                     Padding="2" IsReadOnly="True" />
+                                        </StackPanel>
+                                    </Border>
+                                </GroupBox>
+
                             </StackPanel>
 
                             <FrameworkElement Height="8" />

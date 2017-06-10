@@ -24,6 +24,8 @@ namespace App.Model.Managers.Strategies
 
         private void GetClosest(Vector direction)
         {
+            Selected = Closest(windowManager.CurrentWindowRect);
+
             var tile =  tiles
                 .Select(t => new { Title = t, Penalty = TilePenalty(direction, Selected, t) })
                 .OrderByDescending(a => a.Penalty)
@@ -80,11 +82,11 @@ namespace App.Model.Managers.Strategies
             new Vector(tile.Rect.Left, tile.Rect.Top)
         };
 
-//        private Tile Closest(Rect rect) => tiles.OrderBy(
-//            t => Math.Abs(t.Rect.Left - rect.Left) +
-//                 Math.Abs(t.Rect.Right - rect.Right) +
-//                 Math.Abs(t.Rect.Top - rect.Top) +
-//                 Math.Abs(t.Rect.Bottom - rect.Bottom)
-//        ).First();
+        private Tile Closest(Rect rect) => tiles.OrderBy(
+            t => Math.Abs(t.Rect.Left - rect.Left) +
+                 Math.Abs(t.Rect.Right - rect.Right) +
+                 Math.Abs(t.Rect.Top - rect.Top) +
+                 Math.Abs(t.Rect.Bottom - rect.Bottom)
+        ).First();
     }
 }

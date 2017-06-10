@@ -25,6 +25,7 @@ namespace App
         private ClosestStrategy b;
         private ExtendStrategy c;
         private ConcreteStrategy d;
+        private LayoutStrategy e;
 
         public ObservableCollection<Tile> Tiles
         {
@@ -49,6 +50,7 @@ namespace App
                 b = new ClosestStrategy(holder, layoutManager.Layout.tiles, windowManager);
                 c = new ExtendStrategy(holder, layoutManager.Layout.tiles, windowManager);
                 d = new ConcreteStrategy(holder, layoutManager.Layout.tiles, windowManager);
+                e = new LayoutStrategy(holder, layoutManager.Layout.tiles, windowManager);
 
                 holder.OnSelected += tile =>
                 {
@@ -56,7 +58,7 @@ namespace App
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Tiles)));
                 };
 
-                hotkeyManager = new HotkeyManager(layoutManager.Layout, a,b,c,d);
+                hotkeyManager = new HotkeyManager(layoutManager.Layout, a,b,c,d,e);
 //                Selected = Selected;
             }
         }
@@ -119,6 +121,33 @@ namespace App
         {
             get => layoutManager.Layout.ExpandDown;
             set => layoutManager.Layout.ExpandDown = value;
+        }
+
+
+        public Hotkey LayoutLeft
+        {
+            get => layoutManager.Layout.LayoutLeft;
+            set => layoutManager.Layout.LayoutLeft = value;
+        }
+
+
+        public Hotkey LayoutRight
+        {
+            get => layoutManager.Layout.LayoutRight;
+            set => layoutManager.Layout.LayoutRight = value;
+        }
+
+
+        public Hotkey LayoutUp
+        {
+            get => layoutManager.Layout.LayoutUp;
+            set => layoutManager.Layout.LayoutUp = value;
+        }
+
+        public Hotkey LayoutDown
+        {
+            get => layoutManager.Layout.LayoutDown;
+            set => layoutManager.Layout.LayoutDown = value;
         }
 
         public Tile Selected
