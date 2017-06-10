@@ -6,17 +6,15 @@ namespace App.Model
     public class Tile
     {
         public Rect Rect { get; }
-        public Hotkey Hotkey { get; set; }
 
-        public Tile(Rect rect, Hotkey hotkey = null)
+        public Tile(Rect rect)
         {
             Rect = rect;
-            Hotkey = hotkey;
         }
 
         public override string ToString()
         {
-            return $"{nameof(Rect)}: {Rect}, {nameof(Hotkey)}: {Hotkey}";
+            return $"{nameof(Rect)}: {Rect}";
         }
     }
 }

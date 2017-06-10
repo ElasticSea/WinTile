@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using App.Utils;
 
@@ -72,12 +71,5 @@ namespace App.Model.Managers.Strategies
             Selected = tiles.FirstOrDefault(t => Equals(t.Rect, rect)) ?? new Tile(rect);
             windowManager.CurrentWindowRect = Selected.Rect;
         }
-
-        private Tile Closest(Rect rect) => tiles.OrderBy(
-            t => Math.Abs(t.Rect.Left - rect.Left) +
-                 Math.Abs(t.Rect.Right - rect.Right) +
-                 Math.Abs(t.Rect.Top - rect.Top) +
-                 Math.Abs(t.Rect.Bottom - rect.Bottom)
-        ).First();
     }
 }

@@ -24,8 +24,7 @@ namespace App
         private PrevNextStrategy a;
         private ClosestStrategy b;
         private ExtendStrategy c;
-        private ConcreteStrategy d;
-        private LayoutStrategy e;
+        private LayoutStrategy d;
 
         public ObservableCollection<Tile> Tiles
         {
@@ -49,8 +48,7 @@ namespace App
                 a = new PrevNextStrategy(holder, layoutManager.Layout.tiles, windowManager);
                 b = new ClosestStrategy(holder, layoutManager.Layout.tiles, windowManager);
                 c = new ExtendStrategy(holder, layoutManager.Layout.tiles, windowManager);
-                d = new ConcreteStrategy(holder, layoutManager.Layout.tiles, windowManager);
-                e = new LayoutStrategy(holder, layoutManager.Layout.tiles, windowManager);
+                d = new LayoutStrategy(holder, layoutManager.Layout.tiles, windowManager);
 
                 holder.OnSelected += tile =>
                 {
@@ -58,7 +56,7 @@ namespace App
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Tiles)));
                 };
 
-                hotkeyManager = new HotkeyManager(layoutManager.Layout, a,b,c,d,e);
+                hotkeyManager = new HotkeyManager(layoutManager.Layout, a,b,c,d);
 //                Selected = Selected;
             }
         }
@@ -154,12 +152,6 @@ namespace App
         {
             get => holder.Selected;
             set => holder.Selected = value;
-        }
-
-        public Hotkey SelectedHotkey
-        {
-            get => Selected?.Hotkey;
-            set => Selected?.let(s => s.Hotkey = value);
         }
 
         public bool ActiveInEditor

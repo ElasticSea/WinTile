@@ -73,7 +73,6 @@
     <Compile Include="src\Model\Entities\Layout.cs" />
     <Compile Include="src\Model\Entities\Rect.cs" />
     <Compile Include="src\Model\Entities\Tile.cs" />
-    <Compile Include="src\Model\Managers\Strategies\ConcreteStrategy.cs" />
     <Compile Include="src\Model\Managers\Strategies\LayoutStrategy.cs" />
     <Compile Include="src\Model\Managers\Strategies\PrevNextStrategy.cs" />
     <Compile Include="src\Model\Managers\Strategies\ExtendStrategy.cs" />

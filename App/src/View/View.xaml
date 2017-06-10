@@ -96,8 +96,6 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="16" />
                                     <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="16" />
-                                    <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
                                 <StackPanel Grid.Column="0">
@@ -147,16 +145,6 @@
                                     </TextBox>
                                 </StackPanel>
 
-
-                                <FrameworkElement Grid.Column="7" />
-
-                                <StackPanel Grid.Column="8">
-                                    <TextBlock Text="Selected Tile " />
-                                    <TextBox x:Name="CurrentTile" Text="{Binding SelectedHotkey, Mode=OneWay}"
-                                             PreviewKeyDown="CurrentTile_OnPreviewKeyDown" Padding="2"
-                                             IsReadOnly="True" />
-                                </StackPanel>
-
                             </Grid>
 
                             <FrameworkElement Height="16" />
@@ -164,8 +152,6 @@
                             <Grid>
 
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="16" />
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="16" />
                                     <ColumnDefinition Width="*" />
@@ -186,8 +172,6 @@
                                 <FrameworkElement Grid.Column="5" />
                                 <Button Grid.Column="6" x:Name="ReorderTileDown" Click="ReorderTileDown_OnClick"
                                         Content="Move Down" />
-                                <FrameworkElement Grid.Column="6" />
-                                <FrameworkElement Grid.Column="7" />
                             </Grid>
                         </StackPanel>
                     </Grid>

@@ -295,7 +295,6 @@ namespace App
         private void ReorderTileUp_OnClick(object sender, RoutedEventArgs e) => VM.MoveSelectedUp();
         private void ReorderTileDown_OnClick(object sender, RoutedEventArgs e) => VM.MoveSelectedDown();
 
-        private void CurrentTile_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.SelectedHotkey = h);
         private void NextTile_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.NextTile = h);
         private void PreTile_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.PrevTile = h);
         private void ClosestLeft_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ClosestLeft = h);
