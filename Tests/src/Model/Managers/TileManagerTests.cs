@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using App;
 using App.Model;
 using App.Model.Managers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -13,18 +14,23 @@ namespace Tests.Model.Managers
         [TestMethod]
         public void CycleTiles()
         {
-            var tileA = new Tile(new Rect(), new Hotkey());
-            var tileB = new Tile(new Rect(), new Hotkey());
+            var tileA = new Tile(new Rect(0,0,100,200), new Hotkey());
+            var tileB = new Tile(new Rect(100,200,200,400), new Hotkey());
 
             var observableCollection = new ObservableCollection<Tile>();
-            var tileManager = new TileManager(observableCollection);
+
+            var user32 = new WindowManagerDummy { MonitorRect = new Rect(0, 0, 3840, 2160) };
+            var positionSystem = new PositioningSystem(observableCollection, user32);
+            var tileManager = new TileManager(observableCollection, positionSystem);
             observableCollection.Add(tileA);
             observableCollection.Add(tileB);
 
+            positionSystem.Selected = tileB;
+
             tileManager.PositionNext();
-            Assert.AreEqual(tileManager.Selected, tileA);
+            Assert.AreEqual(positionSystem.Selected, tileA);
             tileManager.PositionPrev();
-            Assert.AreEqual(tileManager.Selected, tileB);
+            Assert.AreEqual(positionSystem.Selected, tileB);
         }
     }
 }

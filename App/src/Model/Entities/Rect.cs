@@ -61,6 +61,11 @@ namespace App.Model
             return new Rect(Left * width, Top * height, Right * width, Bottom * height);
         }
 
+        public Rect shrink(int width, int height)
+        {
+            return new Rect(Left / width, Top / height, Right / width, Bottom / height);
+        }
+
         public static Rect operator *(Rect r0, int value)
         {
             return new Rect(r0.Left * value, r0.Top * value, r0.Right * value, r0.Bottom * value);

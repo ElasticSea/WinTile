@@ -4,15 +4,16 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using App;
 using App.Model;
+using App.Model.Managers;
 using App.Model.Managers.Strategies;
-using App.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NSubstitute;
 using Rect = App.Model.Rect;
 
 namespace Tests.Model.Managers
 {
     [TestClass]
-    public class ClosestStrategyTests
+    public class PositioningSystemTests
     {
         private static readonly Tile tileA = new Tile(new Rect(0, 0, 60, 100), new Hotkey());
         private static readonly Tile tileB = new Tile(new Rect(60, 0, 84, 40), new Hotkey());
@@ -25,31 +26,24 @@ namespace Tests.Model.Managers
         private static readonly Tile tileI = new Tile(new Rect(84, 0, 100, 100), new Hotkey());
 
         private static readonly List<Tile> tiles = new List<Tile> { tileA , tileB , tileC , tileD , tileE , tileF , tileG , tileH, tileI };
-        private static readonly SelectedHolder holder = new SelectedHolder();
-        private readonly ClosestStrategy ext = new ClosestStrategy(holder, tiles, new WindowManagerDummy());
+        private readonly ClosestStrategy ext = new ClosestStrategy(tiles);
 
         [TestMethod]
-        public void NextTo()
+        public void SetWindow()
         {
-            holder.Selected = tileB;
-            ext.Right();
-            Assert.AreEqual(holder.Selected, tileC);
+            var user32 = new WindowManagerDummy { MonitorRect = new Rect(0, 0, 3840, 2160) };
+            var pos = new PositioningSystem(tiles, user32);
+            pos.Selected = tileA;
+            Assert.AreEqual(new Rect(0, 0, 2304, 2160), user32.CurrentWindowRect);
         }
-
         [TestMethod]
-        public void OpositeTo()
+        public void GetWIndow()
         {
-            holder.Selected = tileC;
-            ext.Right();
-            Assert.AreEqual(holder.Selected, null);
-        }
+            var user32 = new WindowManagerDummy { MonitorRect = new Rect(0, 0, 3840, 2160) };
+            var pos = new PositioningSystem(tiles, user32);
 
-        [TestMethod]
-        public void Above()
-        {
-            holder.Selected = tileE;
-            ext.Up();
-            Assert.AreEqual(holder.Selected, tileB);
+            user32.CurrentWindowRect = new Rect(100,100,2000,2000);
+            Assert.AreEqual(tileA, pos.Selected);
         }
     }
 }

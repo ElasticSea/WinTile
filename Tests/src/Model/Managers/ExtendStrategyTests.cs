@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using App.Model;
 using App.Model.Managers;
+using App.Model.Managers.Strategies;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rect = App.Model.Rect;
 

@@ -1,71 +1,75 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using App.Utils;
 
-namespace App.Model.Managers
+namespace App.Model.Managers.Strategies
 {
-    public class ExtendStrategy : IPositioningStrategy
+    public class ExtendStrategy : PositioningStrategy
     {
-        private readonly IEnumerable<Tile> tiles;
-
-        public ExtendStrategy(IEnumerable<Tile> tiles)
+        public ExtendStrategy(SelectedHolder holder, IList<Tile> tiles, IWindowManager windowManager) : base(holder, tiles, windowManager)
         {
-            this.tiles = tiles;
         }
 
-        public Tile Left(Tile selected)
+        public void Left()
         {
             var candidates = tiles
                 .Select(t => t.Rect.Left)
-                .Where(l => l < selected.Rect.Left)
+                .Where(l => l < Selected.Rect.Left)
                 .OrderByDescending(t => t);
 
             var left = candidates.Any() ? candidates.First() : (int?) null;
 
-            var r = selected.Rect;
+            var r = Selected.Rect;
             var rect = new Rect(left ?? r.Left, r.Top, r.Right, r.Bottom);
-            return tiles.FirstOrDefault(t => Equals(t.Rect, rect)) ?? new Tile(rect);
+            Position(rect);
         }
 
-        public Tile Right(Tile selected)
+        public void Right()
         {
             var candidates = tiles
                 .Select(t => t.Rect.Right)
-                .Where(l => l > selected.Rect.Right)
+                .Where(l => l > Selected.Rect.Right)
                 .OrderBy(t => t);
 
             var right = candidates.Any() ? candidates.First() : (int?) null;
 
-            var r = selected.Rect;
+            var r = Selected.Rect;
             var rect = new Rect(r.Left, r.Top, right ?? r.Right, r.Bottom);
-            return tiles.FirstOrDefault(t => Equals(t.Rect, rect)) ?? new Tile(rect);
+            Position(rect);
         }
 
-        public Tile Up(Tile selected)
+        public void Up()
         {
             var candidates = tiles
                 .Select(t => t.Rect.Top)
-                .Where(l => l < selected.Rect.Top)
+                .Where(l => l < Selected.Rect.Top)
                 .OrderByDescending(t => t);
 
             var top = candidates.Any() ? candidates.First() : (int?) null;
 
-            var r = selected.Rect;
+            var r = Selected.Rect;
             var rect = new Rect(r.Left, top ?? r.Top, r.Right, r.Bottom);
-            return tiles.FirstOrDefault(t => Equals(t.Rect, rect)) ?? new Tile(rect);
+            Position(rect);
         }
 
-        public Tile Down(Tile selected)
+        public void Down()
         {
             var candidates = tiles
                 .Select(t => t.Rect.Bottom)
-                .Where(l => l > selected.Rect.Bottom)
+                .Where(l => l > Selected.Rect.Bottom)
                 .OrderBy(t => t);
 
             var bottom = candidates.Any() ? candidates.First() : (int?) null;
 
-            var r = selected.Rect;
+            var r = Selected.Rect;
             var rect = new Rect(r.Left, r.Top, r.Right, bottom ?? r.Bottom);
-            return tiles.FirstOrDefault(t => Equals(t.Rect, rect)) ?? new Tile(rect);
+            Position(rect);
+        }
+
+        private void Position(Rect rect)
+        {
+            Selected = tiles.FirstOrDefault(t => Equals(t.Rect, rect)) ?? new Tile(rect);
+            windowManager.CurrentWindowRect = Selected.Rect;
         }
     }
 }

@@ -2,8 +2,11 @@
 using System.ComponentModel;
 using App.Model;
 using App.Model.Managers;
+using App.Model.Managers.Strategies;
 using App.Properties;
+using App.Utils;
 using PropertyChanged;
+using Rect = App.Model.Rect;
 
 namespace App
 {
@@ -13,17 +16,21 @@ namespace App
         public event PropertyChangedEventHandler PropertyChanged = (sender, args) => {};
 
         private readonly LayoutManager layoutManager = new LayoutManager();
-        private readonly WindowsTileSystem windowsTileManager = new WindowsTileSystem();
         private bool _activeInEditor;
         private HotkeyManager hotkeyManager;
-        private TileManager tileManager;
 
-        public ViewModel()
+        private readonly SelectedHolder holder = new SelectedHolder();
+        private readonly CompositeWindowManager windowManager = new CompositeWindowManager(new ConvertWindowManager(new User32Manager()),new WindowManagerDummy());
+        private PrevNextStrategy a;
+        private ClosestStrategy b;
+        private ExtendStrategy c;
+        private ConcreteStrategy d;
+
+        public ObservableCollection<Tile> Tiles
         {
-            Reload();
+            get => layoutManager.Layout.tiles;
+            set => layoutManager.Layout.tiles = value;
         }
-
-        public ObservableCollection<Tile> Tiles => layoutManager.Layout.tiles;
 
         public Hotkey PrevTile
         {
@@ -37,9 +44,20 @@ namespace App
             set
             {
                 layoutManager.Json = value;
-                tileManager = new TileManager(layoutManager.Layout.tiles, windowsTileManager);
-                tileManager.OnSelected += tile => { Selected = tile; };
-                hotkeyManager = new HotkeyManager(layoutManager.Layout, tileManager);
+                
+                a = new PrevNextStrategy(holder, layoutManager.Layout.tiles, windowManager);
+                b = new ClosestStrategy(holder, layoutManager.Layout.tiles, windowManager);
+                c = new ExtendStrategy(holder, layoutManager.Layout.tiles, windowManager);
+                d = new ConcreteStrategy(holder, layoutManager.Layout.tiles, windowManager);
+
+                holder.OnSelected += tile =>
+                {
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Selected)));
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Tiles)));
+                };
+
+                hotkeyManager = new HotkeyManager(layoutManager.Layout, a,b,c,d);
+//                Selected = Selected;
             }
         }
 
@@ -105,8 +123,8 @@ namespace App
 
         public Tile Selected
         {
-            get => tileManager.Selected;
-            set => tileManager.Selected = value;
+            get => holder.Selected;
+            set => holder.Selected = value;
         }
 
         public Hotkey SelectedHotkey
@@ -129,20 +147,20 @@ namespace App
             }
         }
 
-        public void Reload()
+        public void Load()
         {
             JsonLayout = Settings.Default.Layout ?? "{}";
         }
 
         public void BindHotkeys()
         {
-            tileManager.manager = windowsTileManager;
+            windowManager.Active = true;
             hotkeyManager.BindHotkeys();
         }
 
         public void UnbindHotkeys()
         {
-            tileManager.manager = null;
+            windowManager.Active = false;
             hotkeyManager.UnbindHotkeys();
         }
 

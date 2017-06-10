@@ -71,6 +71,8 @@ namespace App
                         DataContext = VM;
                     }
                 };
+
+                VM.Load();
             }
 
             InstallMeOnStartUp();
@@ -289,7 +291,7 @@ namespace App
         private void RemoveWindowButton_OnClick(object sender, RoutedEventArgs e) => VM.RemoveTile(VM.Selected);
         private void AddWindowButton_OnClick(object sender, RoutedEventArgs e) => VM.AddTile();
         private void SaveLayoutButton_OnClick(object sender, RoutedEventArgs e) => VM.Save();
-        private void ResetLayoutButton_OnClick(object sender, RoutedEventArgs e) => VM.Reload();
+        private void ResetLayoutButton_OnClick(object sender, RoutedEventArgs e) => VM.Load();
         private void ReorderTileUp_OnClick(object sender, RoutedEventArgs e) => VM.MoveSelectedUp();
         private void ReorderTileDown_OnClick(object sender, RoutedEventArgs e) => VM.MoveSelectedDown();
 

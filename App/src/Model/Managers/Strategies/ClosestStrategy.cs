@@ -1,36 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using App.Utils;
 
-namespace App.Model.Managers
+namespace App.Model.Managers.Strategies
 {
-    public class ClosestStrategy : IPositioningStrategy
+    public class ClosestStrategy : PositioningStrategy
     {
         private static readonly Vector left = new Vector(-1, 0);
         private static readonly Vector right = new Vector(1, 0);
         private static readonly Vector up = new Vector(0, -1);
         private static readonly Vector down = new Vector(0, 1);
 
-        private readonly IEnumerable<Tile> tiles;
-
-        public ClosestStrategy(IEnumerable<Tile> tiles)
+        public ClosestStrategy(SelectedHolder holder, IList<Tile> tiles, IWindowManager windowManager) : base(holder, tiles, windowManager)
         {
-            this.tiles = tiles;
         }
 
-        public Tile Left(Tile selected) => GetClosest(left, selected);
-        public Tile Right(Tile slected) => GetClosest(right, slected);
-        public Tile Up(Tile slected) => GetClosest(up, slected);
-        public Tile Down(Tile slected) => GetClosest(down, slected);
+        public void Left() => GetClosest(left);
+        public void Right() => GetClosest(right);
+        public void Up() => GetClosest(up);
+        public void Down() => GetClosest(down);
 
-        private Tile GetClosest(Vector direction, Tile selected)
+        private void GetClosest(Vector direction)
         {
-            return tiles
-                .Select(t => new { Title = t, Penalty = TilePenalty(direction, selected, t) })
+            var tile =  tiles
+                .Select(t => new { Title = t, Penalty = TilePenalty(direction, Selected, t) })
                 .OrderByDescending(a => a.Penalty)
                 .FirstOrDefault(a => a.Penalty > 0)?.Title;
+
+            if (tile != null)
+            {
+                Selected = tile;
+                windowManager.CurrentWindowRect = tile.Rect;
+            }
         }
 
         private static float TilePenalty(Vector direction, Tile original, Tile target)
@@ -76,5 +79,12 @@ namespace App.Model.Managers
             new Vector(tile.Rect.Right, tile.Rect.Top),
             new Vector(tile.Rect.Left, tile.Rect.Top)
         };
+
+//        private Tile Closest(Rect rect) => tiles.OrderBy(
+//            t => Math.Abs(t.Rect.Left - rect.Left) +
+//                 Math.Abs(t.Rect.Right - rect.Right) +
+//                 Math.Abs(t.Rect.Top - rect.Top) +
+//                 Math.Abs(t.Rect.Bottom - rect.Bottom)
+//        ).First();
     }
 }

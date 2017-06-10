@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using App.Model.Managers.Strategies;
 
 namespace App.Model.Managers
 {
@@ -8,13 +9,19 @@ namespace App.Model.Managers
     {
         private readonly Layout layout;
         private IEnumerable<HotKeyUtils> hotkeys;
-        private TileManager tm;
         private bool binded;
+        private PrevNextStrategy prevNextStrategy;
+        private ClosestStrategy closestStrategy;
+        private ExtendStrategy extendStrategy;
+        private ConcreteStrategy concreteStrategy;
 
-        public HotkeyManager(Layout layout, TileManager tm)
+        public HotkeyManager(Layout layout, PrevNextStrategy prevNextStrategy, ClosestStrategy closestStrategy, ExtendStrategy extendStrategy, ConcreteStrategy concreteStrategy)
         {
             this.layout = layout;
-            this.tm = tm;
+            this.prevNextStrategy = prevNextStrategy;
+            this.closestStrategy = closestStrategy;
+            this.extendStrategy = extendStrategy;
+            this.concreteStrategy = concreteStrategy;
         }
 
         public void UnbindHotkeys()
@@ -48,21 +55,21 @@ namespace App.Model.Managers
             IEnumerable<HotKeyUtils> actual;
             var hotkeys = new List<HotKeyUtils>
             {
-                create(layout.PreviousTile, h1 => tm.PositionPrev()),
-                create(layout.NextTile, h1 => tm.PositionNext()),
-                create(layout.ClosestRight, h1 => tm.PositionClosestRight()),
-                create(layout.ClosestLeft, h1 => tm.PositionClosestLeft()),
-                create(layout.ClosestUp, h1 => tm.PositionClosestUp()),
-                create(layout.ClosestDown, h1 => tm.PositionClosestDown()),
-                create(layout.ExpandRight, h1 => tm.PositionExpandRight()),
-                create(layout.ExpandLeft, h1 => tm.PositionExpandLeft()),
-                create(layout.ExpandUp, h1 => tm.PositionExpandUp()),
-                create(layout.ExpandDown, h1 => tm.PositionExpandDown())
+                create(layout.PreviousTile, h1 => prevNextStrategy.Prev()),
+                create(layout.NextTile, h1 => prevNextStrategy.Next()),
+                create(layout.ClosestRight, h1 => closestStrategy.Right()),
+                create(layout.ClosestLeft, h1 => closestStrategy.Left()),
+                create(layout.ClosestUp, h1 => closestStrategy.Up()),
+                create(layout.ClosestDown, h1 => closestStrategy.Down()),
+                create(layout.ExpandRight, h1 => extendStrategy.Right()),
+                create(layout.ExpandLeft, h1 => extendStrategy.Left()),
+                create(layout.ExpandUp, h1 => extendStrategy.Up()),
+                create(layout.ExpandDown, h1 => extendStrategy.Down())
             };
 
             foreach (var tile in layout.tiles)
             {
-                hotkeys.Add(create(tile.Hotkey, h1 => tm.PositionWindow(tile)));
+                hotkeys.Add(create(tile.Hotkey, h1 => concreteStrategy.Position(tile)));
             }
 
             return hotkeys.Where(h => h != null);
