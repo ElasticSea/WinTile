@@ -1,29 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using App.Model;
 
 namespace App
 {
     public class WindowManagerDummy : IWindowManager
     {
+        private Rect rect = new Rect();
+
         public IntPtr getCurrentWindow()
         {
-            throw new NotImplementedException();
+            return IntPtr.Zero;
         }
 
-        public IEnumerable<IntPtr> getVisibleWIndows()
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerable<IntPtr> getVisibleWIndows() => Enumerable.Empty<IntPtr>();
 
         public Rect getRectForWindow(IntPtr handle)
         {
-            throw new NotImplementedException();
+            return rect;
         }
 
         public void MoveWindow(IntPtr handle, Rect rect)
         {
-            throw new NotImplementedException();
+            this.rect = rect;
         }
     }
 }

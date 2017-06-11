@@ -45,10 +45,10 @@ namespace App.Model.Managers.Strategies
                 .Select(t => new { Rect = windowManager.getRectForWindow(t), Handle = t });
             allwin.Where(a => get(a.Rect) == border).ForEach(a =>
             {
-                set(a.Rect, get(a.Rect) + amount);
+                set(a.Rect, (get(a.Rect) + amount).Clamp(0, 100));
                 windowManager.MoveWindow(a.Handle, a.Rect);
             });
-            tiles.Where(t => get(t.Rect) == border).ForEach(t => set(t.Rect, get(t.Rect) + amount));
+            tiles.Where(t => get(t.Rect) == border).ForEach(t => set(t.Rect, (get(t.Rect) + amount).Clamp(0,100)));
         }
     }
 }
