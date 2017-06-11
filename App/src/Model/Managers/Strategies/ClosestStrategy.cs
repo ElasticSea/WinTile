@@ -24,7 +24,8 @@ namespace App.Model.Managers.Strategies
 
         private void GetClosest(Vector direction)
         {
-            Selected = Closest(windowManager.CurrentWindowRect);
+            ;
+            Selected = Closest(windowManager.getRectForWindow(windowManager.getCurrentWindow()));
 
             var tile =  tiles
                 .Select(t => new { Title = t, Penalty = TilePenalty(direction, Selected, t) })
@@ -34,7 +35,7 @@ namespace App.Model.Managers.Strategies
             if (tile != null)
             {
                 Selected = tile;
-                windowManager.CurrentWindowRect = tile.Rect;
+                windowManager.MoveWindow(windowManager.getCurrentWindow(), tile.Rect);
             }
         }
 

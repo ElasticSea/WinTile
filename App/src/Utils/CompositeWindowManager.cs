@@ -1,4 +1,6 @@
-﻿using App.Model;
+﻿using System;
+using System.Collections.Generic;
+using App.Model;
 
 namespace App.Utils
 {
@@ -15,12 +17,11 @@ namespace App.Utils
             WindowManagerDummy = windowManagerDummy;
         }
 
-        public Rect CurrentWindowRect
-        {
-            get => CurrentManager.CurrentWindowRect;
-            set => CurrentManager.CurrentWindowRect = value;
-        }
-
         private IWindowManager CurrentManager => Active ? User32Manager : WindowManagerDummy;
+
+        public IntPtr getCurrentWindow() => CurrentManager.getCurrentWindow();
+        public IEnumerable<IntPtr> getVisibleWIndows() => CurrentManager.getVisibleWIndows();
+        public Rect getRectForWindow(IntPtr handle) => CurrentManager.getRectForWindow(handle);
+        public void MoveWindow(IntPtr handle, Rect rect) => CurrentManager.MoveWindow(handle, rect);
     }
 }

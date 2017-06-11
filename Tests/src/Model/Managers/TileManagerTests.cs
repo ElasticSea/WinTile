@@ -14,8 +14,8 @@ namespace Tests.Model.Managers
         [TestMethod]
         public void CycleTiles()
         {
-            var tileA = new Tile(new Rect(0,0,100,200), new Hotkey());
-            var tileB = new Tile(new Rect(100,200,200,400), new Hotkey());
+            var tileA = new Tile(new Rect(0,0,100,200));
+            var tileB = new Tile(new Rect(100,200,200,400));
 
             var observableCollection = new ObservableCollection<Tile>();
 

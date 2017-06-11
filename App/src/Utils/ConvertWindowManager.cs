@@ -1,4 +1,6 @@
-﻿using static System.Windows.SystemParameters;
+﻿using System;
+using System.Collections.Generic;
+using static System.Windows.SystemParameters;
 using Rect = App.Model.Rect;
 
 namespace App
@@ -12,11 +14,10 @@ namespace App
             this.wrapped = wrapped;
         }
 
-        public Rect CurrentWindowRect
-        {
-            get => PxtoPercent(wrapped.CurrentWindowRect);
-            set => wrapped.CurrentWindowRect = PercentToPx(value);
-        }
+        public IntPtr getCurrentWindow() => wrapped.getCurrentWindow();
+        public IEnumerable<IntPtr> getVisibleWIndows() => wrapped.getVisibleWIndows();
+        public Rect getRectForWindow(IntPtr handle) => PxtoPercent(wrapped.getRectForWindow(handle));
+        public void MoveWindow(IntPtr handle, Rect rect) => wrapped.MoveWindow(handle, PercentToPx(rect));
 
         private Rect MonitorRect => new Rect(0, 0, (int)WorkArea.Width, (int)WorkArea.Height);
 

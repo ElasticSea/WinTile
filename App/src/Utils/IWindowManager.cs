@@ -1,9 +1,14 @@
-﻿using App.Model;
+﻿using System;
+using System.Collections.Generic;
+using App.Model;
 
 namespace App
 {
     public interface IWindowManager
     {
-        Rect CurrentWindowRect { get; set; }
+        IntPtr getCurrentWindow();
+        IEnumerable<IntPtr> getVisibleWIndows();
+        Rect getRectForWindow(IntPtr handle);
+        void MoveWindow(IntPtr handle, Rect rect);
     }
 }

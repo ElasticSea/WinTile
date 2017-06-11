@@ -1,5 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using App.Model;
 using App.Model.Managers;
 using App.Model.Managers.Strategies;
@@ -55,7 +57,6 @@ namespace App
                 };
 
                 hotkeyManager = new HotkeyManager(layoutManager.Layout, b,c,d);
-//                Selected = Selected;
             }
         }
 
