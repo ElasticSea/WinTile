@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:App"
+        xmlns:view="clr-namespace:App.View"
         mc:Ignorable="d"
         Icon="../../Resources/icon.png"
         Title="WinTile" Height="720" Width="1280"
@@ -11,6 +12,7 @@
 
     <Window.Resources>
         <local:Multiplier x:Key="converter" />
+        <view:InverseBooleanConverter x:Key="InverseBooleanConverter" />
         <ContextMenu x:Key="NotifierContextMenu" Placement="MousePoint">
             <MenuItem Header="Exit" Click="Menu_Exit" />
         </ContextMenu>
@@ -217,22 +219,26 @@
                                             <TextBlock Text="Left" />
                                             <TextBox x:Name="ClosestLeft" Text="{Binding ClosestLeft, Mode=OneWay}"
                                                      PreviewKeyDown="ClosestLeft_OnPreviewKeyDown"
-                                                     Padding="2" IsReadOnly="True" />
+                                                     Padding="2" IsReadOnly="True"
+                                                     IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
                                             <FrameworkElement Height="8" />
                                             <TextBlock Text="Right" />
                                             <TextBox x:Name="ClosestRight" Text="{Binding ClosestRight, Mode=OneWay}"
                                                      PreviewKeyDown="ClosestRight_OnPreviewKeyDown"
-                                                     Padding="2" IsReadOnly="True" />
+                                                     Padding="2" IsReadOnly="True"
+                                                     IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
                                             <FrameworkElement Height="8" />
                                             <TextBlock Text="Up" />
                                             <TextBox x:Name="ClosestUp" Text="{Binding ClosestUp, Mode=OneWay}"
                                                      PreviewKeyDown="ClosestUp_OnPreviewKeyDown"
-                                                     Padding="2" IsReadOnly="True" />
+                                                     Padding="2" IsReadOnly="True"
+                                                     IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
                                             <FrameworkElement Height="8" />
                                             <TextBlock Text="Down" />
                                             <TextBox x:Name="ClosestDown" Text="{Binding ClosestDown, Mode=OneWay}"
                                                      PreviewKeyDown="ClosestDown_OnPreviewKeyDown"
-                                                     Padding="2" IsReadOnly="True" />
+                                                     Padding="2" IsReadOnly="True"
+                                                     IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
                                         </StackPanel>
                                     </Border>
                                 </GroupBox>
@@ -244,22 +250,26 @@
                                             <TextBlock Text="Left" />
                                             <TextBox x:Name="ExpandLeft" Text="{Binding ExpandLeft, Mode=OneWay}"
                                                      PreviewKeyDown="ExpandLeft_OnPreviewKeyDown"
-                                                     Padding="2" IsReadOnly="True" />
+                                                     Padding="2" IsReadOnly="True"
+                                                     IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
                                             <FrameworkElement Height="8" />
                                             <TextBlock Text="Right" />
                                             <TextBox x:Name="ExpandRight" Text="{Binding ExpandRight, Mode=OneWay}"
                                                      PreviewKeyDown="ExpandRight_OnPreviewKeyDown"
-                                                     Padding="2" IsReadOnly="True" />
+                                                     Padding="2" IsReadOnly="True"
+                                                     IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
                                             <FrameworkElement Height="8" />
                                             <TextBlock Text="Up" />
                                             <TextBox x:Name="ExpandUp" Text="{Binding ExpandUp, Mode=OneWay}"
                                                      PreviewKeyDown="ExpandUp_OnPreviewKeyDown"
-                                                     Padding="2" IsReadOnly="True" />
+                                                     Padding="2" IsReadOnly="True"
+                                                     IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
                                             <FrameworkElement Height="8" />
                                             <TextBlock Text="Down" />
                                             <TextBox x:Name="ExpandDown" Text="{Binding ExpandDown, Mode=OneWay}"
                                                      PreviewKeyDown="ExpandDown_OnPreviewKeyDown"
-                                                     Padding="2" IsReadOnly="True" />
+                                                     Padding="2" IsReadOnly="True"
+                                                     IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
                                         </StackPanel>
                                     </Border>
                                 </GroupBox>
@@ -270,22 +280,26 @@
                                             <TextBlock Text="Left" />
                                             <TextBox x:Name="LayoutLeft" Text="{Binding LayoutLeft, Mode=OneWay}"
                                                      PreviewKeyDown="LayoutLeft_OnPreviewKeyDown"
-                                                     Padding="2" IsReadOnly="True" />
+                                                     Padding="2" IsReadOnly="True"
+                                                     IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
                                             <FrameworkElement Height="8" />
                                             <TextBlock Text="Right" />
                                             <TextBox x:Name="LayoutRight" Text="{Binding LayoutRight, Mode=OneWay}"
                                                      PreviewKeyDown="LayoutRight_OnPreviewKeyDown"
-                                                     Padding="2" IsReadOnly="True" />
+                                                     Padding="2" IsReadOnly="True"
+                                                     IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
                                             <FrameworkElement Height="8" />
                                             <TextBlock Text="Up" />
                                             <TextBox x:Name="LayoutUp" Text="{Binding LayoutUp, Mode=OneWay}"
                                                      PreviewKeyDown="LayoutUp_OnPreviewKeyDown"
-                                                     Padding="2" IsReadOnly="True" />
+                                                     Padding="2" IsReadOnly="True"
+                                                     IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
                                             <FrameworkElement Height="8" />
                                             <TextBlock Text="Down" />
                                             <TextBox x:Name="LayoutDown" Text="{Binding LayoutDown, Mode=OneWay}"
                                                      PreviewKeyDown="LayoutDown_OnPreviewKeyDown"
-                                                     Padding="2" IsReadOnly="True" />
+                                                     Padding="2" IsReadOnly="True"
+                                                     IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
                                         </StackPanel>
                                     </Border>
                                 </GroupBox>

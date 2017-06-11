@@ -88,6 +88,7 @@
     <Compile Include="src\Utils\WindowManagerDummy.cs" />
     <Compile Include="src\Utils\User32Manager.cs" />
     <Compile Include="src\View\IntegerValidationRule.cs" />
+    <Compile Include="src\View\InverseBooleanConverter.cs" />
     <Compile Include="src\View\RectConverter.cs" />
     <Compile Include="src\Utils\User32Utils.cs" />
     <Compile Include="src\View\View.xaml.cs">
