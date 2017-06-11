@@ -33,12 +33,6 @@ namespace App
             set => layoutManager.Layout.tiles = value;
         }
 
-        public Hotkey PrevTile
-        {
-            get => layoutManager.Layout.PreviousTile;
-            set => layoutManager.Layout.PreviousTile = value;
-        }
-
         public string JsonLayout
         {
             get => layoutManager.Json;
@@ -59,13 +53,6 @@ namespace App
                 hotkeyManager = new HotkeyManager(layoutManager.Layout, b,c,d);
             }
         }
-
-        public Hotkey NextTile
-        {
-            get => layoutManager.Layout.NextTile;
-            set => layoutManager.Layout.NextTile = value;
-        }
-
 
         public Hotkey ClosestLeft
         {
