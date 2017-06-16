@@ -11,7 +11,7 @@ namespace App.Model.Managers.Strategies
 
         protected override void OnClosestTIle(Tile tile)
         {
-            windowManager.MoveWindow(windowManager.getCurrentWindow(), tile.Rect);
+            windowManager.PositionWindow(windowManager.FocusedWindow, tile.Rect);
         }
     }
 }

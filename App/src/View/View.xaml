@@ -189,8 +189,9 @@
                     <Border Padding="8">
 
                         <StackPanel>
-                            <ListView Name="RecordListView" ItemsSource="{Binding Hotkeys}" Height="300"
-                                      SelectedItem="{Binding SelectedHotkeyPair}"
+                            <ListView ItemsSource="{Binding Hotkeys}" Height="300"
+                                      SelectedItem="{Binding SelectedHotkeyPair, Mode=OneWayToSource}"
+                                      IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" 
                                       SelectionMode="Single"
                                       IsSynchronizedWithCurrentItem="True">
                                 <ListView.View>
@@ -216,8 +217,9 @@
                                             </Grid.ColumnDefinitions>
                                             <StackPanel Grid.Column="0">
                                                 <TextBlock Text="Name" />
-                                                <ComboBox ItemsSource="{Binding HotkeyTypes}"
-                                                          SelectedItem="{Binding SelectedHotkeyPair.Type}" Padding="2"
+                                                <ComboBox ItemsSource="{Binding HotkeyTypes, Mode=OneWay}"
+                                                          IsSynchronizedWithCurrentItem="True" 
+                                                          SelectedItem="{Binding AddHotkeyType, Mode=OneWayToSource}" Padding="2"
                                                           IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
                                             </StackPanel>
                                             <FrameworkElement Grid.Column="1" />
@@ -225,7 +227,7 @@
                                                 <TextBlock Text="Hotkey" />
                                                 <TextBox x:Name="HotkeyKey"
                                                          PreviewKeyDown="Hotkey_OnPreviewKeyDown"
-                                                         Text="{Binding SelectedHotkeyPair.Hotkey, Mode=OneWay}"
+                                                         Text="{Binding AddHotkeyHotkey, Mode=OneWay}"
                                                          Padding="2" IsReadOnly="True"
                                                          IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
                                             </StackPanel>

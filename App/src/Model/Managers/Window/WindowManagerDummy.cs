@@ -14,14 +14,15 @@ namespace App
             return IntPtr.Zero;
         }
 
-        public IEnumerable<IntPtr> getVisibleWIndows() => Enumerable.Empty<IntPtr>();
+        public IntPtr FocusedWindow { get; set; }
+        public IEnumerable<IntPtr> GetVisibleWindows() => Enumerable.Empty<IntPtr>();
 
-        public Rect getRectForWindow(IntPtr handle)
+        public Rect GetWindowRect(IntPtr handle)
         {
             return rect;
         }
 
-        public void MoveWindow(IntPtr handle, Rect rect)
+        public void PositionWindow(IntPtr handle, Rect rect)
         {
             this.rect = rect;
         }

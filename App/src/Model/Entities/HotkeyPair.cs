@@ -8,7 +8,7 @@ namespace App.Model
         public HotkeyType Type { get; set; }
         public Hotkey Hotkey { get; set; }
 
-        public HotkeyPair(HotkeyType type = HotkeyType.None, Hotkey hotkey = null)
+        public HotkeyPair(HotkeyType type = HotkeyType.ExpandDown, Hotkey hotkey = null)
         {
             Type = type;
             Hotkey = hotkey;

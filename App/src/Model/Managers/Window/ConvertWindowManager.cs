@@ -14,11 +14,15 @@ namespace App
             this.wrapped = wrapped;
         }
 
-        public IntPtr getCurrentWindow() => wrapped.getCurrentWindow();
-        public IEnumerable<IntPtr> getVisibleWIndows() => wrapped.getVisibleWIndows();
-        public Rect getRectForWindow(IntPtr handle) => PxtoPercent(wrapped.getRectForWindow(handle));
-        public void MoveWindow(IntPtr handle, Rect rect) => wrapped.MoveWindow(handle, PercentToPx(rect));
-        public void Focus(IntPtr closesWqInd) => wrapped.Focus(closesWqInd);
+        public IntPtr FocusedWindow
+        {
+            get => wrapped.FocusedWindow;
+            set => wrapped.FocusedWindow = value;
+        }
+
+        public IEnumerable<IntPtr> GetVisibleWindows() => wrapped.GetVisibleWindows();
+        public Rect GetWindowRect(IntPtr handle) => PxtoPercent(wrapped.GetWindowRect(handle));
+        public void PositionWindow(IntPtr handle, Rect rect) => wrapped.PositionWindow(handle, PercentToPx(rect));
 
         private Rect MonitorRect => new Rect(0, 0, (int)WorkArea.Width, (int)WorkArea.Height);
 

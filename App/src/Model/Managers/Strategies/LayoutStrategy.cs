@@ -41,12 +41,12 @@ namespace App.Model.Managers.Strategies
 
         private void Move(int border, int amount, Func<Rect, int> get, Action<Rect, int> set)
         {
-            var allwin = windowManager.getVisibleWIndows()
-                .Select(t => new { Rect = windowManager.getRectForWindow(t), Handle = t });
+            var allwin = windowManager.GetVisibleWindows()
+                .Select(t => new { Rect = windowManager.GetWindowRect(t), Handle = t });
             allwin.Where(a => get(a.Rect) == border).ForEach(a =>
             {
                 set(a.Rect, (get(a.Rect) + amount).Clamp(0, 100));
-                windowManager.MoveWindow(a.Handle, a.Rect);
+                windowManager.PositionWindow(a.Handle, a.Rect);
             });
             tiles.Where(t => get(t.Rect) == border).ForEach(t => set(t.Rect, (get(t.Rect) + amount).Clamp(0,100)));
         }

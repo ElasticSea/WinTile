@@ -69,7 +69,7 @@ namespace App.Model.Managers.Strategies
         private void Position(Rect rect)
         {
             Selected = tiles.FirstOrDefault(t => Equals(t.Rect, rect)) ?? new Tile(rect);
-            windowManager.MoveWindow(windowManager.getCurrentWindow(), Selected.Rect);
+            windowManager.PositionWindow(windowManager.FocusedWindow, Selected.Rect);
         }
     }
 }

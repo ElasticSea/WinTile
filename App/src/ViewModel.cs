@@ -24,6 +24,7 @@ namespace App
 
         private readonly SelectedHolder holder = new SelectedHolder();
         private readonly CompositeWindowManager windowManager = new CompositeWindowManager(new ConvertWindowManager(new User32Manager()),new WindowManagerDummy());
+        private HotkeyPair _selectedHotkeyPair;
 
         public ObservableCollection<Tile> Tiles
         {
@@ -100,8 +101,10 @@ namespace App
             set => holder.Selected = value;
         }
 
-        public HotkeyPair SelectedHotkeyPair { get; set; }
-        
+        public HotkeyPair SelectedHotkeyPair { private get; set; }
+        public HotkeyType AddHotkeyType { get; set; }
+        public Hotkey AddHotkeyHotkey{ get; set; }
+
         public bool ActiveInEditor
         {
             get => _activeInEditor;
@@ -167,14 +170,16 @@ namespace App
 
         public void AddHotkey()
         {
-            var p = SelectedHotkeyPair ?? new HotkeyPair();
-            var pair = new HotkeyPair(p.Type, p.Hotkey);
+            var htKey = new Hotkey(AddHotkeyHotkey.Key, AddHotkeyHotkey.Modifiers);
+            var pair = new HotkeyPair(AddHotkeyType, htKey);
             Hotkeys.Add(pair);
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HotkeyTypes)));
         }
 
         public void RemoveHotkey()
         {
             Hotkeys.Remove(SelectedHotkeyPair);
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HotkeyTypes)));
         }
     }
 }

@@ -295,11 +295,7 @@ namespace App
 
         private void Hotkey_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotkeyBinding.assignHotkey(args, h =>
         {
-            if (VM.SelectedHotkeyPair == null)
-            {
-                VM.SelectedHotkeyPair = new  HotkeyPair();
-            }
-            VM.SelectedHotkeyPair.Hotkey = h;
+            VM.AddHotkeyHotkey = h;
         });
 
         private void Menu_Exit(object sender, RoutedEventArgs e)

@@ -7,20 +7,11 @@ namespace App.Utils
 {
     public class User32Manager : IWindowManager
     {
+        private IntPtr _currentWindow;
         const short SWP_NOZORDER = 0X4;
         const int SWP_SHOWWINDOW = 0x0040;
 
-        public IntPtr getCurrentWindow() => GetForegroundWindow();
-
-        public Rect getRectForWindow(IntPtr hwnd)
-        {
-            var windowRect = new NativeRect();
-            GetWindowRect(hwnd, ref windowRect);
-
-            return new Rect(windowRect.Left, windowRect.Top, windowRect.Right, windowRect.Bottom);
-        }
-
-        public void MoveWindow(IntPtr handle, Rect rect)
+        public void PositionWindow(IntPtr handle, Rect rect)
         {
             var windowRect = new NativeRect();
             GetWindowRect(handle, ref windowRect);
@@ -34,7 +25,21 @@ namespace App.Utils
                 SWP_NOZORDER | SWP_SHOWWINDOW);
         }
 
-        public IEnumerable<IntPtr> getVisibleWIndows()
+        public Rect GetWindowRect(IntPtr hwnd)
+        {
+            var windowRect = new NativeRect();
+            GetWindowRect(hwnd, ref windowRect);
+
+            return new Rect(windowRect.Left, windowRect.Top, windowRect.Right, windowRect.Bottom);
+        }
+
+        public IntPtr FocusedWindow
+        {
+            get => GetForegroundWindow();
+            set => SetForegroundWindow(value);
+        }
+
+        public IEnumerable<IntPtr> GetVisibleWindows()
         {
             List<IntPtr> windows = new List<IntPtr>();
 
@@ -46,8 +51,6 @@ namespace App.Utils
 
             return windows;
         }
-
-        public void Focus(IntPtr hww) => SetForegroundWindow(hww);
 
         private struct NativeRect
         {

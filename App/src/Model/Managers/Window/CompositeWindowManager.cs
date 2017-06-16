@@ -10,7 +10,7 @@ namespace App.Utils
         private readonly IWindowManager WindowManagerDummy;
 
         public bool Active;
-                    
+
         public CompositeWindowManager(IWindowManager user32Manager, IWindowManager windowManagerDummy)
         {
             User32Manager = user32Manager;
@@ -19,10 +19,14 @@ namespace App.Utils
 
         private IWindowManager CurrentManager => Active ? User32Manager : WindowManagerDummy;
 
-        public IntPtr getCurrentWindow() => CurrentManager.getCurrentWindow();
-        public IEnumerable<IntPtr> getVisibleWIndows() => CurrentManager.getVisibleWIndows();
-        public Rect getRectForWindow(IntPtr handle) => CurrentManager.getRectForWindow(handle);
-        public void MoveWindow(IntPtr handle, Rect rect) => CurrentManager.MoveWindow(handle, rect);
-        public void Focus(IntPtr closesWqInd) => CurrentManager.Focus(closesWqInd);
+        public IntPtr FocusedWindow
+        {
+            get => CurrentManager.FocusedWindow;
+            set => CurrentManager.FocusedWindow = value;
+        }
+
+        public IEnumerable<IntPtr> GetVisibleWindows() => CurrentManager.GetVisibleWindows();
+        public Rect GetWindowRect(IntPtr handle) => CurrentManager.GetWindowRect(handle);
+        public void PositionWindow(IntPtr handle, Rect rect) => CurrentManager.PositionWindow(handle, rect);
     }
 }

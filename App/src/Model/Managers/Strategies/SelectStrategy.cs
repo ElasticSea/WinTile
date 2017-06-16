@@ -13,8 +13,8 @@ namespace App.Model.Managers.Strategies
 
         protected override void OnClosestTIle(Tile tile)
         {
-            var allwin = windowManager.getVisibleWIndows()
-                .Select(t => new { Rect = windowManager.getRectForWindow(t), Handle = t });
+            var allwin = windowManager.GetVisibleWindows()
+                .Select(t => new { Rect = windowManager.GetWindowRect(t), Handle = t });
 
             var closestWindowToRect = allwin.OrderBy(
                 t => Math.Abs(t.Rect.Left - tile.Rect.Left) +
@@ -23,7 +23,7 @@ namespace App.Model.Managers.Strategies
                      Math.Abs(t.Rect.Bottom - tile.Rect.Bottom)
             ).First();
 
-            windowManager.Focus(closestWindowToRect.Handle);
+            windowManager.FocusedWindow = closestWindowToRect.Handle;
         }
     }
 }
