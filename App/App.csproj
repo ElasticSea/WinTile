@@ -70,6 +70,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\Model\Entities\Hotkey.cs" />
+    <Compile Include="src\Model\Entities\HotkeyPair.cs" />
+    <Compile Include="src\Model\Entities\HotkeyType.cs" />
     <Compile Include="src\Model\Entities\Layout.cs" />
     <Compile Include="src\Model\Entities\Rect.cs" />
     <Compile Include="src\Model\Entities\Tile.cs" />
@@ -82,7 +84,7 @@
     <Compile Include="src\Utils\CompositeWindowManager.cs" />
     <Compile Include="src\Utils\ConvertWindowManager.cs" />
     <Compile Include="src\Utils\Extensions.cs" />
-    <Compile Include="src\Utils\HotKeyUtils.cs" />
+    <Compile Include="src\Utils\HotkeyBinding.cs" />
     <Compile Include="src\Utils\IWindowManager.cs" />
     <Compile Include="src\Utils\SelectedHolder.cs" />
     <Compile Include="src\Utils\WindowManagerDummy.cs" />

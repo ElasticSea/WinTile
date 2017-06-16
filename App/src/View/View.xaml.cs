@@ -287,31 +287,27 @@ namespace App
                 VM.JsonLayout = File.ReadAllText(dlg.FileName);
         }
 
-
         private void RemoveWindowButton_OnClick(object sender, RoutedEventArgs e) => VM.RemoveTile(VM.Selected);
         private void AddWindowButton_OnClick(object sender, RoutedEventArgs e) => VM.AddTile();
         private void SaveLayoutButton_OnClick(object sender, RoutedEventArgs e) => VM.Save();
         private void ResetLayoutButton_OnClick(object sender, RoutedEventArgs e) => VM.Load();
 
-        private void ClosestLeft_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ClosestLeft = h);
-        private void ClosestRight_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ClosestRight = h);
-        private void ClosestUp_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ClosestUp = h);
-        private void ClosestDown_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ClosestDown = h);
-
-        private void ExpandLeft_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ExpandLeft = h);
-        private void ExpandRight_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ExpandRight = h);
-        private void ExpandUp_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ExpandUp = h);
-        private void ExpandDown_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ExpandDown = h);
-
-        private void LayoutLeft_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.LayoutLeft = h);
-        private void LayoutRight_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.LayoutRight = h);
-        private void LayoutUp_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.LayoutUp = h);
-        private void LayoutDown_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.LayoutDown = h);
+        private void Hotkey_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotkeyBinding.assignHotkey(args, h => VM.SelectedHotkey =h);
 
         private void Menu_Exit(object sender, RoutedEventArgs e)
         {
             notifyIcon.Visible = false;
             System.Windows.Application.Current.Shutdown();
+        }
+
+        private void AddHotkeyButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            VM.AddHotkey();
+        }
+
+        private void RemoveHotkeyButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            VM.RemoveHotkey();
         }
     }
 }

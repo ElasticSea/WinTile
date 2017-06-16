@@ -7,15 +7,15 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using App.Model;
 
-public class HotKeyUtils : IDisposable
+public class HotkeyBinding : IDisposable
     {
-        public static Dictionary<int, HotKeyUtils> DictHotKeyToCalBackProc
+        public static Dictionary<int, HotkeyBinding> DictHotKeyToCalBackProc
         {
             get
             {
                 if (_dictHotKeyToCalBackProc == null)
                 {
-                    _dictHotKeyToCalBackProc = new Dictionary<int, HotKeyUtils>();
+                    _dictHotKeyToCalBackProc = new Dictionary<int, HotkeyBinding>();
                     ComponentDispatcher.ThreadFilterMessage += ComponentDispatcherThreadFilterMessage;
                 }
                 return _dictHotKeyToCalBackProc;
@@ -31,27 +31,27 @@ public class HotKeyUtils : IDisposable
         public const int WmHotKey = 0x0312;
 
         private bool _disposed;
-        private static Dictionary<int, HotKeyUtils> _dictHotKeyToCalBackProc;
+        private static Dictionary<int, HotkeyBinding> _dictHotKeyToCalBackProc;
 
         public Key Key { get; }
         public KeyModifier KeyModifiers { get; }
-        public Action<HotKeyUtils> Action { get; }
+        public Action<HotkeyBinding> Action { get; }
         public int Id { get; set; }
 
         // ******************************************************************
-        public HotKeyUtils(Key k, KeyModifier keyModifiers, Action<HotKeyUtils> action, bool register = true)
+        public HotkeyBinding(Key k, KeyModifier keyModifiers, Action<HotkeyBinding> action, bool register = true)
         {
             Key = k;
             KeyModifiers = keyModifiers;
             Action = action;
             if (register)
             {
-                Register();
+                Bind();
             }
         }
 
         // ******************************************************************
-        public bool Register()
+        public bool Bind()
         {
             var virtualKeyCode = KeyInterop.VirtualKeyFromKey(Key);
             Id = virtualKeyCode + (int)KeyModifiers * 0x10000;
@@ -64,10 +64,10 @@ public class HotKeyUtils : IDisposable
         }
 
         // ******************************************************************
-        public void Unregister()
+        public void Unbind()
         {
-            HotKeyUtils hotKeyUtils;
-            if (DictHotKeyToCalBackProc.TryGetValue(Id, out hotKeyUtils))
+            HotkeyBinding hotkeyBinding;
+            if (DictHotKeyToCalBackProc.TryGetValue(Id, out hotkeyBinding))
             {
                 UnregisterHotKey(IntPtr.Zero, Id);
                 DictHotKeyToCalBackProc.Remove(Id);
@@ -77,13 +77,13 @@ public class HotKeyUtils : IDisposable
         // ******************************************************************
         private static void ComponentDispatcherThreadFilterMessage(ref MSG msg, ref bool handled)
         {
-            HotKeyUtils hotKeyUtils;
+            HotkeyBinding hotkeyBinding;
 
             if (handled) return;
             if (msg.message != WmHotKey) return;
-            if (!DictHotKeyToCalBackProc.TryGetValue((int) msg.wParam, out hotKeyUtils)) return;
+            if (!DictHotKeyToCalBackProc.TryGetValue((int) msg.wParam, out hotkeyBinding)) return;
 
-            hotKeyUtils.Action?.Invoke(hotKeyUtils);
+            hotkeyBinding.Action?.Invoke(hotkeyBinding);
             handled = true;
         }
 
@@ -120,7 +120,7 @@ public class HotKeyUtils : IDisposable
                 if (disposing)
                 {
                     // Dispose managed resources.
-                    Unregister();
+                    Unbind();
                 }
 
                 // Note disposing has been done.

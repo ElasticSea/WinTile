@@ -22,5 +22,26 @@ namespace App.Model
         {
             return $"{Key}, {string.Join(", ",Modifiers)}";
         }
+
+        protected bool Equals(Hotkey other)
+        {
+            return Key == other.Key && Modifiers == other.Modifiers;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Hotkey) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return ((int) Key * 397) ^ (int) Modifiers;
+            }
+        }
     }
 }
