@@ -23,5 +23,6 @@ namespace App.Utils
         public IEnumerable<IntPtr> getVisibleWIndows() => CurrentManager.getVisibleWIndows();
         public Rect getRectForWindow(IntPtr handle) => CurrentManager.getRectForWindow(handle);
         public void MoveWindow(IntPtr handle, Rect rect) => CurrentManager.MoveWindow(handle, rect);
+        public void Focus(IntPtr closesWqInd) => CurrentManager.Focus(closesWqInd);
     }
 }

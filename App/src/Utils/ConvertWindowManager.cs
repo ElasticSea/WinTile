@@ -18,6 +18,7 @@ namespace App
         public IEnumerable<IntPtr> getVisibleWIndows() => wrapped.getVisibleWIndows();
         public Rect getRectForWindow(IntPtr handle) => PxtoPercent(wrapped.getRectForWindow(handle));
         public void MoveWindow(IntPtr handle, Rect rect) => wrapped.MoveWindow(handle, PercentToPx(rect));
+        public void Focus(IntPtr closesWqInd) => wrapped.Focus(closesWqInd);
 
         private Rect MonitorRect => new Rect(0, 0, (int)WorkArea.Width, (int)WorkArea.Height);
 

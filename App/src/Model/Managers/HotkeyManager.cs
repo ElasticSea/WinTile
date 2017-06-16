@@ -11,34 +11,12 @@ namespace App.Model.Managers
         private IEnumerable<HotkeyBinding> bindings;
         private bool binded;
 
-        private readonly Dictionary<HotkeyType, Action<object>> Mapping;
+        private readonly Dictionary<HotkeyType, Action<object>> mapping;
 
-        public HotkeyManager(Layout layout, ClosestStrategy closestStrategy, ExtendStrategy extendStrategy, LayoutStrategy layoutStrategy)
+        public HotkeyManager(Layout layout, Dictionary<HotkeyType, Action<object>> mapping)
         {
             this.layout = layout;
-
-            Mapping = new Dictionary<HotkeyType, Action<object>>
-            {
-                {HotkeyType.MoveLeft, h1 => closestStrategy.Left()},
-                {HotkeyType.MoveRight, h1 => closestStrategy.Left()},
-                {HotkeyType.MoveUp, h1 => closestStrategy.Left()},
-                {HotkeyType.MoveDown, h1 => closestStrategy.Left()},
-
-                {HotkeyType.ExpandLeft, h1 => extendStrategy.Left()},
-                {HotkeyType.ExpandRight, h1 => extendStrategy.Left()},
-                {HotkeyType.ExpandUp, h1 => extendStrategy.Left()},
-                {HotkeyType.ExpandDown, h1 => extendStrategy.Left()},
-
-                {HotkeyType.LayoutLeft, h1 => layoutStrategy.Left()},
-                {HotkeyType.LayoutRight, h1 => layoutStrategy.Left()},
-                {HotkeyType.LayoutUp, h1 => layoutStrategy.Left()},
-                {HotkeyType.LayoutDown, h1 => layoutStrategy.Left()},
-//
-//                {HotkeyType.SelectLeft, h1 => closestStrategy.Left()},
-//                {HotkeyType.SelectRight, h1 => closestStrategy.Left()},
-//                {HotkeyType.SelectUp, h1 => closestStrategy.Left()},
-//                {HotkeyType.SelectDown, h1 => closestStrategy.Left()}
-            };
+            this.mapping = mapping;
         }
 
         public void UnbindHotkeys()
@@ -59,7 +37,7 @@ namespace App.Model.Managers
             {
                 bindings = from typeHotkey in layout.hotkeys
                     where typeHotkey.Hotkey != null
-                    select new HotkeyBinding(typeHotkey.Hotkey.Key, typeHotkey.Hotkey.Modifiers, Mapping[typeHotkey.Type], false);
+                    select new HotkeyBinding(typeHotkey.Hotkey.Key, typeHotkey.Hotkey.Modifiers, mapping[typeHotkey.Type], false);
 
                 foreach (var binding in bindings)
                 {

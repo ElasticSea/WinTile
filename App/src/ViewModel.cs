@@ -24,9 +24,6 @@ namespace App
 
         private readonly SelectedHolder holder = new SelectedHolder();
         private readonly CompositeWindowManager windowManager = new CompositeWindowManager(new ConvertWindowManager(new User32Manager()),new WindowManagerDummy());
-        private ClosestStrategy b;
-        private ExtendStrategy c;
-        private LayoutStrategy d;
 
         public ObservableCollection<Tile> Tiles
         {
@@ -57,9 +54,10 @@ namespace App
             {
                 layoutManager.Json = value;
                 
-                b = new ClosestStrategy(holder, layoutManager.Layout.tiles, windowManager);
-                c = new ExtendStrategy(holder, layoutManager.Layout.tiles, windowManager);
-                d = new LayoutStrategy(holder, layoutManager.Layout.tiles, windowManager);
+                var move = new MoveStrategy(holder, layoutManager.Layout.tiles, windowManager);
+                var select = new SelectStrategy(holder, layoutManager.Layout.tiles, windowManager);
+                var extend = new ExtendStrategy(holder, layoutManager.Layout.tiles, windowManager);
+                var layout = new LayoutStrategy(holder, layoutManager.Layout.tiles, windowManager);
 
                 holder.OnSelected += tile =>
                 {
@@ -67,7 +65,32 @@ namespace App
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Tiles)));
                 };
 
-                hotkeyManager = new HotkeyManager(layoutManager.Layout, b,c,d);
+                var mapping = new Dictionary<HotkeyType, Action<object>>
+                {
+                    {HotkeyType.MoveLeft, h1 => move.Left()},
+                    {HotkeyType.MoveRight, h1 => move.Right()},
+                    {HotkeyType.MoveUp, h1 => move.Up()},
+                    {HotkeyType.MoveDown, h1 => move.Down()},
+
+                    {HotkeyType.ExpandLeft, h1 => extend.Left()},
+                    {HotkeyType.ExpandRight, h1 => extend.Right()},
+                    {HotkeyType.ExpandUp, h1 => extend.Up()},
+                    {HotkeyType.ExpandDown, h1 => extend.Down()},
+
+                    {HotkeyType.LayoutLeft, h1 => layout.Left()},
+                    {HotkeyType.LayoutRight, h1 => layout.Right()},
+                    {HotkeyType.LayoutUp, h1 => layout.Up()},
+                    {HotkeyType.LayoutDown, h1 => layout.Down()},
+
+                    {HotkeyType.SelectLeft, h1 => select.Left()},
+                    {HotkeyType.SelectRight, h1 => select.Right()},
+                    {HotkeyType.SelectUp, h1 => select.Up()},
+                    {HotkeyType.SelectDown, h1 => select.Down()}
+                };
+
+                hotkeyManager = new HotkeyManager(layoutManager.Layout, mapping);
+                
+
             }
         }
 
@@ -151,7 +174,7 @@ namespace App
 
         public void RemoveHotkey()
         {
-            throw new NotImplementedException();
+            Hotkeys.Remove(SelectedHotkeyPair);
         }
     }
 }

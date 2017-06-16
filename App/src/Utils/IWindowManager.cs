@@ -10,5 +10,6 @@ namespace App
         IEnumerable<IntPtr> getVisibleWIndows();
         Rect getRectForWindow(IntPtr handle);
         void MoveWindow(IntPtr handle, Rect rect);
+        void Focus(IntPtr closesWqInd);
     }
 }

@@ -26,7 +26,7 @@ namespace Tests.Model.Managers
         private static readonly Tile tileI = new Tile(new Rect(84, 0, 100, 100));
 
         private static readonly List<Tile> tiles = new List<Tile> { tileA , tileB , tileC , tileD , tileE , tileF , tileG , tileH, tileI };
-        private readonly ClosestStrategy ext = new ClosestStrategy(tiles);
+        private readonly AbstractClosestStrategy ext = new AbstractClosestStrategy(tiles);
 
         [TestMethod]
         public void SetWindow()

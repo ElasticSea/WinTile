@@ -25,5 +25,10 @@ namespace App
         {
             this.rect = rect;
         }
+
+        public void Focus(IntPtr closesWqInd)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

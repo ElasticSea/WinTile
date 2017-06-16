@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using App.Model;
 using Microsoft.Win32;
 using Binding = System.Windows.Data.Binding;
 using ContextMenu = System.Windows.Controls.ContextMenu;
@@ -292,7 +293,14 @@ namespace App
         private void SaveLayoutButton_OnClick(object sender, RoutedEventArgs e) => VM.Save();
         private void ResetLayoutButton_OnClick(object sender, RoutedEventArgs e) => VM.Load();
 
-        private void Hotkey_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotkeyBinding.assignHotkey(args, h => VM.SelectedHotkeyPair.Hotkey =h);
+        private void Hotkey_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotkeyBinding.assignHotkey(args, h =>
+        {
+            if (VM.SelectedHotkeyPair == null)
+            {
+                VM.SelectedHotkeyPair = new  HotkeyPair();
+            }
+            VM.SelectedHotkeyPair.Hotkey = h;
+        });
 
         private void Menu_Exit(object sender, RoutedEventArgs e)
         {

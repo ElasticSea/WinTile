@@ -75,9 +75,11 @@
     <Compile Include="src\Model\Entities\Layout.cs" />
     <Compile Include="src\Model\Entities\Rect.cs" />
     <Compile Include="src\Model\Entities\Tile.cs" />
+    <Compile Include="src\Model\Managers\Strategies\AbstractClosestStrategy.cs" />
     <Compile Include="src\Model\Managers\Strategies\LayoutStrategy.cs" />
     <Compile Include="src\Model\Managers\Strategies\ExtendStrategy.cs" />
-    <Compile Include="src\Model\Managers\Strategies\ClosestStrategy.cs" />
+    <Compile Include="src\Model\Managers\Strategies\MoveStrategy.cs" />
+    <Compile Include="src\Model\Managers\Strategies\SelectStrategy.cs" />
     <Compile Include="src\Model\Managers\HotkeyManager.cs" />
     <Compile Include="src\Model\Managers\Strategies\PositioningStrategy.cs" />
     <Compile Include="src\Model\Managers\LayoutManager.cs" />
@@ -92,7 +94,6 @@
     <Compile Include="src\View\IntegerValidationRule.cs" />
     <Compile Include="src\View\InverseBooleanConverter.cs" />
     <Compile Include="src\View\RectConverter.cs" />
-    <Compile Include="src\Utils\User32Utils.cs" />
     <Compile Include="src\View\View.xaml.cs">
       <DependentUpon>View.xaml</DependentUpon>
     </Compile>

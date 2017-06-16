@@ -6,14 +6,14 @@ using App.Utils;
 
 namespace App.Model.Managers.Strategies
 {
-    public class ClosestStrategy : PositioningStrategy
+    public abstract class AbstractClosestStrategy : PositioningStrategy
     {
         private static readonly Vector left = new Vector(-1, 0);
         private static readonly Vector right = new Vector(1, 0);
         private static readonly Vector up = new Vector(0, -1);
         private static readonly Vector down = new Vector(0, 1);
 
-        public ClosestStrategy(SelectedHolder holder, IList<Tile> tiles, IWindowManager windowManager) : base(holder, tiles, windowManager)
+        public AbstractClosestStrategy(SelectedHolder holder, IList<Tile> tiles, IWindowManager windowManager) : base(holder, tiles, windowManager)
         {
         }
 
@@ -24,10 +24,9 @@ namespace App.Model.Managers.Strategies
 
         private void GetClosest(Vector direction)
         {
-            ;
             Selected = Closest(windowManager.getRectForWindow(windowManager.getCurrentWindow()));
 
-            var tile =  tiles
+            var tile = tiles
                 .Select(t => new { Title = t, Penalty = TilePenalty(direction, Selected, t) })
                 .OrderByDescending(a => a.Penalty)
                 .FirstOrDefault(a => a.Penalty > 0)?.Title;
@@ -35,9 +34,11 @@ namespace App.Model.Managers.Strategies
             if (tile != null)
             {
                 Selected = tile;
-                windowManager.MoveWindow(windowManager.getCurrentWindow(), tile.Rect);
+                OnClosestTIle(tile);
             }
         }
+
+        protected abstract void OnClosestTIle(Tile tile);
 
         private static float TilePenalty(Vector direction, Tile original, Tile target)
         {
