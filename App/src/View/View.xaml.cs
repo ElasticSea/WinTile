@@ -292,7 +292,7 @@ namespace App
         private void SaveLayoutButton_OnClick(object sender, RoutedEventArgs e) => VM.Save();
         private void ResetLayoutButton_OnClick(object sender, RoutedEventArgs e) => VM.Load();
 
-        private void Hotkey_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotkeyBinding.assignHotkey(args, h => VM.SelectedHotkey =h);
+        private void Hotkey_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotkeyBinding.assignHotkey(args, h => VM.SelectedHotkeyPair.Hotkey =h);
 
         private void Menu_Exit(object sender, RoutedEventArgs e)
         {

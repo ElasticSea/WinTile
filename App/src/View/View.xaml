@@ -217,7 +217,7 @@
                                             <StackPanel Grid.Column="0">
                                                 <TextBlock Text="Name" />
                                                 <ComboBox ItemsSource="{Binding HotkeyTypes}"
-                                                          SelectedItem="{Binding SelectedHotkeyType}" Padding="2"
+                                                          SelectedItem="{Binding SelectedHotkeyPair.Type}" Padding="2"
                                                           IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
                                             </StackPanel>
                                             <FrameworkElement Grid.Column="1" />
@@ -225,7 +225,7 @@
                                                 <TextBlock Text="Hotkey" />
                                                 <TextBox x:Name="HotkeyKey"
                                                          PreviewKeyDown="Hotkey_OnPreviewKeyDown"
-                                                         Text="{Binding SelectedHotkey, Mode=OneWay}"
+                                                         Text="{Binding SelectedHotkeyPair.Hotkey, Mode=OneWay}"
                                                          Padding="2" IsReadOnly="True"
                                                          IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
                                             </StackPanel>

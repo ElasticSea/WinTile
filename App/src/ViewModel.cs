@@ -77,38 +77,8 @@ namespace App
             set => holder.Selected = value;
         }
 
-        private HotkeyPair _selectedHotkeyPair;
-        public HotkeyPair SelectedHotkeyPair
-        {
-            get => _selectedHotkeyPair;
-            set
-            {
-                _selectedHotkeyPair = value;
-                SelectedHotkey = value.Hotkey;
-                SelectedHotkeyType = value.Type;
-            }
-        }
-
-        public Hotkey SelectedHotkey
-        {
-            get => SelectedHotkeyPair?.Hotkey;
-            set
-            {
-                if (SelectedHotkeyPair == null) SelectedHotkeyPair = new HotkeyPair();
-                SelectedHotkeyPair.Hotkey = value;
-            }
-        }
-
-        public HotkeyType SelectedHotkeyType
-        {
-            get => SelectedHotkeyPair?.Type ?? HotkeyType.None;
-            set
-            {
-                if(SelectedHotkeyPair == null) SelectedHotkeyPair = new HotkeyPair();
-                SelectedHotkeyPair.Type = value;
-            }
-        }
-
+        public HotkeyPair SelectedHotkeyPair { get; set; }
+        
         public bool ActiveInEditor
         {
             get => _activeInEditor;
@@ -174,7 +144,9 @@ namespace App
 
         public void AddHotkey()
         {
-            Hotkeys.Add(SelectedHotkeyPair);
+            var p = SelectedHotkeyPair ?? new HotkeyPair();
+            var pair = new HotkeyPair(p.Type, p.Hotkey);
+            Hotkeys.Add(pair);
         }
 
         public void RemoveHotkey()
