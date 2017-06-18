@@ -88,10 +88,11 @@
     <Compile Include="src\Utils\Extensions.cs" />
     <Compile Include="src\Utils\HotkeyBinding.cs" />
     <Compile Include="src\Model\Managers\Window\IWindowManager.cs" />
-    <Compile Include="src\Model\Managers\Window\WindowManagerDummy.cs" />
+    <Compile Include="src\Model\Managers\Window\EditorWindowManager.cs" />
     <Compile Include="src\Model\Managers\Window\User32Manager.cs" />
     <Compile Include="src\View\IntegerValidationRule.cs" />
     <Compile Include="src\View\InverseBooleanConverter.cs" />
+    <Compile Include="src\View\RelativeLayoutPanel.cs" />
     <Compile Include="src\View\RectConverter.cs" />
     <Compile Include="src\View\View.xaml.cs">
       <DependentUpon>View.xaml</DependentUpon>

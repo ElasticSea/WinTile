@@ -31,7 +31,7 @@ namespace Tests.Model.Managers
         [TestMethod]
         public void SetWindow()
         {
-            var user32 = new WindowManagerDummy { MonitorRect = new Rect(0, 0, 3840, 2160) };
+            var user32 = new EditorWindowManager { MonitorRect = new Rect(0, 0, 3840, 2160) };
             var pos = new PositioningSystem(tiles, user32);
             pos.Selected = tileA;
             Assert.AreEqual(new Rect(0, 0, 2304, 2160), user32.CurrentWindowRect);
@@ -39,7 +39,7 @@ namespace Tests.Model.Managers
         [TestMethod]
         public void GetWIndow()
         {
-            var user32 = new WindowManagerDummy { MonitorRect = new Rect(0, 0, 3840, 2160) };
+            var user32 = new EditorWindowManager { MonitorRect = new Rect(0, 0, 3840, 2160) };
             var pos = new PositioningSystem(tiles, user32);
 
             user32.CurrentWindowRect = new Rect(100,100,2000,2000);

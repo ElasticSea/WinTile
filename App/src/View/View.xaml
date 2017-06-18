@@ -44,22 +44,88 @@
                         </Grid.RowDefinitions>
 
                         <Border Grid.Row="0" BorderBrush="Black" BorderThickness="1">
-                            <Canvas x:Name="Canvas" />
+                            <view:RelativeLayoutPanel x:Name="Canvas">
+                                <Border Background="DimGray"
+                                        view:RelativeLayoutPanel.RelativeX="{Binding Selected.Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
+                                        view:RelativeLayoutPanel.RelativeY="{Binding Selected.Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
+                                        view:RelativeLayoutPanel.RelativeWidth="{Binding Selected.Rect.Width, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
+                                        view:RelativeLayoutPanel.RelativeHeight="{Binding Selected.Rect.Height, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}">
+                                    <TextBlock Foreground="White" HorizontalAlignment="Center"
+                                               SnapsToDevicePixels="True"
+                                               VerticalAlignment="Center" FontSize="45"
+                                               Text="{Binding SelectedIndex, Mode=OneWay}" />
+
+                                </Border>
+
+<!--                                view:RelativeLayoutPanel.RelativeY="{Binding Selected.Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"-->
+<!--                                X2="{Binding Selected.Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"-->
+
+
+                                <Line Stroke="Black" StrokeThickness="1" StrokeDashArray="4,4"
+                                      view:RelativeLayoutPanel.RelativeY="{Binding Selected.Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
+                                      view:RelativeLayoutPanel.RelativeWidth="{Binding Selected.Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
+                                      view:RelativeLayoutPanel.RelativeHeight="1"
+                                      X2="10000" />
+
+
+                                <Line Stroke="Black" StrokeThickness="1" StrokeDashArray="4,4"
+                                      view:RelativeLayoutPanel.RelativeY="{Binding Selected.Rect.Bottom, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
+                                      view:RelativeLayoutPanel.RelativeWidth="{Binding Selected.Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
+                                      view:RelativeLayoutPanel.RelativeHeight="1"
+                                      X2="10000" />
+
+
+                                <Line Stroke="Black" StrokeThickness="1" StrokeDashArray="4,4"
+                                      view:RelativeLayoutPanel.RelativeX="{Binding Selected.Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
+                                      view:RelativeLayoutPanel.RelativeWidth="1"
+                                      view:RelativeLayoutPanel.RelativeHeight="{Binding Selected.Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
+                                      Y2="10000" />
+
+                                <Line Stroke="Black" StrokeThickness="1" StrokeDashArray="4,4"
+                                      view:RelativeLayoutPanel.RelativeX="{Binding Selected.Rect.Right, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
+                                      view:RelativeLayoutPanel.RelativeWidth="1"
+                                      view:RelativeLayoutPanel.RelativeHeight="{Binding Selected.Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
+                                      Y2="10000" />
+
+                                <TextBlock Text="{Binding Selected.Rect.Left}" 
+                                           view:RelativeLayoutPanel.RelativeX="{Binding Selected.Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
+                                           view:RelativeLayoutPanel.RelativeHeight="1"
+                                           view:RelativeLayoutPanel.RelativeWidth="1" />
+
+                                <TextBlock Text="{Binding Selected.Rect.Right}" 
+                                           view:RelativeLayoutPanel.RelativeX="{Binding Selected.Rect.Right, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
+                                           view:RelativeLayoutPanel.RelativeHeight="1"
+                                           view:RelativeLayoutPanel.RelativeWidth="1" />
+
+                                <TextBlock Text="{Binding Selected.Rect.Top}" 
+                                           view:RelativeLayoutPanel.RelativeY="{Binding Selected.Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
+                                           view:RelativeLayoutPanel.RelativeHeight="1"
+                                           view:RelativeLayoutPanel.RelativeWidth="1" />
+
+                                <TextBlock Text="{Binding Selected.Rect.Bottom}" 
+                                           view:RelativeLayoutPanel.RelativeY="{Binding Selected.Rect.Bottom, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
+                                           view:RelativeLayoutPanel.RelativeHeight="1"
+                                           view:RelativeLayoutPanel.RelativeWidth="1" />
+
+                                <!--                                // TODO without the textblock the relative rect of border property is not firing properly-->
+                                <TextBlock  Visibility="Hidden" Text="{Binding Selected.Rect}"></TextBlock>
+                            </view:RelativeLayoutPanel>
                         </Border>
                         <FrameworkElement Grid.Row="1" />
                         <ListView Name="ListView" Grid.Row="2" MaxWidth="600" SelectedItem="{Binding Selected}"
+                                  SelectedIndex="{Binding SelectedIndex, Mode=OneWayToSource}"
                                   SelectionMode="Single"
                                   IsSynchronizedWithCurrentItem="True"
                                   ItemsSource="{Binding Tiles}">
 
-                            <ListView.View >
-                                <GridView >
+                            <ListView.View>
+                                <GridView>
                                     <GridView.Columns>
 
                                         <GridViewColumn Header="Left" Width="50">
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <TextBlock Text="{Binding Path=Rect.Left}" TextAlignment="Right"  />
+                                                    <TextBlock Text="{Binding Path=Rect.Left}" TextAlignment="Right" />
                                                 </DataTemplate>
                                             </GridViewColumn.CellTemplate>
                                         </GridViewColumn>
@@ -67,7 +133,7 @@
                                         <GridViewColumn Header="Right" Width="50">
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <TextBlock Text="{Binding Path=Rect.Right}" TextAlignment="Right"  />
+                                                    <TextBlock Text="{Binding Path=Rect.Right}" TextAlignment="Right" />
                                                 </DataTemplate>
                                             </GridViewColumn.CellTemplate>
                                         </GridViewColumn>
@@ -75,7 +141,7 @@
                                         <GridViewColumn Header="Top" Width="50">
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <TextBlock Text="{Binding Path=Rect.Top}" TextAlignment="Right"  />
+                                                    <TextBlock Text="{Binding Path=Rect.Top}" TextAlignment="Right" />
                                                 </DataTemplate>
                                             </GridViewColumn.CellTemplate>
                                         </GridViewColumn>
@@ -83,7 +149,7 @@
                                         <GridViewColumn Header="Bottom" Width="50">
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <TextBlock Text="{Binding Path=Rect.Bottom}" TextAlignment="Right"  />
+                                                    <TextBlock Text="{Binding Path=Rect.Bottom}" TextAlignment="Right" />
                                                 </DataTemplate>
                                             </GridViewColumn.CellTemplate>
                                         </GridViewColumn>
@@ -93,7 +159,7 @@
                         </ListView>
 
                         <FrameworkElement Grid.Row="3" />
-                        <StackPanel Grid.Row="4" MaxWidth="600" >
+                        <StackPanel Grid.Row="4" MaxWidth="600">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
@@ -218,7 +284,7 @@
                         <StackPanel>
                             <ListView ItemsSource="{Binding Hotkeys}" Height="300"
                                       SelectedItem="{Binding SelectedHotkeyPair, Mode=OneWayToSource}"
-                                      IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" 
+                                      IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}"
                                       SelectionMode="Single"
                                       IsSynchronizedWithCurrentItem="True">
                                 <ListView.View>
@@ -234,7 +300,7 @@
                             </ListView>
 
                             <GroupBox Header="Add Hotkey"
-                                      IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" >
+                                      IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}">
                                 <Border Padding="8">
                                     <StackPanel>
                                         <Grid>
@@ -246,8 +312,9 @@
                                             <StackPanel Grid.Column="0">
                                                 <TextBlock Text="Name" />
                                                 <ComboBox ItemsSource="{Binding HotkeyTypes, Mode=OneWay}"
-                                                          IsSynchronizedWithCurrentItem="True" 
-                                                          SelectedItem="{Binding AddHotkeyType, Mode=OneWayToSource}" Padding="2"/>
+                                                          IsSynchronizedWithCurrentItem="True"
+                                                          SelectedItem="{Binding AddHotkeyType, Mode=OneWayToSource}"
+                                                          Padding="2" />
                                             </StackPanel>
                                             <FrameworkElement Grid.Column="1" />
                                             <StackPanel Grid.Column="2">
@@ -255,7 +322,7 @@
                                                 <TextBox x:Name="HotkeyKey"
                                                          PreviewKeyDown="Hotkey_OnPreviewKeyDown"
                                                          Text="{Binding AddHotkeyHotkey, Mode=OneWay}"
-                                                         Padding="2" IsReadOnly="True"/>
+                                                         Padding="2" IsReadOnly="True" />
                                             </StackPanel>
                                         </Grid>
 
@@ -267,7 +334,7 @@
                                                 <ColumnDefinition Width="*" />
                                             </Grid.ColumnDefinitions>
                                             <Button Grid.Column="0" x:Name="AddHotkeyButton" Content="Add"
-                                                    Click="AddHotkeyButton_OnClick"/>
+                                                    Click="AddHotkeyButton_OnClick" />
                                             <FrameworkElement Grid.Column="1" />
                                             <Button Grid.Column="2" x:Name="RemoveHotkeyButton" Content="Remove"
                                                     Click="RemoveHotkeyButton_OnClick" />

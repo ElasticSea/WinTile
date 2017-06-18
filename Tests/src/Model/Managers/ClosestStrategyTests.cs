@@ -26,7 +26,7 @@ namespace Tests.Model.Managers
 
         private static readonly List<Tile> tiles = new List<Tile> { tileA , tileB , tileC , tileD , tileE , tileF , tileG , tileH, tileI };
         private static readonly SelectedHolder holder = new SelectedHolder();
-        private readonly AbstractClosestStrategy ext = new AbstractClosestStrategy(holder, tiles, new WindowManagerDummy());
+        private readonly AbstractClosestStrategy ext = new AbstractClosestStrategy(holder, tiles, new EditorWindowManager());
 
         [TestMethod]
         public void NextTo()

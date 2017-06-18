@@ -22,8 +22,10 @@ namespace App
         private bool _activeInEditor;
         private HotkeyManager hotkeyManager;
 
-        private readonly CompositeWindowManager windowManager = new CompositeWindowManager(new ConvertWindowManager(new User32Manager()),new WindowManagerDummy());
+        private EditorWindowManager editorManager;
+        private CompositeWindowManager windowManager;
         private HotkeyPair _selectedHotkeyPair;
+        private Tile _selected;
 
         public ObservableCollection<Tile> Tiles
         {
@@ -53,13 +55,17 @@ namespace App
             set
             {
                 layoutManager.Json = value;
-                
+
+                var nativeWindowManager = new ConvertWindowManager(new User32Manager());
+                editorManager = new EditorWindowManager(layoutManager.Layout.tiles);
+                windowManager = new CompositeWindowManager(nativeWindowManager, editorManager);
+
                 var move = new MoveStrategy(layoutManager.Layout.tiles, windowManager);
                 var select = new SelectStrategy(layoutManager.Layout.tiles, windowManager);
                 var extend = new ExtendStrategy(layoutManager.Layout.tiles, windowManager);
                 var layout = new LayoutStrategy(layoutManager.Layout.tiles, windowManager);
 
-                var mapping = new Dictionary<HotkeyType, Action<object>>
+                hotkeyManager = new HotkeyManager(layoutManager.Layout.hotkeys, new Dictionary<HotkeyType, Action<object>>
                 {
                     {HotkeyType.MoveLeft, h1 => move.Left()},
                     {HotkeyType.MoveRight, h1 => move.Right()},
@@ -80,19 +86,27 @@ namespace App
                     {HotkeyType.SelectRight, h1 => select.Right()},
                     {HotkeyType.SelectUp, h1 => select.Up()},
                     {HotkeyType.SelectDown, h1 => select.Down()}
-                };
-
-                hotkeyManager = new HotkeyManager(layoutManager.Layout, mapping);
-                
-
+                });
             }
         }
 
-        public Tile Selected { get; set; }
+        public Tile Selected
+        {
+            get { return _selected; }
+            set
+            {
+                _selected = value; 
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Selected)+".Rect"));
+            }
+        }
+
+        public int SelectedIndex { get; set; }
 
         public HotkeyPair SelectedHotkeyPair { private get; set; }
         public HotkeyType AddHotkeyType { get; set; }
         public Hotkey AddHotkeyHotkey{ get; set; }
+
+        public ObservableCollection<Tile> Windows => editorManager.Windows;
 
         public bool ActiveInEditor
         {

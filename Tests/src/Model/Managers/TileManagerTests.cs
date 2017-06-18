@@ -19,7 +19,7 @@ namespace Tests.Model.Managers
 
             var observableCollection = new ObservableCollection<Tile>();
 
-            var user32 = new WindowManagerDummy { MonitorRect = new Rect(0, 0, 3840, 2160) };
+            var user32 = new EditorWindowManager { MonitorRect = new Rect(0, 0, 3840, 2160) };
             var positionSystem = new PositioningSystem(observableCollection, user32);
             var tileManager = new TileManager(observableCollection, positionSystem);
             observableCollection.Add(tileA);

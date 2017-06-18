@@ -47,6 +47,11 @@ namespace App.Model
             }
         }
 
+        public Rect(Rect rect) : this(rect.Left, rect.Top, rect.Right, rect.Bottom)
+        {
+        }
+
+        [JsonConstructor]
         public Rect(int left = 0, int top = 0, int right = 0, int bottom = 0)
         {
             Left = left;

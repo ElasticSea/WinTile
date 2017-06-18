@@ -1,21 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using App.Model.Managers.Strategies;
 
 namespace App.Model.Managers
 {
     public class HotkeyManager
     {
-        private readonly Layout layout;
+        private readonly IList<HotkeyPair> hotkeys;
+        private readonly Dictionary<HotkeyType, Action<object>> mapping;
+
         private IEnumerable<HotkeyBinding> bindings;
         private bool binded;
 
-        private readonly Dictionary<HotkeyType, Action<object>> mapping;
-
-        public HotkeyManager(Layout layout, Dictionary<HotkeyType, Action<object>> mapping)
+        public HotkeyManager(IList<HotkeyPair> hotkeys, Dictionary<HotkeyType, Action<object>> mapping)
         {
-            this.layout = layout;
+            this.hotkeys = hotkeys;
             this.mapping = mapping;
         }
 
@@ -35,7 +34,7 @@ namespace App.Model.Managers
         {
             if (binded == false)
             {
-                bindings = from typeHotkey in layout.hotkeys
+                bindings = from typeHotkey in hotkeys
                     where typeHotkey.Hotkey != null
                     select new HotkeyBinding(typeHotkey.Hotkey.Key, typeHotkey.Hotkey.Modifiers, mapping[typeHotkey.Type], false);
 
