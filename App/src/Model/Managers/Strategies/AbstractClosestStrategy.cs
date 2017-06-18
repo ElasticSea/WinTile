@@ -13,7 +13,7 @@ namespace App.Model.Managers.Strategies
         private static readonly Vector up = new Vector(0, -1);
         private static readonly Vector down = new Vector(0, 1);
 
-        public AbstractClosestStrategy(SelectedHolder holder, IList<Tile> tiles, IWindowManager windowManager) : base(holder, tiles, windowManager)
+        public AbstractClosestStrategy(IList<Tile> tiles, IWindowManager windowManager) : base(tiles, windowManager)
         {
         }
 
@@ -24,7 +24,7 @@ namespace App.Model.Managers.Strategies
 
         private void GetClosest(Vector direction)
         {
-            Selected = Closest(windowManager.GetWindowRect(windowManager.FocusedWindow));
+            var Selected = Closest(windowManager.GetWindowRect(windowManager.FocusedWindow));
 
             var tile = tiles
                 .Select(t => new { Title = t, Penalty = TilePenalty(direction, Selected, t) })
@@ -33,7 +33,6 @@ namespace App.Model.Managers.Strategies
 
             if (tile != null)
             {
-                Selected = tile;
                 OnClosestTIle(tile);
             }
         }

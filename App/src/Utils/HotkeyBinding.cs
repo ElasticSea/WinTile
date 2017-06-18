@@ -38,7 +38,6 @@ public class HotkeyBinding : IDisposable
         public Action<HotkeyBinding> Action { get; }
         public int Id { get; set; }
 
-        // ******************************************************************
         public HotkeyBinding(Key k, KeyModifier keyModifiers, Action<HotkeyBinding> action, bool register = true)
         {
             Key = k;
@@ -50,7 +49,6 @@ public class HotkeyBinding : IDisposable
             }
         }
 
-        // ******************************************************************
         public bool Bind()
         {
             var virtualKeyCode = KeyInterop.VirtualKeyFromKey(Key);
@@ -63,7 +61,6 @@ public class HotkeyBinding : IDisposable
             return result;
         }
 
-        // ******************************************************************
         public void Unbind()
         {
             HotkeyBinding hotkeyBinding;
@@ -74,7 +71,6 @@ public class HotkeyBinding : IDisposable
             }
         }
 
-        // ******************************************************************
         private static void ComponentDispatcherThreadFilterMessage(ref MSG msg, ref bool handled)
         {
             HotkeyBinding hotkeyBinding;

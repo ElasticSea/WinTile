@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using App.Utils;
 
 namespace App.Model.Managers.Strategies
 {
     public class MoveStrategy : AbstractClosestStrategy
     {
-        public MoveStrategy(SelectedHolder holder, IList<Tile> tiles, IWindowManager windowManager) : base(holder, tiles, windowManager)
+        public MoveStrategy(IList<Tile> tiles, IWindowManager windowManager) : base(tiles, windowManager)
         {
         }
 

@@ -7,30 +7,47 @@ namespace App.Utils
 {
     public class User32Manager : IWindowManager
     {
-        private IntPtr _currentWindow;
         const short SWP_NOZORDER = 0X4;
         const int SWP_SHOWWINDOW = 0x0040;
 
         public void PositionWindow(IntPtr handle, Rect rect)
         {
-            var windowRect = new NativeRect();
-            GetWindowRect(handle, ref windowRect);
-            var clientRect = new NativeRect();
-            GetClientRect(handle, ref clientRect);
+            var nativeWinRect = new NativeRect();
+            GetWindowRect(handle, ref nativeWinRect);
+            var nativeClientRect = new NativeRect();
+            GetClientRect(handle, ref nativeClientRect);
 
-            var dx = Math.Min((windowRect.Right - windowRect.Left) - clientRect.Right, 16);
-            var dy = Math.Min((windowRect.Bottom - windowRect.Top) - clientRect.Bottom, 8);
+            var winRect = rerct(nativeWinRect);
+            var clientRect = rerct(nativeClientRect);
+
+            var dx = Math.Min(winRect.Width - clientRect.Right, 16);
+            var dy = Math.Min(winRect.Height - clientRect.Bottom, 8);
 
             SetWindowPos(handle, 0, rect.Left - dx / 2, rect.Top, rect.Width + dx, rect.Height + dy,
                 SWP_NOZORDER | SWP_SHOWWINDOW);
         }
 
-        public Rect GetWindowRect(IntPtr hwnd)
-        {
-            var windowRect = new NativeRect();
-            GetWindowRect(hwnd, ref windowRect);
+        private Rect rerct(NativeRect rect) => new Rect(rect.Left,rect.Top,rect.Right,rect.Bottom);
 
-            return new Rect(windowRect.Left, windowRect.Top, windowRect.Right, windowRect.Bottom);
+        public Rect GetWindowRect(IntPtr handle)
+        {
+            var nativeWinRect = new NativeRect();
+            GetWindowRect(handle, ref nativeWinRect);
+            var nativeClientRect = new NativeRect();
+            GetClientRect(handle, ref nativeClientRect);
+
+            var winRect = rerct(nativeWinRect);
+            var clientRect = rerct(nativeClientRect);
+
+            var dx = Math.Min(winRect.Width - clientRect.Right, 16);
+            var dy = Math.Min(winRect.Height - clientRect.Bottom, 8);
+
+            winRect.Left += dx / 2;
+            winRect.Right += dx / 2;
+            winRect.Top += 0;
+            winRect.Bottom += dy;
+
+            return winRect;
         }
 
         public IntPtr FocusedWindow

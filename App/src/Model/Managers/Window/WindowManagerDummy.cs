@@ -15,7 +15,7 @@ namespace App
         }
 
         public IntPtr FocusedWindow { get; set; }
-        public IEnumerable<IntPtr> GetVisibleWindows() => Enumerable.Empty<IntPtr>();
+        public IEnumerable<IntPtr> GetVisibleWindows() => new List<IntPtr>{ IntPtr.Zero };
 
         public Rect GetWindowRect(IntPtr handle)
         {

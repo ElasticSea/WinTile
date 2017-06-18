@@ -7,7 +7,7 @@ namespace App.Model.Managers.Strategies
 {
     public class SelectStrategy : AbstractClosestStrategy
     {
-        public SelectStrategy(SelectedHolder holder, IList<Tile> tiles, IWindowManager windowManager) : base(holder, tiles, windowManager)
+        public SelectStrategy(IList<Tile> tiles, IWindowManager windowManager) : base(tiles, windowManager)
         {
         }
 

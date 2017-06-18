@@ -88,7 +88,6 @@
     <Compile Include="src\Utils\Extensions.cs" />
     <Compile Include="src\Utils\HotkeyBinding.cs" />
     <Compile Include="src\Model\Managers\Window\IWindowManager.cs" />
-    <Compile Include="src\Utils\SelectedHolder.cs" />
     <Compile Include="src\Model\Managers\Window\WindowManagerDummy.cs" />
     <Compile Include="src\Model\Managers\Window\User32Manager.cs" />
     <Compile Include="src\View\IntegerValidationRule.cs" />

@@ -22,7 +22,6 @@ namespace App
         private bool _activeInEditor;
         private HotkeyManager hotkeyManager;
 
-        private readonly SelectedHolder holder = new SelectedHolder();
         private readonly CompositeWindowManager windowManager = new CompositeWindowManager(new ConvertWindowManager(new User32Manager()),new WindowManagerDummy());
         private HotkeyPair _selectedHotkeyPair;
 
@@ -55,16 +54,10 @@ namespace App
             {
                 layoutManager.Json = value;
                 
-                var move = new MoveStrategy(holder, layoutManager.Layout.tiles, windowManager);
-                var select = new SelectStrategy(holder, layoutManager.Layout.tiles, windowManager);
-                var extend = new ExtendStrategy(holder, layoutManager.Layout.tiles, windowManager);
-                var layout = new LayoutStrategy(holder, layoutManager.Layout.tiles, windowManager);
-
-                holder.OnSelected += tile =>
-                {
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Selected)));
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Tiles)));
-                };
+                var move = new MoveStrategy(layoutManager.Layout.tiles, windowManager);
+                var select = new SelectStrategy(layoutManager.Layout.tiles, windowManager);
+                var extend = new ExtendStrategy(layoutManager.Layout.tiles, windowManager);
+                var layout = new LayoutStrategy(layoutManager.Layout.tiles, windowManager);
 
                 var mapping = new Dictionary<HotkeyType, Action<object>>
                 {
@@ -95,11 +88,7 @@ namespace App
             }
         }
 
-        public Tile Selected
-        {
-            get => holder.Selected;
-            set => holder.Selected = value;
-        }
+        public Tile Selected { get; set; }
 
         public HotkeyPair SelectedHotkeyPair { private get; set; }
         public HotkeyType AddHotkeyType { get; set; }
