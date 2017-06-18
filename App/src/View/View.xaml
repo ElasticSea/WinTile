@@ -16,6 +16,9 @@
         <ContextMenu x:Key="NotifierContextMenu" Placement="MousePoint">
             <MenuItem Header="Exit" Click="Menu_Exit" />
         </ContextMenu>
+        <Style TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        </Style>
     </Window.Resources>
 
     <Border Padding="16">
@@ -49,24 +52,48 @@
                                   IsSynchronizedWithCurrentItem="True"
                                   ItemsSource="{Binding Tiles}">
 
-                            <ListView.View>
-                                <GridView>
+                            <ListView.View >
+                                <GridView >
                                     <GridView.Columns>
-                                        <GridViewColumn Header="Left" Width="50"
-                                                        DisplayMemberBinding="{Binding Path=Rect.Left}" />
-                                        <GridViewColumn Header="Right" Width="50"
-                                                        DisplayMemberBinding="{Binding Path=Rect.Right}" />
-                                        <GridViewColumn Header="Top" Width="50"
-                                                        DisplayMemberBinding="{Binding Path=Rect.Top}" />
-                                        <GridViewColumn Header="Bottom" Width="50"
-                                                        DisplayMemberBinding="{Binding Path=Rect.Bottom}" />
+
+                                        <GridViewColumn Header="Left" Width="50">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Path=Rect.Left}" TextAlignment="Right"  />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <GridViewColumn Header="Right" Width="50">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Path=Rect.Right}" TextAlignment="Right"  />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <GridViewColumn Header="Top" Width="50">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Path=Rect.Top}" TextAlignment="Right"  />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <GridViewColumn Header="Bottom" Width="50">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Path=Rect.Bottom}" TextAlignment="Right"  />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
                                     </GridView.Columns>
                                 </GridView>
                             </ListView.View>
                         </ListView>
 
                         <FrameworkElement Grid.Row="3" />
-                        <StackPanel Grid.Row="4" MaxWidth="600">
+                        <StackPanel Grid.Row="4" MaxWidth="600" >
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
@@ -206,7 +233,8 @@
                                 </ListView.View>
                             </ListView>
 
-                            <GroupBox Header="Add Hotkey">
+                            <GroupBox Header="Add Hotkey"
+                                      IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" >
                                 <Border Padding="8">
                                     <StackPanel>
                                         <Grid>
@@ -219,8 +247,7 @@
                                                 <TextBlock Text="Name" />
                                                 <ComboBox ItemsSource="{Binding HotkeyTypes, Mode=OneWay}"
                                                           IsSynchronizedWithCurrentItem="True" 
-                                                          SelectedItem="{Binding AddHotkeyType, Mode=OneWayToSource}" Padding="2"
-                                                          IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
+                                                          SelectedItem="{Binding AddHotkeyType, Mode=OneWayToSource}" Padding="2"/>
                                             </StackPanel>
                                             <FrameworkElement Grid.Column="1" />
                                             <StackPanel Grid.Column="2">
@@ -228,8 +255,7 @@
                                                 <TextBox x:Name="HotkeyKey"
                                                          PreviewKeyDown="Hotkey_OnPreviewKeyDown"
                                                          Text="{Binding AddHotkeyHotkey, Mode=OneWay}"
-                                                         Padding="2" IsReadOnly="True"
-                                                         IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
+                                                         Padding="2" IsReadOnly="True"/>
                                             </StackPanel>
                                         </Grid>
 
@@ -241,12 +267,10 @@
                                                 <ColumnDefinition Width="*" />
                                             </Grid.ColumnDefinitions>
                                             <Button Grid.Column="0" x:Name="AddHotkeyButton" Content="Add"
-                                                    Click="AddHotkeyButton_OnClick"
-                                                    IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
+                                                    Click="AddHotkeyButton_OnClick"/>
                                             <FrameworkElement Grid.Column="1" />
                                             <Button Grid.Column="2" x:Name="RemoveHotkeyButton" Content="Remove"
-                                                    Click="RemoveHotkeyButton_OnClick"
-                                                    IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
+                                                    Click="RemoveHotkeyButton_OnClick" />
                                         </Grid>
                                     </StackPanel>
                                 </Border>
