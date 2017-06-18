@@ -6,7 +6,6 @@ namespace App.Model
     [ImplementPropertyChanged]
     public class Rect
     {
-        private int _cx;
         public int Left { get; set; }
         public int Top { get; set; }
         public int Right { get; set; }
