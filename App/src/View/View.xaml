@@ -12,7 +12,7 @@
         d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True, Type=local:ViewModel}">
 
     <Window.Resources>
-        <local:Multiplier x:Key="converter" />
+        <local:MultiplayerConvertor x:Key="converter" />
         <view:TrueFalseConverter x:Key="TrueFalseConverter" />
         <view:InverseBooleanConverter x:Key="InverseBooleanConverter" />
         <ContextMenu x:Key="NotifierContextMenu" Placement="MousePoint">
@@ -77,23 +77,17 @@
 
                                 </Border>
 
-                                <!--                                view:RelativeLayoutPanel.RelativeY="{Binding Selected.Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"-->
-                                <!--                                X2="{Binding Selected.Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"-->
-
-
                                 <Line Stroke="Black" StrokeThickness="1" StrokeDashArray="4,4"
                                           view:RelativeLayoutPanel.RelativeY="{Binding Selected.Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
                                           view:RelativeLayoutPanel.RelativeWidth="{Binding Selected.Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
                                           view:RelativeLayoutPanel.RelativeHeight="1"
                                           X2="10000" />
 
-
                                 <Line Stroke="Black" StrokeThickness="1" StrokeDashArray="4,4"
                                           view:RelativeLayoutPanel.RelativeY="{Binding Selected.Rect.Bottom, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
                                           view:RelativeLayoutPanel.RelativeWidth="{Binding Selected.Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
                                           view:RelativeLayoutPanel.RelativeHeight="1"
                                           X2="10000" />
-
 
                                 <Line Stroke="Black" StrokeThickness="1" StrokeDashArray="4,4"
                                           view:RelativeLayoutPanel.RelativeX="{Binding Selected.Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
@@ -280,19 +274,13 @@
                                     view:RelativeLayoutPanel.RelativeWidth="1"
                                     view:RelativeLayoutPanel.RelativeHeight="1"
                                     ItemsSource="{Binding Windows}">
-                                    <!--Use the ItemsPanel property to specify an ItemsPanelTemplate
-      that defines the panel that is used to hold the generated items.
-      In other words, use this property if you want to affect
-      how the items are laid out.-->
+                                    
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <view:RelativeLayoutPanel />
                                         </ItemsPanelTemplate>
                                     </ItemsControl.ItemsPanel>
-                                    <!--Use the ItemTemplate to set a DataTemplate to define
-      the visualization of the data objects. This DataTemplate
-      specifies that each data object appears with the Proriity
-      and TaskName on top of a silver ellipse.-->
+                                    
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <Border
@@ -308,11 +296,7 @@
                                             </Border>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
-                                    <!--Use the ItemContainerStyle property to specify the appearance
-      of the element that contains the data. This ItemContainerStyle
-      gives each item container a margin and a width. There is also
-      a trigger that sets a tooltip that shows the description of
-      the data object when the mouse hovers over the item container.-->
+                                    
                                     <ItemsControl.ItemContainerStyle>
                                         <Style TargetType="ContentPresenter">
                                             <Setter Property="view:RelativeLayoutPanel.RelativeX"

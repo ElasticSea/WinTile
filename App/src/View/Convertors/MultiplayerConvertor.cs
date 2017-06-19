@@ -6,7 +6,7 @@ using System.Windows.Markup;
 namespace App
 {
     [ValueConversion(typeof(object), typeof(string))]
-    public class Multiplier : MarkupExtension, IValueConverter
+    public class MultiplayerConvertor : MarkupExtension, IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter,
             CultureInfo culture)

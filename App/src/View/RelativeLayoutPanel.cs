@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace App.View
@@ -78,11 +79,15 @@ namespace App.View
         {
             foreach (UIElement element in InternalChildren)
             {
-                element.Arrange(new Rect(
-                    GetRelativeX(element) * finalSize.Width,
-                    GetRelativeY(element) * finalSize.Height,
-                    GetRelativeWidth(element) * finalSize.Width,
-                    GetRelativeHeight(element) * finalSize.Height));
+                var x = GetRelativeX(element) * finalSize.Width;
+                var y = GetRelativeY(element) * finalSize.Height;
+                var width = GetRelativeWidth(element) * finalSize.Width;
+                var height = GetRelativeHeight(element) * finalSize.Height;
+
+                width = Math.Max(0, width);
+                height = Math.Max(0, height);
+
+                element.Arrange(new Rect(x,y,width,height));
             }
 
             return finalSize;

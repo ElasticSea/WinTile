@@ -90,11 +90,11 @@
     <Compile Include="src\Model\Managers\Window\IWindowManager.cs" />
     <Compile Include="src\Model\Managers\Window\EditorWindowManager.cs" />
     <Compile Include="src\Model\Managers\Window\User32Manager.cs" />
-    <Compile Include="src\View\IntegerValidationRule.cs" />
-    <Compile Include="src\View\InverseBooleanConverter.cs" />
+    <Compile Include="src\View\Rules\IntegerValidationRule.cs" />
+    <Compile Include="src\View\Convertors\InverseBooleanConverter.cs" />
     <Compile Include="src\View\RelativeLayoutPanel.cs" />
-    <Compile Include="src\View\RectConverter.cs" />
-    <Compile Include="src\View\TrueFalseConverter.cs" />
+    <Compile Include="src\View\Convertors\MultiplayerConvertor.cs" />
+    <Compile Include="src\View\Convertors\TrueFalseConverter.cs" />
     <Compile Include="src\View\View.xaml.cs">
       <DependentUpon>View.xaml</DependentUpon>
     </Compile>
@@ -143,6 +143,7 @@
   <ItemGroup>
     <Resource Include="Resources\icon.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.2.0.0\build\netstandard1.4\Fody.targets" Condition="Exists('..\packages\Fody.2.0.0\build\netstandard1.4\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

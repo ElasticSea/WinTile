@@ -28,18 +28,6 @@ namespace App
         private HotkeyPair _selectedHotkeyPair;
         private Tile _selected;
 
-        public ObservableCollection<Tile> Tiles
-        {
-            get => layoutManager.Layout.tiles;
-            set => layoutManager.Layout.tiles = value;
-        }
-
-        public ObservableCollection<HotkeyPair> Hotkeys
-        {
-            get => layoutManager.Layout.hotkeys;
-            set => layoutManager.Layout.hotkeys = value;
-        }
-
         public IEnumerable<HotkeyType> HotkeyTypes
         {
             get
@@ -91,23 +79,15 @@ namespace App
             }
         }
 
-        public Tile Selected
-        {
-            get { return _selected; }
-            set
-            {
-                _selected = value; 
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Selected)+".Rect"));
-            }
-        }
+        public ObservableCollection<Tile> Tiles => layoutManager.Layout.tiles;
+        public ObservableCollection<HotkeyPair> Hotkeys => layoutManager.Layout.hotkeys;
+        public ObservableCollection<Tile> Windows => editorWindowManager.Windows;
 
+        public Tile Selected { get; set; }
         public int SelectedIndex { get; set; }
-
         public HotkeyPair SelectedHotkeyPair { private get; set; }
         public HotkeyType AddHotkeyType { get; set; }
         public Hotkey AddHotkeyHotkey{ get; set; }
-
-        public ObservableCollection<Tile> Windows => editorWindowManager.Windows;
 
         public bool ActiveInEditor
         {
