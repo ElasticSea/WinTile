@@ -22,8 +22,9 @@ namespace App
         private bool _activeInEditor;
         private HotkeyManager hotkeyManager;
 
-        private EditorWindowManager editorManager;
-        private CompositeWindowManager windowManager;
+        private ConvertWindowManager nativeWindowManager;
+        private EditorWindowManager editorWindowManager;
+        private CompositeWindowManager windowManager = new CompositeWindowManager();
         private HotkeyPair _selectedHotkeyPair;
         private Tile _selected;
 
@@ -56,9 +57,9 @@ namespace App
             {
                 layoutManager.Json = value;
 
-                var nativeWindowManager = new ConvertWindowManager(new User32Manager());
-                editorManager = new EditorWindowManager(layoutManager.Layout.tiles);
-                windowManager = new CompositeWindowManager(nativeWindowManager, editorManager);
+                nativeWindowManager = new ConvertWindowManager(new User32Manager());
+                editorWindowManager = new EditorWindowManager(layoutManager.Layout.tiles);
+                windowManager.CurrentManager = editorWindowManager;
 
                 var move = new MoveStrategy(layoutManager.Layout.tiles, windowManager);
                 var select = new SelectStrategy(layoutManager.Layout.tiles, windowManager);
@@ -106,7 +107,7 @@ namespace App
         public HotkeyType AddHotkeyType { get; set; }
         public Hotkey AddHotkeyHotkey{ get; set; }
 
-        public ObservableCollection<Tile> Windows => editorManager.Windows;
+        public ObservableCollection<Tile> Windows => editorWindowManager.Windows;
 
         public bool ActiveInEditor
         {
@@ -129,13 +130,13 @@ namespace App
 
         public void BindHotkeys()
         {
-            windowManager.Active = true;
+            windowManager.CurrentManager = nativeWindowManager;
             hotkeyManager.BindHotkeys();
         }
 
         public void UnbindHotkeys()
         {
-            windowManager.Active = false;
+            windowManager.CurrentManager = editorWindowManager;
             hotkeyManager.UnbindHotkeys();
         }
 
@@ -152,12 +153,12 @@ namespace App
         }
         public void AddWindow()
         {
-            throw new NotImplementedException();
+            editorWindowManager.addWindow();
         }
 
-        public void RemoveWindow(Tile window)
+        public void RemoveWindow()
         {
-            throw new NotImplementedException();
+            editorWindowManager.removeWindow();
         }
 
         internal void Save()

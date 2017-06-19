@@ -12,46 +12,14 @@ namespace App
 {
     public class EditorWindowManager : IWindowManager
     {
-        private IDictionary<Tile,Tile> binding = new Dictionary<Tile, Tile>();
 
         public EditorWindowManager(ObservableCollection<Tile> tiles)
         {
-            tiles.CollectionChanged += (sender, args) =>
-            {
-                foreach(Tile tile in args.NewItems)
-                {
-                    var window = new Tile(new Rect(tile.Rect));
-                    Windows.Add(window);
-                    binding.Add(tile, window);
-                }
-
-                foreach (Tile tile in args.OldItems)
-                {
-                    var window = binding[tile];
-                    binding.Remove(window);
-                    Windows.Remove(window);
-                }
-
-                if (Windows.Any(w => w.Selected) == false)
-                {
-                    Windows.Last().Selected = true;
-                }
-            };
-
-            tiles.ForEach(tile =>
-                {
-                    var window = new Tile(new Rect(tile.Rect)){Bursh = PickBrush()};
-                    Windows.Add(window);
-                    binding.Add(tile, window);
-                }
-            );
-
-            if (Windows.Any(w => w.Selected) == false)
-            {
-                Windows.Last().Selected = true;
-            }
+            this.tiles = tiles;
         }
         Random rnd = new Random();
+        private ObservableCollection<Tile> tiles;
+
         private SolidColorBrush PickBrush()
         {
 
@@ -92,5 +60,27 @@ namespace App
         }
 
         public Tile getTileFrom(IntPtr handle) => Windows.First(w => w.GetHashCode() == handle.ToInt32());
+
+        public void addWindow()
+        {
+            var tile = tiles.First();
+            var window = new Tile(new Rect(tile.Rect)) { Bursh = PickBrush() };
+            Windows.Add(window);
+
+            if (Windows.Any(w => w.Selected) == false)
+            {
+                Windows.First().Selected = true;
+            }
+        }
+
+        public void removeWindow()
+        {
+            Windows.Remove(Windows.First(w => w.Selected));
+
+            if (Windows.Any(w => w.Selected) == false)
+            {
+                Windows.FirstOrDefault()?.@let(w => w.Selected = true);
+            }
+        }
     }
 }

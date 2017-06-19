@@ -127,8 +127,8 @@ namespace App
 
         private void RemoveTileButton_OnClick(object sender, RoutedEventArgs e) => VM.RemoveTile(VM.Selected);
         private void AddTileButton_OnClick(object sender, RoutedEventArgs e) => VM.AddTile();
-        private void RemoveWindowButton_OnClick(object sender, RoutedEventArgs e) => VM.RemoveTile(VM.Selected);
-        private void AddWindowButton_OnClick(object sender, RoutedEventArgs e) => VM.AddTile();
+        private void RemoveWindowButton_OnClick(object sender, RoutedEventArgs e) => VM.RemoveWindow();
+        private void AddWindowButton_OnClick(object sender, RoutedEventArgs e) => VM.AddWindow();
         private void SaveLayoutButton_OnClick(object sender, RoutedEventArgs e) => VM.Save();
         private void ResetLayoutButton_OnClick(object sender, RoutedEventArgs e) => VM.Load();
         private void Hotkey_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotkeyBinding.assignHotkey(args, h => VM.AddHotkeyHotkey = h);
