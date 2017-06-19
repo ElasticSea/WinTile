@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:App"
         xmlns:view="clr-namespace:App.View"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Icon="../../Resources/icon.png"
         Title="WinTile" Height="720" Width="1280"
@@ -12,6 +13,7 @@
 
     <Window.Resources>
         <local:Multiplier x:Key="converter" />
+        <view:TrueFalseConverter x:Key="TrueFalseConverter" />
         <view:InverseBooleanConverter x:Key="InverseBooleanConverter" />
         <ContextMenu x:Key="NotifierContextMenu" Placement="MousePoint">
             <MenuItem Header="Exit" Click="Menu_Exit" />
@@ -19,6 +21,23 @@
         <Style TargetType="ListViewItem">
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         </Style>
+        <x:Array Type="Brush" x:Key="selectedDeselectedBrushes">
+            <Brush>Yellow</Brush>
+            <Brush>Aqua</Brush>
+        </x:Array>
+        <x:Array Type="system:Int32" x:Key="5to0Thicknes">
+            <system:Int32>5</system:Int32>
+            <system:Int32>0</system:Int32>
+        </x:Array>
+        <x:Array Type="Visibility" x:Key="visibleHiddenArray">
+            <Visibility>Visible</Visibility>
+            <Visibility>Hidden</Visibility>
+        </x:Array>
+        <x:Array Type="Visibility" x:Key="hiddenVisibleArray">
+            <Visibility>Hidden</Visibility>
+            <Visibility>Visible</Visibility>
+        </x:Array>
+
     </Window.Resources>
 
     <Border Padding="16">
@@ -45,89 +64,90 @@
 
                         <Border Grid.Row="0" BorderBrush="Black" BorderThickness="1">
                             <view:RelativeLayoutPanel x:Name="Canvas">
-                                <Border Background="DimGray"
-                                        view:RelativeLayoutPanel.RelativeX="{Binding Selected.Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
-                                        view:RelativeLayoutPanel.RelativeY="{Binding Selected.Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
-                                        view:RelativeLayoutPanel.RelativeWidth="{Binding Selected.Rect.Width, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
-                                        view:RelativeLayoutPanel.RelativeHeight="{Binding Selected.Rect.Height, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}">
-                                    <TextBlock Foreground="White" HorizontalAlignment="Center"
-                                               SnapsToDevicePixels="True"
-                                               VerticalAlignment="Center" FontSize="45"
-                                               Text="{Binding SelectedIndex, Mode=OneWay}" />
+                                <view:RelativeLayoutPanel
+                                    Visibility="{Binding Path=ActiveInEditor, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource hiddenVisibleArray}}"
+                                    view:RelativeLayoutPanel.RelativeX="0"
+                                    view:RelativeLayoutPanel.RelativeY="0"
+                                    view:RelativeLayoutPanel.RelativeWidth="1"
+                                    view:RelativeLayoutPanel.RelativeHeight="1">
+                                    <Border Background="DimGray"
+                                            view:RelativeLayoutPanel.RelativeX="{Binding Selected.Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
+                                            view:RelativeLayoutPanel.RelativeY="{Binding Selected.Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
+                                            view:RelativeLayoutPanel.RelativeWidth="{Binding Selected.Rect.Width, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
+                                            view:RelativeLayoutPanel.RelativeHeight="{Binding Selected.Rect.Height, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}">
+                                        <TextBlock Foreground="White" HorizontalAlignment="Center"
+                                                   SnapsToDevicePixels="True"
+                                                   VerticalAlignment="Center" FontSize="45"
+                                                   Text="{Binding SelectedIndex, Mode=OneWay}" />
 
-                                </Border>
+                                    </Border>
 
-<!--                                view:RelativeLayoutPanel.RelativeY="{Binding Selected.Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"-->
-<!--                                X2="{Binding Selected.Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"-->
-
-
-                                <Line Stroke="Black" StrokeThickness="1" StrokeDashArray="4,4"
-                                      view:RelativeLayoutPanel.RelativeY="{Binding Selected.Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
-                                      view:RelativeLayoutPanel.RelativeWidth="{Binding Selected.Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
-                                      view:RelativeLayoutPanel.RelativeHeight="1"
-                                      X2="10000" />
-
-
-                                <Line Stroke="Black" StrokeThickness="1" StrokeDashArray="4,4"
-                                      view:RelativeLayoutPanel.RelativeY="{Binding Selected.Rect.Bottom, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
-                                      view:RelativeLayoutPanel.RelativeWidth="{Binding Selected.Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
-                                      view:RelativeLayoutPanel.RelativeHeight="1"
-                                      X2="10000" />
+                                    <!--                                view:RelativeLayoutPanel.RelativeY="{Binding Selected.Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"-->
+                                    <!--                                X2="{Binding Selected.Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"-->
 
 
-                                <Line Stroke="Black" StrokeThickness="1" StrokeDashArray="4,4"
-                                      view:RelativeLayoutPanel.RelativeX="{Binding Selected.Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
-                                      view:RelativeLayoutPanel.RelativeWidth="1"
-                                      view:RelativeLayoutPanel.RelativeHeight="{Binding Selected.Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
-                                      Y2="10000" />
+                                    <Line Stroke="Black" StrokeThickness="1" StrokeDashArray="4,4"
+                                          view:RelativeLayoutPanel.RelativeY="{Binding Selected.Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
+                                          view:RelativeLayoutPanel.RelativeWidth="{Binding Selected.Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
+                                          view:RelativeLayoutPanel.RelativeHeight="1"
+                                          X2="10000" />
 
-                                <Line Stroke="Black" StrokeThickness="1" StrokeDashArray="4,4"
-                                      view:RelativeLayoutPanel.RelativeX="{Binding Selected.Rect.Right, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
-                                      view:RelativeLayoutPanel.RelativeWidth="1"
-                                      view:RelativeLayoutPanel.RelativeHeight="{Binding Selected.Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
-                                      Y2="10000" />
 
-                                <TextBlock Text="{Binding Selected.Rect.Left}" 
-                                           view:RelativeLayoutPanel.RelativeX="{Binding Selected.Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
-                                           view:RelativeLayoutPanel.RelativeHeight="1"
-                                           view:RelativeLayoutPanel.RelativeWidth="1" />
+                                    <Line Stroke="Black" StrokeThickness="1" StrokeDashArray="4,4"
+                                          view:RelativeLayoutPanel.RelativeY="{Binding Selected.Rect.Bottom, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
+                                          view:RelativeLayoutPanel.RelativeWidth="{Binding Selected.Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
+                                          view:RelativeLayoutPanel.RelativeHeight="1"
+                                          X2="10000" />
 
-                                <TextBlock Text="{Binding Selected.Rect.Right}" 
-                                           view:RelativeLayoutPanel.RelativeX="{Binding Selected.Rect.Right, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
-                                           view:RelativeLayoutPanel.RelativeHeight="1"
-                                           view:RelativeLayoutPanel.RelativeWidth="1" />
 
-                                <TextBlock Text="{Binding Selected.Rect.Top}" 
-                                           view:RelativeLayoutPanel.RelativeY="{Binding Selected.Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
-                                           view:RelativeLayoutPanel.RelativeHeight="1"
-                                           view:RelativeLayoutPanel.RelativeWidth="1" />
+                                    <Line Stroke="Black" StrokeThickness="1" StrokeDashArray="4,4"
+                                          view:RelativeLayoutPanel.RelativeX="{Binding Selected.Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
+                                          view:RelativeLayoutPanel.RelativeWidth="1"
+                                          view:RelativeLayoutPanel.RelativeHeight="{Binding Selected.Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
+                                          Y2="10000" />
 
-                                <TextBlock Text="{Binding Selected.Rect.Bottom}" 
-                                           view:RelativeLayoutPanel.RelativeY="{Binding Selected.Rect.Bottom, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
-                                           view:RelativeLayoutPanel.RelativeHeight="1"
-                                           view:RelativeLayoutPanel.RelativeWidth="1" />
+                                    <Line Stroke="Black" StrokeThickness="1" StrokeDashArray="4,4"
+                                          view:RelativeLayoutPanel.RelativeX="{Binding Selected.Rect.Right, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
+                                          view:RelativeLayoutPanel.RelativeWidth="1"
+                                          view:RelativeLayoutPanel.RelativeHeight="{Binding Selected.Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
+                                          Y2="10000" />
 
-                                <!--                                // TODO without the textblock the relative rect of border property is not firing properly-->
-                                    <TextBlock  Visibility="Hidden" Text="{Binding Selected.Rect}"></TextBlock>
+                                    <TextBlock Text="{Binding Selected.Rect.Left}"
+                                               view:RelativeLayoutPanel.RelativeX="{Binding Selected.Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
+                                               view:RelativeLayoutPanel.RelativeHeight="1"
+                                               view:RelativeLayoutPanel.RelativeWidth="1" />
 
-                                <ItemsControl 
-                                              view:RelativeLayoutPanel.RelativeX="0"
-                                              view:RelativeLayoutPanel.RelativeY="0"
-                                              view:RelativeLayoutPanel.RelativeWidth="1"
-                                              view:RelativeLayoutPanel.RelativeHeight="1"
-                                              ItemsSource="{Binding Windows}">
+                                    <TextBlock Text="{Binding Selected.Rect.Right}"
+                                               view:RelativeLayoutPanel.RelativeX="{Binding Selected.Rect.Right, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
+                                               view:RelativeLayoutPanel.RelativeHeight="1"
+                                               view:RelativeLayoutPanel.RelativeWidth="1" />
+
+                                    <TextBlock Text="{Binding Selected.Rect.Top}"
+                                               view:RelativeLayoutPanel.RelativeY="{Binding Selected.Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
+                                               view:RelativeLayoutPanel.RelativeHeight="1"
+                                               view:RelativeLayoutPanel.RelativeWidth="1" />
+
+                                    <TextBlock Text="{Binding Selected.Rect.Bottom}"
+                                               view:RelativeLayoutPanel.RelativeY="{Binding Selected.Rect.Bottom, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
+                                               view:RelativeLayoutPanel.RelativeHeight="1"
+                                               view:RelativeLayoutPanel.RelativeWidth="1" />
+
+                                </view:RelativeLayoutPanel>
+
+                                <ItemsControl
+                                    Visibility="{Binding Path=ActiveInEditor, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource visibleHiddenArray}}"
+                                    view:RelativeLayoutPanel.RelativeX="0"
+                                    view:RelativeLayoutPanel.RelativeY="0"
+                                    view:RelativeLayoutPanel.RelativeWidth="1"
+                                    view:RelativeLayoutPanel.RelativeHeight="1"
+                                    ItemsSource="{Binding Windows}">
                                     <!--Use the ItemsPanel property to specify an ItemsPanelTemplate
       that defines the panel that is used to hold the generated items.
       In other words, use this property if you want to affect
       how the items are laid out.-->
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
-                                            <view:RelativeLayoutPanel 
-                                                view:RelativeLayoutPanel.RelativeX=".6"
-                                                view:RelativeLayoutPanel.RelativeY="0"
-                                                view:RelativeLayoutPanel.RelativeWidth="1"
-                                                view:RelativeLayoutPanel.RelativeHeight="1" />
-<!--                                            <Canvas></Canvas>-->
+                                            <view:RelativeLayoutPanel />
                                         </ItemsPanelTemplate>
                                     </ItemsControl.ItemsPanel>
                                     <!--Use the ItemTemplate to set a DataTemplate to define
@@ -136,32 +156,21 @@
       and TaskName on top of a silver ellipse.-->
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <DataTemplate.Resources>
-<!--                                                <Style TargetType="TextBlock">-->
-<!--                                                    <Setter Property="FontSize" Value="18"/>-->
-<!--                                                    <Setter Property="HorizontalAlignment" Value="Center"/>-->
-<!--                                                </Style>-->
-                                            </DataTemplate.Resources>
-
-
-                                            <Border BorderThickness="3" BorderBrush="Aqua">
-                                            <TextBlock Text="{Binding Rect}" 
-                                            />
+                                            <Border
+                                                Background="{Binding Bursh}"
+                                                BorderThickness="{Binding Path=Selected, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource 5to0Thicknes}}"
+                                                BorderBrush="{Binding Path=Selected, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource selectedDeselectedBrushes}}">
+                                                <TextBlock Text="" Foreground="White" VerticalAlignment="Center"
+                                                           HorizontalAlignment="Center" FontSize="45">
+                                                    <Run Text="{Binding Rect.Width}" />
+                                                    <Run Text="x" />
+                                                    <Run Text="{Binding Rect.Height}" />
+                                                    <Run Text="{Binding Rect.Left}" />
+                                                    <Run Text="{Binding Rect.Right}" />
+                                                    <Run Text="{Binding Rect.Bottom}" />
+                                                    <Run Text="{Binding Rect.Top}" />
+                                                </TextBlock>
                                             </Border>
-
-                                            <!--                                                       view:RelativeLayoutPanel.RelativeX="{Binding Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"-->
-<!--                                                       view:RelativeLayoutPanel.RelativeY="{Binding Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"-->
-<!--                                                       view:RelativeLayoutPanel.RelativeWidth="{Binding Rect.Width, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"-->
-<!--                                                       view:RelativeLayoutPanel.RelativeHeight="{Binding Rect.Height, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"-->
-<!--                                            <Grid >-->
-<!--                                                <Ellipse Fill="Silver"/>-->
-<!--                                                <StackPanel>-->
-<!--                                                    <TextBlock -->
-<!--                                                               Text="{Binding Path=Rect.Left}"/>-->
-<!--                                                    <TextBlock -->
-<!--                                                               Text="{Binding Path=Rect.Right}"/>-->
-<!--                                                </StackPanel>-->
-<!--                                            </Grid>-->
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                     <!--Use the ItemContainerStyle property to specify the appearance
@@ -171,22 +180,16 @@
       the data object when the mouse hovers over the item container.-->
                                     <ItemsControl.ItemContainerStyle>
                                         <Style TargetType="ContentPresenter">
-                                            <Setter Property="view:RelativeLayoutPanel.RelativeX" Value="{Binding Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}" />
-                                            <Setter Property="view:RelativeLayoutPanel.RelativeY" Value="{Binding Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}" />
-                                            <Setter Property="view:RelativeLayoutPanel.RelativeWidth" Value="{Binding Rect.Width, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}" />
-                                            <Setter Property="view:RelativeLayoutPanel.RelativeHeight" Value="{Binding Rect.Height, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}" />
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeX"
+                                                    Value="{Binding Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}" />
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeY"
+                                                    Value="{Binding Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}" />
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeWidth"
+                                                    Value="{Binding Rect.Width, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}" />
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeHeight"
+                                                    Value="{Binding Rect.Height, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}" />
                                         </Style>
                                     </ItemsControl.ItemContainerStyle>
-<!--                                    <ItemsControl.ItemContainerStyle>-->
-<!--                                        <Style>-->
-<!--                                            <Style.Triggers>-->
-<!--                                                <Trigger Property="Control.IsMouseOver" Value="True">-->
-<!--                                                    <Setter Property="Control.ToolTip"-->
-<!--                                                            Value="AJOJ"/>-->
-<!--                                                </Trigger>-->
-<!--                                            </Style.Triggers>-->
-<!--                                        </Style>-->
-<!--                                    </ItemsControl.ItemContainerStyle>-->
                                 </ItemsControl>
                             </view:RelativeLayoutPanel>
                         </Border>

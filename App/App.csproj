@@ -94,6 +94,7 @@
     <Compile Include="src\View\InverseBooleanConverter.cs" />
     <Compile Include="src\View\RelativeLayoutPanel.cs" />
     <Compile Include="src\View\RectConverter.cs" />
+    <Compile Include="src\View\TrueFalseConverter.cs" />
     <Compile Include="src\View\View.xaml.cs">
       <DependentUpon>View.xaml</DependentUpon>
     </Compile>
