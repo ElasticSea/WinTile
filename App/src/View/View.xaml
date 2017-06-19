@@ -165,10 +165,6 @@
                                                     <Run Text="{Binding Rect.Width}" />
                                                     <Run Text="x" />
                                                     <Run Text="{Binding Rect.Height}" />
-                                                    <Run Text="{Binding Rect.Left}" />
-                                                    <Run Text="{Binding Rect.Right}" />
-                                                    <Run Text="{Binding Rect.Bottom}" />
-                                                    <Run Text="{Binding Rect.Top}" />
                                                 </TextBlock>
                                             </Border>
                                         </DataTemplate>
