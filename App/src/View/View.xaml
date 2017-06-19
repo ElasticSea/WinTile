@@ -108,7 +108,86 @@
                                            view:RelativeLayoutPanel.RelativeWidth="1" />
 
                                 <!--                                // TODO without the textblock the relative rect of border property is not firing properly-->
-                                <TextBlock  Visibility="Hidden" Text="{Binding Selected.Rect}"></TextBlock>
+                                    <TextBlock  Visibility="Hidden" Text="{Binding Selected.Rect}"></TextBlock>
+
+                                <ItemsControl 
+                                              view:RelativeLayoutPanel.RelativeX="0"
+                                              view:RelativeLayoutPanel.RelativeY="0"
+                                              view:RelativeLayoutPanel.RelativeWidth="1"
+                                              view:RelativeLayoutPanel.RelativeHeight="1"
+                                              ItemsSource="{Binding Windows}">
+                                    <!--Use the ItemsPanel property to specify an ItemsPanelTemplate
+      that defines the panel that is used to hold the generated items.
+      In other words, use this property if you want to affect
+      how the items are laid out.-->
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <view:RelativeLayoutPanel 
+                                                view:RelativeLayoutPanel.RelativeX=".6"
+                                                view:RelativeLayoutPanel.RelativeY="0"
+                                                view:RelativeLayoutPanel.RelativeWidth="1"
+                                                view:RelativeLayoutPanel.RelativeHeight="1" />
+<!--                                            <Canvas></Canvas>-->
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <!--Use the ItemTemplate to set a DataTemplate to define
+      the visualization of the data objects. This DataTemplate
+      specifies that each data object appears with the Proriity
+      and TaskName on top of a silver ellipse.-->
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <DataTemplate.Resources>
+<!--                                                <Style TargetType="TextBlock">-->
+<!--                                                    <Setter Property="FontSize" Value="18"/>-->
+<!--                                                    <Setter Property="HorizontalAlignment" Value="Center"/>-->
+<!--                                                </Style>-->
+                                            </DataTemplate.Resources>
+
+
+                                            <Border BorderThickness="3" BorderBrush="Aqua">
+                                            <TextBlock Text="{Binding Rect}" 
+                                            />
+                                            </Border>
+
+                                            <!--                                                       view:RelativeLayoutPanel.RelativeX="{Binding Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"-->
+<!--                                                       view:RelativeLayoutPanel.RelativeY="{Binding Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"-->
+<!--                                                       view:RelativeLayoutPanel.RelativeWidth="{Binding Rect.Width, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"-->
+<!--                                                       view:RelativeLayoutPanel.RelativeHeight="{Binding Rect.Height, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"-->
+<!--                                            <Grid >-->
+<!--                                                <Ellipse Fill="Silver"/>-->
+<!--                                                <StackPanel>-->
+<!--                                                    <TextBlock -->
+<!--                                                               Text="{Binding Path=Rect.Left}"/>-->
+<!--                                                    <TextBlock -->
+<!--                                                               Text="{Binding Path=Rect.Right}"/>-->
+<!--                                                </StackPanel>-->
+<!--                                            </Grid>-->
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                    <!--Use the ItemContainerStyle property to specify the appearance
+      of the element that contains the data. This ItemContainerStyle
+      gives each item container a margin and a width. There is also
+      a trigger that sets a tooltip that shows the description of
+      the data object when the mouse hovers over the item container.-->
+                                    <ItemsControl.ItemContainerStyle>
+                                        <Style TargetType="ContentPresenter">
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeX" Value="{Binding Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}" />
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeY" Value="{Binding Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}" />
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeWidth" Value="{Binding Rect.Width, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}" />
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeHeight" Value="{Binding Rect.Height, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}" />
+                                        </Style>
+                                    </ItemsControl.ItemContainerStyle>
+<!--                                    <ItemsControl.ItemContainerStyle>-->
+<!--                                        <Style>-->
+<!--                                            <Style.Triggers>-->
+<!--                                                <Trigger Property="Control.IsMouseOver" Value="True">-->
+<!--                                                    <Setter Property="Control.ToolTip"-->
+<!--                                                            Value="AJOJ"/>-->
+<!--                                                </Trigger>-->
+<!--                                            </Style.Triggers>-->
+<!--                                        </Style>-->
+<!--                                    </ItemsControl.ItemContainerStyle>-->
+                                </ItemsControl>
                             </view:RelativeLayoutPanel>
                         </Border>
                         <FrameworkElement Grid.Row="1" />
