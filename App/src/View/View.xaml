@@ -49,7 +49,8 @@
             </Grid.ColumnDefinitions>
 
 
-            <GroupBox Grid.Column="0" Header="Tile Editor">
+            <GroupBox Grid.Column="0" Header="Tile Editor" 
+                      Visibility="{Binding Path=ActiveInEditor, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource hiddenVisibleArray}}">
                 <Border Padding="8">
 
                     <Grid>
@@ -63,130 +64,69 @@
                         </Grid.RowDefinitions>
 
                         <Border Grid.Row="0" BorderBrush="Black" BorderThickness="1">
-                            <view:RelativeLayoutPanel x:Name="Canvas">
-                                <view:RelativeLayoutPanel
-                                    Visibility="{Binding Path=ActiveInEditor, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource hiddenVisibleArray}}"
-                                    view:RelativeLayoutPanel.RelativeX="0"
-                                    view:RelativeLayoutPanel.RelativeY="0"
-                                    view:RelativeLayoutPanel.RelativeWidth="1"
-                                    view:RelativeLayoutPanel.RelativeHeight="1">
-                                    <Border Background="DimGray"
+                            <view:RelativeLayoutPanel>
+                                <Border Background="DimGray"
                                             view:RelativeLayoutPanel.RelativeX="{Binding Selected.Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
                                             view:RelativeLayoutPanel.RelativeY="{Binding Selected.Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
                                             view:RelativeLayoutPanel.RelativeWidth="{Binding Selected.Rect.Width, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
                                             view:RelativeLayoutPanel.RelativeHeight="{Binding Selected.Rect.Height, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}">
-                                        <TextBlock Foreground="White" HorizontalAlignment="Center"
+                                    <TextBlock Foreground="White" HorizontalAlignment="Center"
                                                    SnapsToDevicePixels="True"
                                                    VerticalAlignment="Center" FontSize="45"
                                                    Text="{Binding SelectedIndex, Mode=OneWay}" />
 
-                                    </Border>
+                                </Border>
 
-                                    <!--                                view:RelativeLayoutPanel.RelativeY="{Binding Selected.Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"-->
-                                    <!--                                X2="{Binding Selected.Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"-->
+                                <!--                                view:RelativeLayoutPanel.RelativeY="{Binding Selected.Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"-->
+                                <!--                                X2="{Binding Selected.Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"-->
 
 
-                                    <Line Stroke="Black" StrokeThickness="1" StrokeDashArray="4,4"
+                                <Line Stroke="Black" StrokeThickness="1" StrokeDashArray="4,4"
                                           view:RelativeLayoutPanel.RelativeY="{Binding Selected.Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
                                           view:RelativeLayoutPanel.RelativeWidth="{Binding Selected.Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
                                           view:RelativeLayoutPanel.RelativeHeight="1"
                                           X2="10000" />
 
 
-                                    <Line Stroke="Black" StrokeThickness="1" StrokeDashArray="4,4"
+                                <Line Stroke="Black" StrokeThickness="1" StrokeDashArray="4,4"
                                           view:RelativeLayoutPanel.RelativeY="{Binding Selected.Rect.Bottom, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
                                           view:RelativeLayoutPanel.RelativeWidth="{Binding Selected.Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
                                           view:RelativeLayoutPanel.RelativeHeight="1"
                                           X2="10000" />
 
 
-                                    <Line Stroke="Black" StrokeThickness="1" StrokeDashArray="4,4"
+                                <Line Stroke="Black" StrokeThickness="1" StrokeDashArray="4,4"
                                           view:RelativeLayoutPanel.RelativeX="{Binding Selected.Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
                                           view:RelativeLayoutPanel.RelativeWidth="1"
                                           view:RelativeLayoutPanel.RelativeHeight="{Binding Selected.Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
                                           Y2="10000" />
 
-                                    <Line Stroke="Black" StrokeThickness="1" StrokeDashArray="4,4"
+                                <Line Stroke="Black" StrokeThickness="1" StrokeDashArray="4,4"
                                           view:RelativeLayoutPanel.RelativeX="{Binding Selected.Rect.Right, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
                                           view:RelativeLayoutPanel.RelativeWidth="1"
                                           view:RelativeLayoutPanel.RelativeHeight="{Binding Selected.Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
                                           Y2="10000" />
 
-                                    <TextBlock Text="{Binding Selected.Rect.Left}"
+                                <TextBlock Text="{Binding Selected.Rect.Left}"
                                                view:RelativeLayoutPanel.RelativeX="{Binding Selected.Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
                                                view:RelativeLayoutPanel.RelativeHeight="1"
                                                view:RelativeLayoutPanel.RelativeWidth="1" />
 
-                                    <TextBlock Text="{Binding Selected.Rect.Right}"
+                                <TextBlock Text="{Binding Selected.Rect.Right}"
                                                view:RelativeLayoutPanel.RelativeX="{Binding Selected.Rect.Right, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
                                                view:RelativeLayoutPanel.RelativeHeight="1"
                                                view:RelativeLayoutPanel.RelativeWidth="1" />
 
-                                    <TextBlock Text="{Binding Selected.Rect.Top}"
+                                <TextBlock Text="{Binding Selected.Rect.Top}"
                                                view:RelativeLayoutPanel.RelativeY="{Binding Selected.Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
                                                view:RelativeLayoutPanel.RelativeHeight="1"
                                                view:RelativeLayoutPanel.RelativeWidth="1" />
 
-                                    <TextBlock Text="{Binding Selected.Rect.Bottom}"
+                                <TextBlock Text="{Binding Selected.Rect.Bottom}"
                                                view:RelativeLayoutPanel.RelativeY="{Binding Selected.Rect.Bottom, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}"
                                                view:RelativeLayoutPanel.RelativeHeight="1"
                                                view:RelativeLayoutPanel.RelativeWidth="1" />
 
-                                </view:RelativeLayoutPanel>
-
-                                <ItemsControl
-                                    Visibility="{Binding Path=ActiveInEditor, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource visibleHiddenArray}}"
-                                    view:RelativeLayoutPanel.RelativeX="0"
-                                    view:RelativeLayoutPanel.RelativeY="0"
-                                    view:RelativeLayoutPanel.RelativeWidth="1"
-                                    view:RelativeLayoutPanel.RelativeHeight="1"
-                                    ItemsSource="{Binding Windows}">
-                                    <!--Use the ItemsPanel property to specify an ItemsPanelTemplate
-      that defines the panel that is used to hold the generated items.
-      In other words, use this property if you want to affect
-      how the items are laid out.-->
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <view:RelativeLayoutPanel />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <!--Use the ItemTemplate to set a DataTemplate to define
-      the visualization of the data objects. This DataTemplate
-      specifies that each data object appears with the Proriity
-      and TaskName on top of a silver ellipse.-->
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border
-                                                Background="{Binding Bursh}"
-                                                BorderThickness="{Binding Path=Selected, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource 5to0Thicknes}}"
-                                                BorderBrush="{Binding Path=Selected, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource selectedDeselectedBrushes}}">
-                                                <TextBlock Text="" Foreground="White" VerticalAlignment="Center"
-                                                           HorizontalAlignment="Center" FontSize="45">
-                                                    <Run Text="{Binding Rect.Width}" />
-                                                    <Run Text="x" />
-                                                    <Run Text="{Binding Rect.Height}" />
-                                                </TextBlock>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                    <!--Use the ItemContainerStyle property to specify the appearance
-      of the element that contains the data. This ItemContainerStyle
-      gives each item container a margin and a width. There is also
-      a trigger that sets a tooltip that shows the description of
-      the data object when the mouse hovers over the item container.-->
-                                    <ItemsControl.ItemContainerStyle>
-                                        <Style TargetType="ContentPresenter">
-                                            <Setter Property="view:RelativeLayoutPanel.RelativeX"
-                                                    Value="{Binding Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}" />
-                                            <Setter Property="view:RelativeLayoutPanel.RelativeY"
-                                                    Value="{Binding Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}" />
-                                            <Setter Property="view:RelativeLayoutPanel.RelativeWidth"
-                                                    Value="{Binding Rect.Width, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}" />
-                                            <Setter Property="view:RelativeLayoutPanel.RelativeHeight"
-                                                    Value="{Binding Rect.Height, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}" />
-                                        </Style>
-                                    </ItemsControl.ItemContainerStyle>
-                                </ItemsControl>
                             </view:RelativeLayoutPanel>
                         </Border>
                         <FrameworkElement Grid.Row="1" />
@@ -306,21 +246,104 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="16" />
                                     <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="16" />
+                                </Grid.ColumnDefinitions>
+
+                                <Button Grid.Column="0" x:Name="AddTileButton" Click="AddTileButton_OnClick"
+                                        Content="Add Tile" />
+                                <FrameworkElement Grid.Column="1" />
+                                <Button Grid.Column="2" x:Name="RemoveTileButton" Click="RemoveTileButton_OnClick"
+                                        Content="Remove Tile" />
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+
+                </Border>
+            </GroupBox>
+            <GroupBox Grid.Column="0" Header="Window Editor"
+                      Visibility="{Binding Path=ActiveInEditor, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource visibleHiddenArray}}">
+                <Border Padding="8">
+
+                    <Grid>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="16" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Border Grid.Row="0" BorderBrush="Black" BorderThickness="1">
+                            <view:RelativeLayoutPanel x:Name="Canvas">
+                                <ItemsControl
+                                    Visibility="{Binding Path=ActiveInEditor, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource visibleHiddenArray}}"
+                                    view:RelativeLayoutPanel.RelativeX="0"
+                                    view:RelativeLayoutPanel.RelativeY="0"
+                                    view:RelativeLayoutPanel.RelativeWidth="1"
+                                    view:RelativeLayoutPanel.RelativeHeight="1"
+                                    ItemsSource="{Binding Windows}">
+                                    <!--Use the ItemsPanel property to specify an ItemsPanelTemplate
+      that defines the panel that is used to hold the generated items.
+      In other words, use this property if you want to affect
+      how the items are laid out.-->
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <view:RelativeLayoutPanel />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <!--Use the ItemTemplate to set a DataTemplate to define
+      the visualization of the data objects. This DataTemplate
+      specifies that each data object appears with the Proriity
+      and TaskName on top of a silver ellipse.-->
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border
+                                                Background="{Binding Bursh}"
+                                                BorderThickness="{Binding Path=Selected, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource 5to0Thicknes}}"
+                                                BorderBrush="{Binding Path=Selected, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource selectedDeselectedBrushes}}">
+                                                <TextBlock Text="" Foreground="White" VerticalAlignment="Center"
+                                                           HorizontalAlignment="Center" FontSize="45">
+                                                    <Run Text="{Binding Rect.Width}" />
+                                                    <Run Text="x" />
+                                                    <Run Text="{Binding Rect.Height}" />
+                                                </TextBlock>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                    <!--Use the ItemContainerStyle property to specify the appearance
+      of the element that contains the data. This ItemContainerStyle
+      gives each item container a margin and a width. There is also
+      a trigger that sets a tooltip that shows the description of
+      the data object when the mouse hovers over the item container.-->
+                                    <ItemsControl.ItemContainerStyle>
+                                        <Style TargetType="ContentPresenter">
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeX"
+                                                    Value="{Binding Rect.Left, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}" />
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeY"
+                                                    Value="{Binding Rect.Top, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}" />
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeWidth"
+                                                    Value="{Binding Rect.Width, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}" />
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeHeight"
+                                                    Value="{Binding Rect.Height, Mode=OneWay, Converter={StaticResource converter}, ConverterParameter='0.01'}" />
+                                        </Style>
+                                    </ItemsControl.ItemContainerStyle>
+                                </ItemsControl>
+                            </view:RelativeLayoutPanel>
+                        </Border>
+                        <FrameworkElement Grid.Row="1" />
+                        <StackPanel Grid.Row="4" MaxWidth="600">
+
+                            <Grid>
+
+                                <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="16" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
                                 <Button Grid.Column="0" x:Name="AddWindowButton" Click="AddWindowButton_OnClick"
-                                        Content="Add" />
+                                        Content="Add Window" />
                                 <FrameworkElement Grid.Column="1" />
                                 <Button Grid.Column="2" x:Name="RemoveWindowButton" Click="RemoveWindowButton_OnClick"
-                                        Content="Remove" />
-                                <FrameworkElement Grid.Column="3" />
-                                <FrameworkElement Grid.Column="4" />
-                                <FrameworkElement Grid.Column="5" />
-                                <FrameworkElement Grid.Column="6" />
+                                        Content="Remove Window" />
                             </Grid>
                         </StackPanel>
                     </Grid>

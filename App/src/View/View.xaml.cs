@@ -125,6 +125,8 @@ namespace App
                 VM.JsonLayout = File.ReadAllText(dlg.FileName);
         }
 
+        private void RemoveTileButton_OnClick(object sender, RoutedEventArgs e) => VM.RemoveTile(VM.Selected);
+        private void AddTileButton_OnClick(object sender, RoutedEventArgs e) => VM.AddTile();
         private void RemoveWindowButton_OnClick(object sender, RoutedEventArgs e) => VM.RemoveTile(VM.Selected);
         private void AddWindowButton_OnClick(object sender, RoutedEventArgs e) => VM.AddTile();
         private void SaveLayoutButton_OnClick(object sender, RoutedEventArgs e) => VM.Save();

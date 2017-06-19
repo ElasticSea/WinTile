@@ -150,6 +150,15 @@ namespace App
         {
             Tiles.Remove(window);
         }
+        public void AddWindow()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemoveWindow(Tile window)
+        {
+            throw new NotImplementedException();
+        }
 
         internal void Save()
         {
