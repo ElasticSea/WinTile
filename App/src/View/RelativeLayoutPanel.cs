@@ -9,23 +9,35 @@ namespace App.View
         // TODO WHy do I have to use affetsParentaArange ?
         public static readonly DependencyProperty RelativeXProperty = DependencyProperty.RegisterAttached(
             "RelativeX", typeof(double), typeof(RelativeLayoutPanel),
-            new FrameworkPropertyMetadata(0d, FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsArrange | FrameworkPropertyMetadataOptions.AffectsParentArrange | FrameworkPropertyMetadataOptions.AffectsParentMeasure));
+            new FrameworkPropertyMetadata(0d,
+                FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsArrange |
+                FrameworkPropertyMetadataOptions.AffectsParentArrange |
+                FrameworkPropertyMetadataOptions.AffectsParentMeasure));
 
         public static readonly DependencyProperty RelativeYProperty = DependencyProperty.RegisterAttached(
             "RelativeY", typeof(double), typeof(RelativeLayoutPanel),
-            new FrameworkPropertyMetadata(0d, FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsArrange | FrameworkPropertyMetadataOptions.AffectsParentArrange | FrameworkPropertyMetadataOptions.AffectsParentMeasure));
+            new FrameworkPropertyMetadata(0d,
+                FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsArrange |
+                FrameworkPropertyMetadataOptions.AffectsParentArrange |
+                FrameworkPropertyMetadataOptions.AffectsParentMeasure));
 
         public static readonly DependencyProperty RelativeWidthProperty = DependencyProperty.RegisterAttached(
             "RelativeWidth", typeof(double), typeof(RelativeLayoutPanel),
-            new FrameworkPropertyMetadata(0d, FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsArrange | FrameworkPropertyMetadataOptions.AffectsParentArrange | FrameworkPropertyMetadataOptions.AffectsParentMeasure));
+            new FrameworkPropertyMetadata(0d,
+                FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsArrange |
+                FrameworkPropertyMetadataOptions.AffectsParentArrange |
+                FrameworkPropertyMetadataOptions.AffectsParentMeasure));
 
         public static readonly DependencyProperty RelativeHeightProperty = DependencyProperty.RegisterAttached(
             "RelativeHeight", typeof(double), typeof(RelativeLayoutPanel),
-            new FrameworkPropertyMetadata(0d, FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsArrange | FrameworkPropertyMetadataOptions.AffectsParentArrange | FrameworkPropertyMetadataOptions.AffectsParentMeasure));
+            new FrameworkPropertyMetadata(0d,
+                FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsArrange |
+                FrameworkPropertyMetadataOptions.AffectsParentArrange |
+                FrameworkPropertyMetadataOptions.AffectsParentMeasure));
 
         public static double GetRelativeX(UIElement element)
         {
-            return (double)element.GetValue(RelativeXProperty);
+            return (double) element.GetValue(RelativeXProperty);
         }
 
         public static void SetRelativeX(UIElement element, double value)
@@ -35,7 +47,7 @@ namespace App.View
 
         public static double GetRelativeY(UIElement element)
         {
-            return (double)element.GetValue(RelativeYProperty);
+            return (double) element.GetValue(RelativeYProperty);
         }
 
         public static void SetRelativeY(UIElement element, double value)
@@ -45,7 +57,7 @@ namespace App.View
 
         public static double GetRelativeWidth(UIElement element)
         {
-            return (double)element.GetValue(RelativeWidthProperty);
+            return (double) element.GetValue(RelativeWidthProperty);
         }
 
         public static void SetRelativeWidth(UIElement element, double value)
@@ -55,7 +67,7 @@ namespace App.View
 
         public static double GetRelativeHeight(UIElement element)
         {
-            return (double)element.GetValue(RelativeHeightProperty);
+            return (double) element.GetValue(RelativeHeightProperty);
         }
 
         public static void SetRelativeHeight(UIElement element, double value)
@@ -68,9 +80,7 @@ namespace App.View
             availableSize = new Size(double.PositiveInfinity, double.PositiveInfinity);
 
             foreach (UIElement element in InternalChildren)
-            {
                 element.Measure(availableSize);
-            }
 
             return new Size();
         }
@@ -87,7 +97,7 @@ namespace App.View
                 width = Math.Max(0, width);
                 height = Math.Max(0, height);
 
-                element.Arrange(new Rect(x,y,width,height));
+                element.Arrange(new Rect(x, y, width, height));
             }
 
             return finalSize;

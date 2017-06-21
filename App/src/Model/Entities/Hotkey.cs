@@ -6,21 +6,21 @@ namespace App.Model
 {
     public class Hotkey
     {
-        [JsonConverter(typeof(StringEnumConverter))]
-        public Key Key { get; }
-
-        [JsonConverter(typeof(StringEnumConverter))]
-        public KeyModifier Modifiers { get; }
-
         public Hotkey(Key key = Key.None, KeyModifier modifiers = KeyModifier.None)
         {
             Key = key;
             Modifiers = modifiers;
         }
 
+        [JsonConverter(typeof(StringEnumConverter))]
+        public Key Key { get; }
+
+        [JsonConverter(typeof(StringEnumConverter))]
+        public KeyModifier Modifiers { get; }
+
         public override string ToString()
         {
-            return $"{Key}, {string.Join(", ",Modifiers)}";
+            return $"{Key}, {string.Join(", ", Modifiers)}";
         }
 
         protected bool Equals(Hotkey other)
@@ -32,7 +32,7 @@ namespace App.Model
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((Hotkey) obj);
         }
 

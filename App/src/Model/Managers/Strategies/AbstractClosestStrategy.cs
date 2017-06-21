@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using App.Utils;
 
 namespace App.Model.Managers.Strategies
 {
@@ -17,24 +16,37 @@ namespace App.Model.Managers.Strategies
         {
         }
 
-        public void Left() => GetClosest(left);
-        public void Right() => GetClosest(right);
-        public void Up() => GetClosest(up);
-        public void Down() => GetClosest(down);
+        public void Left()
+        {
+            GetClosest(left);
+        }
+
+        public void Right()
+        {
+            GetClosest(right);
+        }
+
+        public void Up()
+        {
+            GetClosest(up);
+        }
+
+        public void Down()
+        {
+            GetClosest(down);
+        }
 
         private void GetClosest(Vector direction)
         {
             var Selected = Closest(windowManager.GetWindowRect(windowManager.FocusedWindow));
 
             var tile = tiles
-                .Select(t => new { Title = t, Penalty = TilePenalty(direction, Selected, t) })
+                .Select(t => new {Title = t, Penalty = TilePenalty(direction, Selected, t)})
                 .OrderByDescending(a => a.Penalty)
                 .FirstOrDefault(a => a.Penalty > 0)?.Title;
 
             if (tile != null)
-            {
                 OnClosestTIle(tile);
-            }
         }
 
         protected abstract void OnClosestTIle(Tile tile);
@@ -55,15 +67,13 @@ namespace App.Model.Managers.Strategies
             var ocor = TileCorners(original);
             var tcor = TileCorners(target);
 
-            var dist = Double.MaxValue;
+            var dist = double.MaxValue;
             foreach (var oc in ocor)
+            foreach (var tc in tcor)
             {
-                foreach (var tc in tcor)
-                {
-                    var length = (tc - oc).Length;
-                    if (length < dist)
-                        dist = length;
-                }
+                var length = (tc - oc).Length;
+                if (length < dist)
+                    dist = length;
             }
 
             var dot = direction * vec;
@@ -72,22 +82,28 @@ namespace App.Model.Managers.Strategies
             var limit = Math.PI / 2;
             var dirHeur = (limit - angle) / limit;
             var distHeur = 1 / (dist + 1);
-            return (float)(dirHeur * distHeur);
+            return (float) (dirHeur * distHeur);
         }
 
-        private static Vector[] TileCorners(Tile tile) => new[]
+        private static Vector[] TileCorners(Tile tile)
         {
-            new Vector(tile.Rect.Left, tile.Rect.Bottom),
-            new Vector(tile.Rect.Right, tile.Rect.Bottom),
-            new Vector(tile.Rect.Right, tile.Rect.Top),
-            new Vector(tile.Rect.Left, tile.Rect.Top)
-        };
+            return new[]
+            {
+                new Vector(tile.Rect.Left, tile.Rect.Bottom),
+                new Vector(tile.Rect.Right, tile.Rect.Bottom),
+                new Vector(tile.Rect.Right, tile.Rect.Top),
+                new Vector(tile.Rect.Left, tile.Rect.Top)
+            };
+        }
 
-        private Tile Closest(Rect rect) => tiles.OrderBy(
-            t => Math.Abs(t.Rect.Left - rect.Left) +
-                 Math.Abs(t.Rect.Right - rect.Right) +
-                 Math.Abs(t.Rect.Top - rect.Top) +
-                 Math.Abs(t.Rect.Bottom - rect.Bottom)
-        ).First();
+        private Tile Closest(Rect rect)
+        {
+            return tiles.OrderBy(
+                t => Math.Abs(t.Rect.Left - rect.Left) +
+                     Math.Abs(t.Rect.Right - rect.Right) +
+                     Math.Abs(t.Rect.Top - rect.Top) +
+                     Math.Abs(t.Rect.Bottom - rect.Bottom)
+            ).First();
+        }
     }
 }

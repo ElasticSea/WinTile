@@ -14,8 +14,8 @@ namespace App.Model.Managers.Strategies
         {
             var Selected = windowManager.GetWindowRect(windowManager.FocusedWindow);
             var value = Selected.Left;
-            Move(value,-5, rect => rect.Left,(rect, i) => rect.Left = i);
-            Move(value,-5, rect => rect.Right,(rect, i) => rect.Right = i);
+            Move(value, -5, rect => rect.Left, (rect, i) => rect.Left = i);
+            Move(value, -5, rect => rect.Right, (rect, i) => rect.Right = i);
         }
 
         public void Right()
@@ -42,16 +42,16 @@ namespace App.Model.Managers.Strategies
             Move(value, 5, rect => rect.Bottom, (rect, i) => rect.Bottom = i);
         }
 
-        private void Move(int border, int amount, Func<Rect, int> get, Action<Rect, int> set)
+        private void Move(float border, float amount, Func<Rect, float> get, Action<Rect, float> set)
         {
             var allwin = windowManager.GetVisibleWindows()
-                .Select(t => new { Rect = windowManager.GetWindowRect(t), Handle = t });
+                .Select(t => new {Rect = windowManager.GetWindowRect(t), Handle = t});
             allwin.Where(a => get(a.Rect) == border).ForEach(a =>
             {
-                set(a.Rect, (get(a.Rect) + amount).Clamp(0, 100));
+                set(a.Rect, (get(a.Rect) + amount).Clamp(0, 1));
                 windowManager.PositionWindow(a.Handle, a.Rect);
             });
-            tiles.Where(t => get(t.Rect) == border).ForEach(t => set(t.Rect, (get(t.Rect) + amount).Clamp(0,100)));
+            tiles.Where(t => get(t.Rect) == border).ForEach(t => set(t.Rect, (get(t.Rect) + amount).Clamp(0, 1)));
         }
     }
 }

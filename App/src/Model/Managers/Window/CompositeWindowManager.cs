@@ -14,8 +14,19 @@ namespace App.Utils
             set => CurrentManager.FocusedWindow = value;
         }
 
-        public IEnumerable<IntPtr> GetVisibleWindows() => CurrentManager.GetVisibleWindows();
-        public Rect GetWindowRect(IntPtr handle) => CurrentManager.GetWindowRect(handle);
-        public void PositionWindow(IntPtr handle, Rect rect) => CurrentManager.PositionWindow(handle, rect);
+        public IEnumerable<IntPtr> GetVisibleWindows()
+        {
+            return CurrentManager.GetVisibleWindows();
+        }
+
+        public Rect GetWindowRect(IntPtr handle)
+        {
+            return CurrentManager.GetWindowRect(handle);
+        }
+
+        public void PositionWindow(IntPtr handle, Rect rect)
+        {
+            CurrentManager.PositionWindow(handle, rect);
+        }
     }
 }

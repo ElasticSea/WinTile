@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using App.Utils;
 
 namespace App.Model.Managers.Strategies
 {
@@ -14,7 +13,7 @@ namespace App.Model.Managers.Strategies
         protected override void OnClosestTIle(Tile tile)
         {
             var allwin = windowManager.GetVisibleWindows()
-                .Select(t => new { Rect = windowManager.GetWindowRect(t), Handle = t });
+                .Select(t => new {Rect = windowManager.GetWindowRect(t), Handle = t});
 
             var closestWindowToRect = allwin.OrderBy(
                 t => Math.Abs(t.Rect.Left - tile.Rect.Left) +

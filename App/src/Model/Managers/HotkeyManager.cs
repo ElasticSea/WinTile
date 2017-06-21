@@ -8,9 +8,9 @@ namespace App.Model.Managers
     {
         private readonly IList<HotkeyPair> hotkeys;
         private readonly Dictionary<HotkeyType, Action<object>> mapping;
+        private bool binded;
 
         private IEnumerable<HotkeyBinding> bindings;
-        private bool binded;
 
         public HotkeyManager(IList<HotkeyPair> hotkeys, Dictionary<HotkeyType, Action<object>> mapping)
         {
@@ -23,9 +23,7 @@ namespace App.Model.Managers
             if (binded)
             {
                 foreach (var hotkey in bindings)
-                {
                     hotkey.Unbind();
-                }
                 binded = false;
             }
         }
@@ -36,12 +34,11 @@ namespace App.Model.Managers
             {
                 bindings = from typeHotkey in hotkeys
                     where typeHotkey.Hotkey != null
-                    select new HotkeyBinding(typeHotkey.Hotkey.Key, typeHotkey.Hotkey.Modifiers, mapping[typeHotkey.Type], false);
+                    select new HotkeyBinding(typeHotkey.Hotkey.Key, typeHotkey.Hotkey.Modifiers,
+                        mapping[typeHotkey.Type], false);
 
                 foreach (var binding in bindings)
-                {
                     binding.Bind();
-                }
                 binded = true;
             }
         }

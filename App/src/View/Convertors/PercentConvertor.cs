@@ -1,21 +1,19 @@
 ﻿using System;
-using System.Collections;
 using System.Globalization;
-using System.Linq;
 using System.Windows.Data;
 
-namespace App.View
+namespace App.View.Convertors
 {
-    public class TrueFalseConverter : IValueConverter
+    [ValueConversion(typeof(float), typeof(string))]
+    public class PercentConvertor : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter,
             CultureInfo culture)
         {
-            if (parameter.GetType().IsArray == false)
-                throw new InvalidOperationException("The paramter is not an array");
+            if (targetType != typeof(string))
+                throw new InvalidOperationException("The target must be a string");
 
-            var list = (parameter as IEnumerable).Cast<object>().ToList();
-            return (bool) value ? list[0] : list[1];
+            return (int)((float)value *100);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter,

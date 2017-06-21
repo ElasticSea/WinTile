@@ -8,14 +8,14 @@ namespace App.Model.Managers
 {
     public class LayoutManager
     {
-        public Layout Layout { get; private set; }
-
         private readonly JsonSerializerSettings settings = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore,
-            Converters = new List<JsonConverter> { new StringEnumConverter() },
+            Converters = new List<JsonConverter> {new StringEnumConverter()},
             Formatting = Formatting.Indented
         };
+
+        public Layout Layout { get; private set; }
 
         public string Json
         {

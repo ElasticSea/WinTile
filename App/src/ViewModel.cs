@@ -9,24 +9,21 @@ using App.Model.Managers.Strategies;
 using App.Properties;
 using App.Utils;
 using PropertyChanged;
-using Rect = App.Model.Rect;
 
 namespace App
 {
     [ImplementPropertyChanged]
     public class ViewModel : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged = (sender, args) => {};
-
         private readonly LayoutManager layoutManager = new LayoutManager();
         private bool _activeInEditor;
-        private HotkeyManager hotkeyManager;
-
-        private ConvertWindowManager nativeWindowManager;
-        private EditorWindowManager editorWindowManager;
-        private CompositeWindowManager windowManager = new CompositeWindowManager();
-        private HotkeyPair _selectedHotkeyPair;
         private Tile _selected;
+        private HotkeyPair _selectedHotkeyPair;
+        private EditorWindowManager editorWindowManager;
+        private HotkeyManager hotkeyManager;
+        private ConvertWindowManager nativeWindowManager;
+        private readonly CompositeWindowManager windowManager = new CompositeWindowManager();
+        private CuttingManager cuttingManager;
 
         public IEnumerable<HotkeyType> HotkeyTypes
         {
@@ -44,17 +41,24 @@ namespace App
             set
             {
                 layoutManager.Json = value;
+                reload();
+            }
+        }
 
-                nativeWindowManager = new ConvertWindowManager(new User32Manager());
-                editorWindowManager = new EditorWindowManager(layoutManager.Layout.tiles);
-                windowManager.CurrentManager = editorWindowManager;
+        private void reload()
+        {
+            cuttingManager = new CuttingManager(layoutManager.Layout.VerticalHandlers, layoutManager.Layout.HorizontalHandlers);
+            nativeWindowManager = new ConvertWindowManager(new User32Manager());
+            editorWindowManager = new EditorWindowManager(Tiles);
+            windowManager.CurrentManager = editorWindowManager;
 
-                var move = new MoveStrategy(layoutManager.Layout.tiles, windowManager);
-                var select = new SelectStrategy(layoutManager.Layout.tiles, windowManager);
-                var extend = new ExtendStrategy(layoutManager.Layout.tiles, windowManager);
-                var layout = new LayoutStrategy(layoutManager.Layout.tiles, windowManager);
+            var move = new MoveStrategy(Tiles, windowManager);
+            var select = new SelectStrategy(Tiles, windowManager);
+            var extend = new ExtendStrategy(Tiles, windowManager);
+//                var layout = new LayoutStrategy(Tiles, windowManager);
 
-                hotkeyManager = new HotkeyManager(layoutManager.Layout.hotkeys, new Dictionary<HotkeyType, Action<object>>
+            hotkeyManager = new HotkeyManager(layoutManager.Layout.hotkeys,
+                new Dictionary<HotkeyType, Action<object>>
                 {
                     {HotkeyType.MoveLeft, h1 => move.Left()},
                     {HotkeyType.MoveRight, h1 => move.Right()},
@@ -65,29 +69,28 @@ namespace App
                     {HotkeyType.ExpandRight, h1 => extend.Right()},
                     {HotkeyType.ExpandUp, h1 => extend.Up()},
                     {HotkeyType.ExpandDown, h1 => extend.Down()},
+//
+//                        {HotkeyType.LayoutLeft, h1 => layout.Left()},
+//                        {HotkeyType.LayoutRight, h1 => layout.Right()},
+//                        {HotkeyType.LayoutUp, h1 => layout.Up()},
+//                        {HotkeyType.LayoutDown, h1 => layout.Down()},
 
-                    {HotkeyType.LayoutLeft, h1 => layout.Left()},
-                    {HotkeyType.LayoutRight, h1 => layout.Right()},
-                    {HotkeyType.LayoutUp, h1 => layout.Up()},
-                    {HotkeyType.LayoutDown, h1 => layout.Down()},
-
-                    {HotkeyType.SelectLeft, h1 => select.Left()},
-                    {HotkeyType.SelectRight, h1 => select.Right()},
-                    {HotkeyType.SelectUp, h1 => select.Up()},
-                    {HotkeyType.SelectDown, h1 => select.Down()}
+                    {HotkeyType.SelectLeft, h1 => @select.Left()},
+                    {HotkeyType.SelectRight, h1 => @select.Right()},
+                    {HotkeyType.SelectUp, h1 => @select.Up()},
+                    {HotkeyType.SelectDown, h1 => @select.Down()}
                 });
-            }
         }
 
-        public ObservableCollection<Tile> Tiles => layoutManager.Layout.tiles;
+        public ObservableCollection<Handle> VerticalHandlers => layoutManager.Layout.VerticalHandlers;
+        public ObservableCollection<Handle> HorizontalHandlers => layoutManager.Layout.HorizontalHandlers;
+        public ObservableCollection<Tile> Tiles => cuttingManager.Tiles;
         public ObservableCollection<HotkeyPair> Hotkeys => layoutManager.Layout.hotkeys;
         public ObservableCollection<Tile> Windows => editorWindowManager.Windows;
 
-        public Tile Selected { get; set; }
-        public int SelectedIndex { get; set; }
         public HotkeyPair SelectedHotkeyPair { private get; set; }
         public HotkeyType AddHotkeyType { get; set; }
-        public Hotkey AddHotkeyHotkey{ get; set; }
+        public Hotkey AddHotkeyHotkey { get; set; }
 
         public bool ActiveInEditor
         {
@@ -102,6 +105,8 @@ namespace App
                     hotkeyManager.UnbindHotkeys();
             }
         }
+
+        public event PropertyChangedEventHandler PropertyChanged = (sender, args) => { };
 
         public void Load()
         {
@@ -120,17 +125,6 @@ namespace App
             hotkeyManager.UnbindHotkeys();
         }
 
-        public void AddTile()
-        {
-            var r = Selected?.Rect ?? new Rect();
-            var rect = new Rect(r.Left, r.Top, r.Right, r.Bottom);
-            Tiles.Add(new Tile(rect));
-        }
-
-        public void RemoveTile(Tile window)
-        {
-            Tiles.Remove(window);
-        }
         public void AddWindow()
         {
             editorWindowManager.addWindow();
@@ -147,20 +141,6 @@ namespace App
             Settings.Default.Save();
         }
 
-        public void MoveSelectedUp()
-        {
-            var index = Tiles.IndexOf(Selected);
-            if (index > 0)
-                Tiles.Move(index, index - 1);
-        }
-
-        public void MoveSelectedDown()
-        {
-            var index = Tiles.IndexOf(Selected);
-            if (index < Tiles.Count - 1)
-                Tiles.Move(index, index + 1);
-        }
-
         public void AddHotkey()
         {
             var htKey = new Hotkey(AddHotkeyHotkey.Key, AddHotkeyHotkey.Modifiers);
@@ -174,5 +154,8 @@ namespace App
             Hotkeys.Remove(SelectedHotkeyPair);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HotkeyTypes)));
         }
+
+        public void CutVertical() => cuttingManager.CutVertical();
+        public void CutHorizontal() => cuttingManager.CutHorizontal();
     }
 }

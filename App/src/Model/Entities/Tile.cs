@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 using Newtonsoft.Json;
 using PropertyChanged;
 
@@ -8,6 +7,11 @@ namespace App.Model
     [ImplementPropertyChanged]
     public class Tile
     {
+        public Tile(Rect rect)
+        {
+            Rect = rect;
+        }
+
         [JsonIgnore]
         public bool Selected { get; set; }
 
@@ -15,11 +19,6 @@ namespace App.Model
         public SolidColorBrush Bursh { get; set; }
 
         public Rect Rect { get; set; }
-
-        public Tile(Rect rect)
-        {
-            Rect = rect;
-        }
 
         public override string ToString()
         {
