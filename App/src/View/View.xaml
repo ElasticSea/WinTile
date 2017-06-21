@@ -38,7 +38,6 @@
             <Visibility>Hidden</Visibility>
             <Visibility>Visible</Visibility>
         </x:Array>
-
     </Window.Resources>
 
     <Border Padding="16">
@@ -51,7 +50,7 @@
 
 
             <GroupBox Grid.Column="0" Header="Tile Editor"
-                      Visibility="{Binding Path=ActiveInEditor, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource hiddenVisibleArray}}">
+                      Visibility="{Binding Path=EnterSandboxMode, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource hiddenVisibleArray}}">
                 <Border Padding="8">
 
                     <Grid>
@@ -79,18 +78,20 @@
 
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                                <TextBlock Text=""
-                                                           Margin="5"
-                                                           Foreground="Black"
-                                                           HorizontalAlignment="Right"
-                                                           VerticalAlignment="Bottom"
-                                                           FontSize="12">
-                                                    <Run Text="[" />
-                                                    <Run Text="{Binding Rect.Right, Converter={StaticResource PercentConvertor}}" />
-                                                    <Run Text=", " />
-                                                    <Run Text="{Binding Rect.Bottom, Converter={StaticResource PercentConvertor}}" />
-                                                    <Run Text="]" />
-                                                </TextBlock>
+                                            <TextBlock Text=""
+                                                       Margin="5"
+                                                       Foreground="Black"
+                                                       HorizontalAlignment="Right"
+                                                       VerticalAlignment="Bottom"
+                                                       FontSize="12">
+                                                <Run Text="[" />
+                                                <Run
+                                                    Text="{Binding Rect.Right, Converter={StaticResource PercentConvertor}}" />
+                                                <Run Text=", " />
+                                                <Run
+                                                    Text="{Binding Rect.Bottom, Converter={StaticResource PercentConvertor}}" />
+                                                <Run Text="]" />
+                                            </TextBlock>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
 
@@ -112,7 +113,7 @@
                                     view:RelativeLayoutPanel.RelativeY="0"
                                     view:RelativeLayoutPanel.RelativeWidth="1"
                                     view:RelativeLayoutPanel.RelativeHeight="1"
-                                    ItemsSource="{Binding VerticalHandlers}">
+                                    ItemsSource="{Binding Rows}">
 
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
@@ -123,32 +124,54 @@
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <Canvas ClipToBounds="True"
-                                                    Margin="-20 -20 0 0">
-                                                <Line Stroke="Black" Margin="20 20 0 0" X2="10000" StrokeDashArray="4,4" />
+                                                    Margin="-20 -60 0 0">
+                                                <Line Stroke="Black" Margin="20 60 0 0" X2="10000"
+                                                      StrokeDashArray="4,4" />
                                                 <Thumb
                                                     HorizontalAlignment="Left" DragDelta="onVerticalHandler"
                                                     VerticalAlignment="Top"
-                                                    Height="40"
-                                                    Width="80">
+                                                    Width="40"
+                                                    Height="120">
                                                     <Thumb.Template>
                                                         <ControlTemplate>
                                                             <Border BorderThickness="2" BorderBrush="Black"
                                                                     Background="DeepSkyBlue">
                                                                 <Grid>
+                                                                    <Grid.RowDefinitions>
+                                                                        <RowDefinition Height="40" />
+                                                                        <RowDefinition Height="40" />
+                                                                        <RowDefinition Height="40" />
+                                                                    </Grid.RowDefinitions>
+
                                                                     <Grid.ColumnDefinitions>
-                                                                        <ColumnDefinition Width="40" />
                                                                         <ColumnDefinition Width="40" />
                                                                     </Grid.ColumnDefinitions>
 
-                                                                    <TextBlock Grid.Column="0" Foreground="Black"
-                                                                               Text="{Binding Value, Converter={StaticResource PercentConvertor}}"
-                                                                               FontSize="20" VerticalAlignment="Center"
-                                                                               HorizontalAlignment="Center" />
-                                                                    <Button Grid.Column="1" BorderThickness="0" Width="40" Height="40"  
-                                                                            Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"  Foreground="White" Click="ButtonBase_OnClick">
-                                                                        <Path x:Name="CloseWindow" SnapsToDevicePixels="True" ToolTip="Remove Handler" Margin="12" Stretch="Fill" Stroke="Black" Data="M0,0 L1,1 M0,1 L1,0"  />
+                                                                    <Path Grid.Column="0" Grid.Row="0"
+                                                                          SnapsToDevicePixels="True"
+                                                                          ToolTip="Move Handler" Margin="14"
+                                                                          Stretch="Uniform" Stroke="Black"
+                                                                          Data="M0,0.3 L1,0.3 M0,0.7 L1,0.7" />
+
+                                                                    <TextBox Grid.Column="0" Grid.Row="1"
+                                                                             Foreground="Black" Width="40" Height="40"
+                                                                             Padding="0 2 0 0"
+                                                                             Text="{Binding Position, Converter={StaticResource PercentConvertor}, UpdateSourceTrigger=PropertyChanged}"
+                                                                             FontSize="20" VerticalAlignment="Center"
+                                                                             TextAlignment="Center"
+                                                                             GotFocus="HandleOnFocus"
+                                                                             PreviewMouseLeftButtonDown="HandleOnFocus"
+                                                                             HorizontalAlignment="Center" />
+                                                                    <Button Grid.Column="0" BorderThickness="0"
+                                                                            Grid.Row="2" ToolTip="Remove Handler"
+                                                                            Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                                                                            Foreground="White" Click="RemoveHandle">
+                                                                        <Path x:Name="CloseWindow"
+                                                                              SnapsToDevicePixels="True" Margin="12"
+                                                                              Stretch="Fill" Stroke="Black"
+                                                                              Data="M0,0 L1,1 M0,1 L1,0" />
                                                                     </Button>
-                                                                    
+
                                                                 </Grid>
                                                             </Border>
                                                         </ControlTemplate>
@@ -162,7 +185,7 @@
                                         <Style TargetType="ContentPresenter">
                                             <Setter Property="view:RelativeLayoutPanel.RelativeX" Value="0" />
                                             <Setter Property="view:RelativeLayoutPanel.RelativeY"
-                                                    Value="{Binding Value, Mode=OneWay}" />
+                                                    Value="{Binding Position, Mode=OneWay}" />
                                             <Setter Property="view:RelativeLayoutPanel.RelativeWidth" Value="1" />
                                             <Setter Property="view:RelativeLayoutPanel.RelativeHeight" Value="1" />
                                         </Style>
@@ -173,7 +196,7 @@
                                     view:RelativeLayoutPanel.RelativeY="0"
                                     view:RelativeLayoutPanel.RelativeWidth="1"
                                     view:RelativeLayoutPanel.RelativeHeight="1"
-                                    ItemsSource="{Binding HorizontalHandlers}">
+                                    ItemsSource="{Binding Columns}">
 
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
@@ -184,13 +207,14 @@
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <Canvas ClipToBounds="True"
-                                                    Margin="-20 -20 0 0">
-                                                <Line Stroke="Black" Margin="20 20 0 0" Y2="10000" StrokeDashArray="4,4" />
+                                                    Margin="-60 -20 0 0">
+                                                <Line Stroke="Black" Margin="60 20 0 0" Y2="10000"
+                                                      StrokeDashArray="4,4" />
                                                 <Thumb
                                                     HorizontalAlignment="Left" DragDelta="onHorizontalHandler"
                                                     VerticalAlignment="Top"
                                                     Height="40"
-                                                    Width="80">
+                                                    Width="120">
                                                     <Thumb.Template>
                                                         <ControlTemplate>
                                                             <Border BorderThickness="2" BorderBrush="Black"
@@ -199,15 +223,36 @@
                                                                     <Grid.ColumnDefinitions>
                                                                         <ColumnDefinition Width="40" />
                                                                         <ColumnDefinition Width="40" />
+                                                                        <ColumnDefinition Width="40" />
                                                                     </Grid.ColumnDefinitions>
 
-                                                                    <TextBlock Grid.Column="0" Foreground="Black"
-                                                                               Text="{Binding Value, Converter={StaticResource PercentConvertor}}"
-                                                                               FontSize="20" VerticalAlignment="Center"
-                                                                               HorizontalAlignment="Center" />
-                                                                    <Button Grid.Column="1" BorderThickness="0" Width="40" Height="40"  
-                                                                            Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"  Foreground="White" Click="ButtonBase_OnClick">
-                                                                        <Path x:Name="CloseWindow" SnapsToDevicePixels="True" ToolTip="Remove Handler" Margin="12" Stretch="Fill" Stroke="Black" Data="M0,0 L1,1 M0,1 L1,0"  />
+                                                                    <Grid.RowDefinitions>
+                                                                        <RowDefinition Height="40" />
+                                                                    </Grid.RowDefinitions>
+
+                                                                    <Path Grid.Column="0" Grid.Row="0"
+                                                                          SnapsToDevicePixels="True"
+                                                                          ToolTip="Move Handler" Margin="14"
+                                                                          Stretch="Uniform" Stroke="Black"
+                                                                          Data="M0,0.3 L1,0.3 M0,0.7 L1,0.7" />
+
+                                                                    <TextBox Grid.Column="1" Grid.Row="0"
+                                                                             Foreground="Black" Width="40" Height="40"
+                                                                             Padding="0 2 0 0"
+                                                                             Text="{Binding Position, Converter={StaticResource PercentConvertor}, UpdateSourceTrigger=PropertyChanged}"
+                                                                             FontSize="20" VerticalAlignment="Center"
+                                                                             TextAlignment="Center"
+                                                                             GotFocus="HandleOnFocus"
+                                                                             PreviewMouseLeftButtonDown="HandleOnFocus"
+                                                                             HorizontalAlignment="Center" />
+                                                                    <Button Grid.Column="2" BorderThickness="0"
+                                                                            Grid.Row="0" ToolTip="Remove Handler"
+                                                                            Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                                                                            Foreground="White" Click="RemoveHandle">
+                                                                        <Path x:Name="CloseWindow"
+                                                                              SnapsToDevicePixels="True" Margin="12"
+                                                                              Stretch="Fill" Stroke="Black"
+                                                                              Data="M0,0 L1,1 M0,1 L1,0" />
                                                                     </Button>
 
                                                                 </Grid>
@@ -221,7 +266,8 @@
 
                                     <ItemsControl.ItemContainerStyle>
                                         <Style TargetType="ContentPresenter">
-                                            <Setter Property="view:RelativeLayoutPanel.RelativeX" Value="{Binding Value, Mode=OneWay}" />
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeX"
+                                                    Value="{Binding Position, Mode=OneWay}" />
                                             <Setter Property="view:RelativeLayoutPanel.RelativeY"
                                                     Value="0" />
                                             <Setter Property="view:RelativeLayoutPanel.RelativeWidth" Value="1" />
@@ -231,53 +277,7 @@
                                 </ItemsControl>
                             </view:RelativeLayoutPanel>
                         </Border>
-<!--                        <FrameworkElement Grid.Row="1" />-->
-<!--                        <ListView Name="ListView" Grid.Row="2" MaxWidth="600"-->
-<!--                                  SelectionMode="Single"-->
-<!--                                  IsSynchronizedWithCurrentItem="True"-->
-<!--                                  ItemsSource="{Binding Tiles}">-->
-<!---->
-<!--                            <ListView.View>-->
-<!--                                <GridView>-->
-<!--                                    <GridView.Columns>-->
-<!---->
-<!--                                        <GridViewColumn Header="Left" Width="50">-->
-<!--                                            <GridViewColumn.CellTemplate>-->
-<!--                                                <DataTemplate>-->
-<!--                                                    <TextBlock Text="{Binding Path=Rect.Left, Converter={StaticResource PercentConvertor}}" TextAlignment="Right" />-->
-<!--                                                </DataTemplate>-->
-<!--                                            </GridViewColumn.CellTemplate>-->
-<!--                                        </GridViewColumn>-->
-<!---->
-<!--                                        <GridViewColumn Header="Right" Width="50">-->
-<!--                                            <GridViewColumn.CellTemplate>-->
-<!--                                                <DataTemplate>-->
-<!--                                                    <TextBlock Text="{Binding Path=Rect.Right, Converter={StaticResource PercentConvertor}}" TextAlignment="Right" />-->
-<!--                                                </DataTemplate>-->
-<!--                                            </GridViewColumn.CellTemplate>-->
-<!--                                        </GridViewColumn>-->
-<!---->
-<!--                                        <GridViewColumn Header="Top" Width="50">-->
-<!--                                            <GridViewColumn.CellTemplate>-->
-<!--                                                <DataTemplate>-->
-<!--                                                    <TextBlock Text="{Binding Path=Rect.Top, Converter={StaticResource PercentConvertor}}" TextAlignment="Right" />-->
-<!--                                                </DataTemplate>-->
-<!--                                            </GridViewColumn.CellTemplate>-->
-<!--                                        </GridViewColumn>-->
-<!---->
-<!--                                        <GridViewColumn Header="Bottom" Width="50">-->
-<!--                                            <GridViewColumn.CellTemplate>-->
-<!--                                                <DataTemplate>-->
-<!--                                                    <TextBlock Text="{Binding Path=Rect.Bottom, Converter={StaticResource PercentConvertor}}" TextAlignment="Right" />-->
-<!--                                                </DataTemplate>-->
-<!--                                            </GridViewColumn.CellTemplate>-->
-<!--                                        </GridViewColumn>-->
-<!--                                    </GridView.Columns>-->
-<!--                                </GridView>-->
-<!--                            </ListView.View>-->
-<!--                        </ListView>-->
-<!---->
-<!--                        <FrameworkElement Grid.Row="3" />-->
+
                         <StackPanel Grid.Row="2" MaxWidth="600">
                             <Grid>
 
@@ -288,9 +288,9 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Button Grid.Column="0" x:Name="CutHorizontalButton"
-                                        Click="CutHorizontalButton_OnClick" Content="Cut Horizontal" />
+                                        Click="CutHorizontal" Content="Cut Horizontal" />
                                 <FrameworkElement Grid.Column="1" />
-                                <Button Grid.Column="2" x:Name="CutVerticalButton" Click="CutVerticalButton_OnClick"
+                                <Button Grid.Column="2" x:Name="CutVerticalButton" Click="CutVertical"
                                         Content="Cut Vertical" />
                             </Grid>
                         </StackPanel>
@@ -299,7 +299,7 @@
                 </Border>
             </GroupBox>
             <GroupBox Grid.Column="0" Header="Window Editor"
-                      Visibility="{Binding Path=ActiveInEditor, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource visibleHiddenArray}}">
+                      Visibility="{Binding Path=EnterSandboxMode, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource visibleHiddenArray}}">
                 <Border Padding="8">
 
                     <Grid>
@@ -317,7 +317,7 @@
                                     view:RelativeLayoutPanel.RelativeY="0"
                                     view:RelativeLayoutPanel.RelativeWidth="1"
                                     view:RelativeLayoutPanel.RelativeHeight="1"
-                                    ItemsSource="{Binding VerticalHandlers}">
+                                    ItemsSource="{Binding Rows}">
 
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
@@ -328,7 +328,7 @@
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <Line view:RelativeLayoutPanel.RelativeX="0"
-                                                  view:RelativeLayoutPanel.RelativeY="{Binding Value, Mode=OneWay}"
+                                                  view:RelativeLayoutPanel.RelativeY="{Binding Position, Mode=OneWay}"
                                                   view:RelativeLayoutPanel.RelativeWidth="1"
                                                   Stroke="Black" StrokeThickness="1" StrokeDashArray="4,4"
                                                   X1="0"
@@ -341,7 +341,7 @@
                                         <Style TargetType="ContentPresenter">
                                             <Setter Property="view:RelativeLayoutPanel.RelativeX" Value="0" />
                                             <Setter Property="view:RelativeLayoutPanel.RelativeY"
-                                                    Value="{Binding Value, Mode=OneWay}" />
+                                                    Value="{Binding Position, Mode=OneWay}" />
                                             <Setter Property="view:RelativeLayoutPanel.RelativeWidth"
                                                     Value="1" />
                                             <Setter Property="view:RelativeLayoutPanel.RelativeHeight"
@@ -354,7 +354,7 @@
                                     view:RelativeLayoutPanel.RelativeY="0"
                                     view:RelativeLayoutPanel.RelativeWidth="1"
                                     view:RelativeLayoutPanel.RelativeHeight="1"
-                                    ItemsSource="{Binding HorizontalHandlers}">
+                                    ItemsSource="{Binding Columns}">
 
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
@@ -366,7 +366,7 @@
                                         <DataTemplate>
                                             <Line
                                                 view:RelativeLayoutPanel.RelativeX="0"
-                                                view:RelativeLayoutPanel.RelativeY="{Binding Value, Mode=OneWay}"
+                                                view:RelativeLayoutPanel.RelativeY="{Binding Position, Mode=OneWay}"
                                                 view:RelativeLayoutPanel.RelativeWidth="1"
                                                 StrokeDashArray="4,4"
                                                 Stroke="Black" StrokeThickness="1"
@@ -379,7 +379,7 @@
                                     <ItemsControl.ItemContainerStyle>
                                         <Style TargetType="ContentPresenter">
                                             <Setter Property="view:RelativeLayoutPanel.RelativeX"
-                                                    Value="{Binding Value, Mode=OneWay}" />
+                                                    Value="{Binding Position, Mode=OneWay}" />
                                             <Setter Property="view:RelativeLayoutPanel.RelativeY"
                                                     Value="0" />
                                             <Setter Property="view:RelativeLayoutPanel.RelativeWidth"
@@ -405,16 +405,21 @@
 
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border
-                                                Background="{Binding Bursh}"
-                                                BorderThickness="{Binding Path=Selected, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource 5to0Thicknes}}"
-                                                BorderBrush="{Binding Path=Selected, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource selectedDeselectedBrushes}}">
-                                                <TextBlock Text="" Foreground="White" VerticalAlignment="Center"
-                                                           HorizontalAlignment="Center" FontSize="45">
-                                                    <Run Text="{Binding Rect.Width,Converter={StaticResource PercentConvertor}}" />
-                                                    <Run Text="x" />
-                                                    <Run Text="{Binding Rect.Height,Converter={StaticResource PercentConvertor}}" />
-                                                </TextBlock>
+
+                                            <Border BorderBrush="Black" BorderThickness="1">
+                                                <Border
+                                                    Background="{Binding Bursh}"
+                                                    BorderThickness="{Binding Path=Selected, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource 5to0Thicknes}}"
+                                                    BorderBrush="{Binding Path=Selected, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource selectedDeselectedBrushes}}">
+                                                    <TextBlock Text="" Foreground="White" VerticalAlignment="Center"
+                                                               HorizontalAlignment="Center" FontSize="45">
+                                                        <Run
+                                                            Text="{Binding Rect.Width,Converter={StaticResource PercentConvertor}}" />
+                                                        <Run Text="x" />
+                                                        <Run
+                                                            Text="{Binding Rect.Height,Converter={StaticResource PercentConvertor}}" />
+                                                    </TextBlock>
+                                                </Border>
                                             </Border>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
@@ -445,10 +450,10 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <Button Grid.Column="0" x:Name="AddWindowButton" Click="AddWindowButton_OnClick"
+                                <Button Grid.Column="0" x:Name="AddWindowButton" Click="AddWindow"
                                         Content="Add Window" />
                                 <FrameworkElement Grid.Column="1" />
-                                <Button Grid.Column="2" x:Name="RemoveWindowButton" Click="RemoveWindowButton_OnClick"
+                                <Button Grid.Column="2" x:Name="RemoveWindowButton" Click="RemoveWindow"
                                         Content="Remove Window" />
                             </Grid>
                         </StackPanel>
@@ -476,22 +481,22 @@
                             <FrameworkElement Grid.Column="1" />
                             <Button Grid.Column="2" x:Name="ImportButton" Content="Import" Click="ImportButton_OnClick" />
                             <FrameworkElement Grid.Column="3" />
-                            <Button Grid.Column="4" x:Name="SaveLayoutButton" Click="SaveLayoutButton_OnClick"
+                            <Button Grid.Column="4" x:Name="SaveLayoutButton" Click="SaveLayout"
                                     Content="Save" />
                             <FrameworkElement Grid.Column="5" />
-                            <Button Grid.Column="6" x:Name="ResetLayoutButton" Click="ResetLayoutButton_OnClick"
+                            <Button Grid.Column="6" x:Name="ResetLayoutButton" Click="ResetLayout"
                                     Content="Reset" />
                         </Grid>
                     </Border>
                 </GroupBox>
 
-                <GroupBox Header="Hotkeys">
+                <GroupBox Header="Hotkeys"
+                          IsEnabled="{Binding ActiveHotkeys, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}">
                     <Border Padding="8">
 
                         <StackPanel>
                             <ListView ItemsSource="{Binding Hotkeys}" Height="300"
                                       SelectedItem="{Binding SelectedHotkeyPair, Mode=OneWayToSource}"
-                                      IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}"
                                       SelectionMode="Single"
                                       IsSynchronizedWithCurrentItem="True">
                                 <ListView.View>
@@ -506,55 +511,52 @@
                                 </ListView.View>
                             </ListView>
 
-                            <GroupBox Header="Add Hotkey"
-                                      IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}">
-                                <Border Padding="8">
-                                    <StackPanel>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="16" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-                                            <StackPanel Grid.Column="0">
-                                                <TextBlock Text="Name" />
-                                                <ComboBox ItemsSource="{Binding HotkeyTypes, Mode=OneWay}"
-                                                          IsSynchronizedWithCurrentItem="True"
-                                                          SelectedItem="{Binding AddHotkeyType, Mode=OneWayToSource}"
-                                                          Padding="2" />
-                                            </StackPanel>
-                                            <FrameworkElement Grid.Column="1" />
-                                            <StackPanel Grid.Column="2">
-                                                <TextBlock Text="Hotkey" />
-                                                <TextBox x:Name="HotkeyKey"
-                                                         PreviewKeyDown="Hotkey_OnPreviewKeyDown"
-                                                         Text="{Binding AddHotkeyHotkey, Mode=OneWay}"
-                                                         Padding="2" IsReadOnly="True" />
-                                            </StackPanel>
-                                        </Grid>
-
-                                        <FrameworkElement Height="16" />
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="16" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-                                            <Button Grid.Column="0" x:Name="AddHotkeyButton" Content="Add"
-                                                    Click="AddHotkeyButton_OnClick" />
-                                            <FrameworkElement Grid.Column="1" />
-                                            <Button Grid.Column="2" x:Name="RemoveHotkeyButton" Content="Remove"
-                                                    Click="RemoveHotkeyButton_OnClick" />
-                                        </Grid>
-                                    </StackPanel>
-                                </Border>
-                            </GroupBox>
-
                             <FrameworkElement Height="8" />
-                            <CheckBox Content="Active in Editor" IsChecked="{Binding ActiveInEditor}" />
+                            <StackPanel>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="16" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="Name" />
+                                        <ComboBox ItemsSource="{Binding HotkeyTypes, Mode=OneWay}"
+                                                  IsSynchronizedWithCurrentItem="True"
+                                                  SelectedItem="{Binding AddHotkeyType, Mode=OneWayToSource}"
+                                                  Padding="2" />
+                                    </StackPanel>
+                                    <FrameworkElement Grid.Column="1" />
+                                    <StackPanel Grid.Column="2">
+                                        <TextBlock Text="Hotkey" />
+                                        <TextBox x:Name="HotkeyKey"
+                                                 PreviewKeyDown="Hotkey_OnPreviewKeyDown"
+                                                 Text="{Binding AddHotkeyHotkey, Mode=OneWay}"
+                                                 Padding="2" IsReadOnly="True" />
+                                    </StackPanel>
+                                </Grid>
+
+                                <FrameworkElement Height="16" />
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="16" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Button Grid.Column="0" x:Name="AddHotkeyButton" Content="Add"
+                                            Click="AddHotkey" />
+                                    <FrameworkElement Grid.Column="1" />
+                                    <Button Grid.Column="2" x:Name="RemoveHotkeyButton" Content="Remove"
+                                            Click="RemoveHotkey" />
+                                </Grid>
+                            </StackPanel>
                         </StackPanel>
                     </Border>
                 </GroupBox>
+                <FrameworkElement Height="8" />
+                <CheckBox Content="Hotkeys" IsChecked="{Binding ActiveHotkeys}" />
+                <FrameworkElement Height="8" />
+                <CheckBox Content="Sandbox" IsChecked="{Binding EnterSandboxMode}" />
             </StackPanel>
         </Grid>
     </Border>

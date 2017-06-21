@@ -5,11 +5,11 @@ namespace App
     [ImplementPropertyChanged]
     public class Handle
     {
-        public float Value { get; set; }
+        public float Position { get; set; }
 
-        public Handle(float value)
+        public Handle(float position)
         {
-            Value = value;
+            Position = position;
         }
     }
 }

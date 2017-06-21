@@ -1,6 +1,4 @@
-﻿using System.Windows.Media;
-using Newtonsoft.Json;
-using PropertyChanged;
+﻿using PropertyChanged;
 
 namespace App.Model
 {
@@ -12,17 +10,6 @@ namespace App.Model
             Rect = rect;
         }
 
-        [JsonIgnore]
-        public bool Selected { get; set; }
-
-        [JsonIgnore]
-        public SolidColorBrush Bursh { get; set; }
-
         public Rect Rect { get; set; }
-
-        public override string ToString()
-        {
-            return $"{nameof(Rect)}: {Rect}";
-        }
     }
 }

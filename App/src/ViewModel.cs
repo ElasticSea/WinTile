@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using App.Model;
+using App.Model.Entities;
 using App.Model.Managers;
 using App.Model.Managers.Strategies;
 using App.Properties;
@@ -16,14 +17,15 @@ namespace App
     public class ViewModel : INotifyPropertyChanged
     {
         private readonly LayoutManager layoutManager = new LayoutManager();
-        private bool _activeInEditor;
+        private bool _activeHotkeys;
         private Tile _selected;
         private HotkeyPair _selectedHotkeyPair;
-        private EditorWindowManager editorWindowManager;
+        private SandboxWindowManager sandbox;
         private HotkeyManager hotkeyManager;
         private ConvertWindowManager nativeWindowManager;
         private readonly CompositeWindowManager windowManager = new CompositeWindowManager();
         private CuttingManager cuttingManager;
+        private bool _enterSandboxMode;
 
         public IEnumerable<HotkeyType> HotkeyTypes
         {
@@ -47,10 +49,10 @@ namespace App
 
         private void reload()
         {
-            cuttingManager = new CuttingManager(layoutManager.Layout.VerticalHandlers, layoutManager.Layout.HorizontalHandlers);
+            cuttingManager = new CuttingManager(layoutManager.Layout.Grid);
             nativeWindowManager = new ConvertWindowManager(new User32Manager());
-            editorWindowManager = new EditorWindowManager(Tiles);
-            windowManager.CurrentManager = editorWindowManager;
+            sandbox = new SandboxWindowManager(Tiles);
+            windowManager.CurrentManager = sandbox;
 
             var move = new MoveStrategy(Tiles, windowManager);
             var select = new SelectStrategy(Tiles, windowManager);
@@ -82,27 +84,46 @@ namespace App
                 });
         }
 
-        public ObservableCollection<Handle> VerticalHandlers => layoutManager.Layout.VerticalHandlers;
-        public ObservableCollection<Handle> HorizontalHandlers => layoutManager.Layout.HorizontalHandlers;
+        public ObservableCollection<Handle> Rows => layoutManager.Layout.Grid.Rows;
+        public ObservableCollection<Handle> Columns => layoutManager.Layout.Grid.Columns;
         public ObservableCollection<Tile> Tiles => cuttingManager.Tiles;
         public ObservableCollection<HotkeyPair> Hotkeys => layoutManager.Layout.hotkeys;
-        public ObservableCollection<Tile> Windows => editorWindowManager.Windows;
+        public ObservableCollection<Window> Windows => sandbox.Windows;
 
         public HotkeyPair SelectedHotkeyPair { private get; set; }
         public HotkeyType AddHotkeyType { get; set; }
         public Hotkey AddHotkeyHotkey { get; set; }
 
-        public bool ActiveInEditor
+        public bool ActiveHotkeys
         {
-            get => _activeInEditor;
+            get => _activeHotkeys;
             set
             {
-                _activeInEditor = value;
+                _activeHotkeys = value;
 
-                if (ActiveInEditor)
+                if (ActiveHotkeys)
                     hotkeyManager.BindHotkeys();
                 else
                     hotkeyManager.UnbindHotkeys();
+            }
+        }
+
+        public bool EnterSandboxMode
+        {
+            get => _enterSandboxMode;
+            set
+            {
+                _enterSandboxMode = value;
+
+                if (EnterSandboxMode)
+                {
+                    ActiveHotkeys = true;
+                    windowManager.CurrentManager = sandbox;
+                }
+                else
+                {
+                    windowManager.CurrentManager = nativeWindowManager;
+                }
             }
         }
 
@@ -113,26 +134,14 @@ namespace App
             JsonLayout = Settings.Default.Layout ?? "{}";
         }
 
-        public void BindHotkeys()
-        {
-            windowManager.CurrentManager = nativeWindowManager;
-            hotkeyManager.BindHotkeys();
-        }
-
-        public void UnbindHotkeys()
-        {
-            windowManager.CurrentManager = editorWindowManager;
-            hotkeyManager.UnbindHotkeys();
-        }
-
         public void AddWindow()
         {
-            editorWindowManager.addWindow();
+            sandbox.AddWindow();
         }
 
         public void RemoveWindow()
         {
-            editorWindowManager.removeWindow();
+            sandbox.RemoveWindow();
         }
 
         internal void Save()

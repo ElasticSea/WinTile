@@ -3,48 +3,30 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using App.Model.Entities;
 
 namespace App.Model.Managers
 {
     public class CuttingManager
     {
-        private ObservableCollection<Handle> verticalHandlers;
-        private ObservableCollection<Handle> horizontalHandlers;
-
-        public CuttingManager(ObservableCollection<Handle> verticalHandlers, ObservableCollection<Handle> horizontalHandlers)
-        {
-            this.verticalHandlers = verticalHandlers;
-            this.horizontalHandlers = horizontalHandlers;
-
-            verticalHandlers.CollectionChanged += (sender, args) =>
-            {
-                recalculate();
-            };
-            horizontalHandlers.CollectionChanged += (sender, args) =>
-            {
-                recalculate();
-            };
-
-            NotifyCollectionChangedEventHandler handlerChanged = (sender, args) => collectionPropertyChanged(args, (o, eventArgs) => recalculate());
-            verticalHandlers.CollectionChanged += handlerChanged;
-            horizontalHandlers.CollectionChanged += handlerChanged;
-
-            recalculate();
-
-
-
-        }
-
-        public CuttingManager()
-        {
-            this.verticalHandlers = verticalHandlers;
-            this.horizontalHandlers = horizontalHandlers;
-        }
+        private Grid grid;
 
         public ObservableCollection<Tile> Tiles { get; set; } = new ObservableCollection<Tile>();
 
+        public CuttingManager(Grid grid)
+        {
+            this.grid = grid;
+            PropertyChangedEventHandler propertyChangedEventHandler = (o, eventArgs) => recalculate();
+            NotifyCollectionChangedEventHandler handlerChanged = (sender, args) => collectionPropertyChanged(sender, args, propertyChangedEventHandler);
+            grid.Rows.CollectionChanged += handlerChanged;
+            grid.Columns.CollectionChanged += handlerChanged;
+            grid.Rows.Cast<INotifyPropertyChanged>().ForEach(r => r.PropertyChanged += propertyChangedEventHandler);
+            grid.Columns.Cast<INotifyPropertyChanged>().ForEach(g => g.PropertyChanged += propertyChangedEventHandler);
 
-        void collectionPropertyChanged(NotifyCollectionChangedEventArgs e, PropertyChangedEventHandler handler)
+            recalculate();
+        }
+
+        void collectionPropertyChanged(object sender, NotifyCollectionChangedEventArgs e, PropertyChangedEventHandler handler)
         {
             if (e.OldItems != null)
                 foreach (INotifyPropertyChanged item in e.OldItems)
@@ -53,12 +35,14 @@ namespace App.Model.Managers
             if (e.NewItems != null)
                 foreach (INotifyPropertyChanged item in e.NewItems)
                     item.PropertyChanged += handler;
+
+            handler(sender, new PropertyChangedEventArgs(nameof(sender)));
         }
 
-        public void CutVertical() => cut(verticalHandlers);
-        public void CutHorizontal() => cut(horizontalHandlers);
+        public void CutVertical() => cut(grid.Rows);
+        public void CutHorizontal() => cut(grid.Columns);
 
-        private void cut(ObservableCollection<Handle> handles)
+        private void cut(IList<Handle> handles)
         {
             var dist = 0f;
             var start = 0f;
@@ -80,12 +64,12 @@ namespace App.Model.Managers
             handles.Add(new Handle(start + (end - start) / 2));
         }
 
-        public void recalculate()
+        private void recalculate()
         {
             Tiles.Clear();
 
-            var hor = handleValues(horizontalHandlers);
-            var ver = handleValues(verticalHandlers);
+            var hor = handleValues(grid.Columns);
+            var ver = handleValues(grid.Rows);
 
             for (var x = 0; x < hor.Count - 1; x++)
             {
@@ -107,7 +91,7 @@ namespace App.Model.Managers
         {
             var vals = new List<float>();
             vals.Add(0);
-            vals.AddRange(handles.Select(h => h.Value));
+            vals.AddRange(handles.Select(h => h.Position));
             vals.Add(1);
             vals.Sort();
             return vals;

@@ -10,16 +10,13 @@ namespace App.View.Convertors
         public object Convert(object value, Type targetType, object parameter,
             CultureInfo culture)
         {
-            if (targetType != typeof(string))
-                throw new InvalidOperationException("The target must be a string");
-
-            return (int)((float)value *100);
+            return Math.Round(((float)value).Clamp(0, 1) * 100);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter,
             CultureInfo culture)
         {
-            throw new NotSupportedException();
+            return (((string)value).ToFloat(0).Value / 100).Clamp(0, 1);
         }
     }
 }

@@ -4,20 +4,21 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Media;
 using App.Model;
+using App.Model.Entities;
 
 namespace App
 {
-    public class EditorWindowManager : IWindowManager
+    public class SandboxWindowManager : IWindowManager
     {
         private readonly Random rnd = new Random();
         private readonly ObservableCollection<Tile> tiles;
 
-        public EditorWindowManager(ObservableCollection<Tile> tiles)
+        public SandboxWindowManager(ObservableCollection<Tile> tiles)
         {
             this.tiles = tiles;
         }
 
-        public ObservableCollection<Tile> Windows { get; } = new ObservableCollection<Tile>();
+        public ObservableCollection<Window> Windows { get; } = new ObservableCollection<Window>();
 
         public IntPtr FocusedWindow
         {
@@ -25,7 +26,7 @@ namespace App
             set
             {
                 Windows.ForEach(w => w.Selected = false);
-                var tileFrom = getTileFrom(value);
+                var tileFrom = GetTileFrom(value);
                 tileFrom.Selected = true;
 
                 var index = Windows.IndexOf(tileFrom);
@@ -40,42 +41,37 @@ namespace App
 
         public Rect GetWindowRect(IntPtr handle)
         {
-            return getTileFrom(handle).Rect;
+            return GetTileFrom(handle).Rect;
         }
 
         public void PositionWindow(IntPtr handle, Rect rect)
         {
-            var tileFrom = getTileFrom(handle);
+            var tileFrom = GetTileFrom(handle);
             tileFrom.Rect = rect;
 //            tileFrom.Rect.Right = rect.Right;
 //            tileFrom.Rect.Top = rect.Top;
 //            tileFrom.Rect.Bottom = rect.Bottom;
         }
 
-        private SolidColorBrush PickBrush()
-        {
-
-            var fromArgb = Color.FromArgb(255, (byte) rnd.Next(0, 128), (byte) rnd.Next(0, 128),
-                (byte) rnd.Next(0, 128));
-            return new SolidColorBrush(fromArgb);
-        }
-
-        public Tile getTileFrom(IntPtr handle)
+        public Window GetTileFrom(IntPtr handle)
         {
             return Windows.First(w => w.GetHashCode() == handle.ToInt32());
         }
 
-        public void addWindow()
+        public void AddWindow()
         {
             var tile = tiles.First();
-            var window = new Tile(new Rect(tile.Rect)) {Bursh = PickBrush()};
+
+            var brush = new SolidColorBrush(Color.FromArgb(255, (byte) rnd.Next(0, 128), (byte) rnd.Next(0, 128),
+                (byte) rnd.Next(0, 128)));
+            var window = new Window(false, brush, new Rect(tile.Rect));
             Windows.Add(window);
 
             if (Windows.Any(w => w.Selected) == false)
                 Windows.First().Selected = true;
         }
 
-        public void removeWindow()
+        public void RemoveWindow()
         {
             var selected = Windows.FirstOrDefault(w => w.Selected);
             if (selected != null)

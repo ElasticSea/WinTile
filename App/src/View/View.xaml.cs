@@ -1,24 +1,26 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Forms;
+using System.Windows.Input;
+using System.Windows.Media;
 using Microsoft.Win32;
 using ContextMenu = System.Windows.Controls.ContextMenu;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
+using TextBox = System.Windows.Controls.TextBox;
 
 namespace App
 {
     public partial class MainWindow : Window
     {
-        private readonly ViewModel VM = new ViewModel();
         private readonly NotifyIcon notifyIcon;
+        private readonly ViewModel VM = new ViewModel();
 
         public MainWindow()
         {
@@ -74,14 +76,7 @@ namespace App
         // minimize to system tray when applicaiton is minimized
         protected override void OnStateChanged(EventArgs e)
         {
-            if (WindowState == WindowState.Minimized)
-            {
-                Hide();
-                VM.BindHotkeys();
-            }
-            if (WindowState == WindowState.Normal)
-                VM.UnbindHotkeys();
-
+            if (WindowState == WindowState.Minimized) Hide();
             base.OnStateChanged(e);
         }
 
@@ -93,7 +88,6 @@ namespace App
             e.Cancel = true;
 
             Hide();
-            VM.BindHotkeys();
 
             base.OnClosing(e);
         }
@@ -124,39 +118,18 @@ namespace App
                 VM.JsonLayout = File.ReadAllText(dlg.FileName);
         }
 
-        private void RemoveWindowButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            VM.RemoveWindow();
-        }
-
-        private void AddWindowButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            VM.AddWindow();
-        }
-
-        private void SaveLayoutButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            VM.Save();
-        }
-
-        private void ResetLayoutButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            VM.Load();
-        }
+        private void RemoveWindow(object sender, RoutedEventArgs e) => VM.RemoveWindow();
+        private void AddWindow(object sender, RoutedEventArgs e) => VM.AddWindow();
+        private void SaveLayout(object sender, RoutedEventArgs e) => VM.Save();
+        private void ResetLayout(object sender, RoutedEventArgs e) => VM.Load();
+        private void AddHotkey(object sender, RoutedEventArgs e) => VM.AddHotkey();
+        private void RemoveHotkey(object sender, RoutedEventArgs e) => VM.RemoveHotkey();
+        private void CutVertical(object sender, RoutedEventArgs e) => VM.CutVertical();
+        private void CutHorizontal(object sender, RoutedEventArgs e) => VM.CutHorizontal();
 
         private void Hotkey_OnPreviewKeyDown(object sender, KeyEventArgs args)
         {
             HotkeyBinding.assignHotkey(args, h => VM.AddHotkeyHotkey = h);
-        }
-
-        private void AddHotkeyButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            VM.AddHotkey();
-        }
-
-        private void RemoveHotkeyButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            VM.RemoveHotkey();
         }
 
         private void Menu_Exit(object sender, RoutedEventArgs e)
@@ -175,27 +148,34 @@ namespace App
             moveHandle(sender, e, e.HorizontalChange / Canvaz.ActualWidth);
         }
 
-        private void CutVerticalButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            VM.CutVertical();
-        }
-
-        private void CutHorizontalButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            VM.CutHorizontal();
-        }
-
         private void moveHandle(object sender, DragDeltaEventArgs e, double value)
         {
             var handle = (sender as FrameworkElement).DataContext as Handle;
-            handle.Value = (float)(handle.Value + value).Clamp(0, 1);
+            handle.Position = (float) (handle.Position + value).Clamp(0, 1);
         }
 
-        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        private void RemoveHandle(object sender, RoutedEventArgs e)
         {
             var handle = (sender as FrameworkElement).DataContext as Handle;
-            VM.VerticalHandlers.Remove(handle);
-            VM.HorizontalHandlers.Remove(handle);
+            VM.Rows.Remove(handle);
+            VM.Columns.Remove(handle);
+        }
+
+        private void HandleOnFocus(object sender, RoutedEventArgs e)
+        {
+            (e.OriginalSource as TextBox)?.SelectAll();
+        }
+
+        private void HandlePreviewMouse(object sender, MouseButtonEventArgs e)
+        {
+                var textBox = (sender as TextBox);
+                if (!textBox.IsKeyboardFocusWithin)
+                {
+                    // If the text box is not yet focused, give it the focus and
+                    // stop further processing of this click event.
+                    textBox.Focus();
+                    e.Handled = true;
+                }
         }
     }
 }
