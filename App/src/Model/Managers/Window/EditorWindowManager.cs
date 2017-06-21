@@ -54,8 +54,9 @@ namespace App
 
         private SolidColorBrush PickBrush()
         {
-            var fromArgb = Color.FromArgb(255, (byte) rnd.Next(0, 256), (byte) rnd.Next(0, 256),
-                (byte) rnd.Next(0, 256));
+
+            var fromArgb = Color.FromArgb(255, (byte) rnd.Next(0, 128), (byte) rnd.Next(0, 128),
+                (byte) rnd.Next(0, 128));
             return new SolidColorBrush(fromArgb);
         }
 

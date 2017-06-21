@@ -23,7 +23,7 @@
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         </Style>
         <x:Array Type="Brush" x:Key="selectedDeselectedBrushes">
-            <Brush>Yellow</Brush>
+            <Brush>White</Brush>
             <Brush>Aqua</Brush>
         </x:Array>
         <x:Array Type="system:Int32" x:Key="5to0Thicknes">
@@ -144,7 +144,10 @@
                                                                                Text="{Binding Value, Converter={StaticResource PercentConvertor}}"
                                                                                FontSize="20" VerticalAlignment="Center"
                                                                                HorizontalAlignment="Center" />
-                                                                    <Button Grid.Column="1"  Content="X" Click="ButtonBase_OnClick"></Button>
+                                                                    <Button Grid.Column="1" BorderThickness="0" Width="40" Height="40"  
+                                                                            Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"  Foreground="White" Click="ButtonBase_OnClick">
+                                                                        <Path x:Name="CloseWindow" SnapsToDevicePixels="True" ToolTip="Remove Handler" Margin="12" Stretch="Fill" Stroke="Black" Data="M0,0 L1,1 M0,1 L1,0"  />
+                                                                    </Button>
                                                                     
                                                                 </Grid>
                                                             </Border>
@@ -202,7 +205,10 @@
                                                                                Text="{Binding Value, Converter={StaticResource PercentConvertor}}"
                                                                                FontSize="20" VerticalAlignment="Center"
                                                                                HorizontalAlignment="Center" />
-                                                                    <Button Grid.Column="1"  Content="X" Click="ButtonBase_OnClick"></Button>
+                                                                    <Button Grid.Column="1" BorderThickness="0" Width="40" Height="40"  
+                                                                            Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"  Foreground="White" Click="ButtonBase_OnClick">
+                                                                        <Path x:Name="CloseWindow" SnapsToDevicePixels="True" ToolTip="Remove Handler" Margin="12" Stretch="Fill" Stroke="Black" Data="M0,0 L1,1 M0,1 L1,0"  />
+                                                                    </Button>
 
                                                                 </Grid>
                                                             </Border>
