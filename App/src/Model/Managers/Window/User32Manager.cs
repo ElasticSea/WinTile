@@ -41,9 +41,9 @@ namespace App.Utils
             var dy = Math.Min(winRect.Height - clientRect.Bottom, 8);
 
             winRect.Left += dx / 2;
-            winRect.Right += dx / 2;
+            winRect.Right -= dx / 2;
             winRect.Top += 0;
-            winRect.Bottom += dy;
+            winRect.Bottom -= dy;
 
             return winRect;
         }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Media;
 using App.Model;
 using App.Model.Entities;
 
@@ -10,7 +9,6 @@ namespace App
 {
     public class SandboxWindowManager : IWindowManager
     {
-        private readonly Random rnd = new Random();
         private readonly ObservableCollection<Tile> tiles;
 
         public SandboxWindowManager(ObservableCollection<Tile> tiles)
@@ -46,11 +44,7 @@ namespace App
 
         public void PositionWindow(IntPtr handle, Rect rect)
         {
-            var tileFrom = GetTileFrom(handle);
-            tileFrom.Rect = rect;
-//            tileFrom.Rect.Right = rect.Right;
-//            tileFrom.Rect.Top = rect.Top;
-//            tileFrom.Rect.Bottom = rect.Bottom;
+            GetTileFrom(handle).Rect = rect;
         }
 
         public Window GetTileFrom(IntPtr handle)
@@ -60,12 +54,7 @@ namespace App
 
         public void AddWindow()
         {
-            var tile = tiles.First();
-
-            var brush = new SolidColorBrush(Color.FromArgb(255, (byte) rnd.Next(0, 128), (byte) rnd.Next(0, 128),
-                (byte) rnd.Next(0, 128)));
-            var window = new Window(false, brush, new Rect(tile.Rect));
-            Windows.Add(window);
+            Windows.Add(new Window(new Rect(tiles.First().Rect)));
 
             if (Windows.Any(w => w.Selected) == false)
                 Windows.First().Selected = true;
@@ -77,7 +66,7 @@ namespace App
             if (selected != null)
             {
                 Windows.Remove(selected);
-                Windows.FirstOrDefault()?.let(w => w.Selected = true);
+                if (Windows.Any()) Windows.Last().Selected = true;
             }
         }
     }

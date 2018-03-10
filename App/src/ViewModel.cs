@@ -43,16 +43,16 @@ namespace App
             set
             {
                 layoutManager.Json = value;
-                reload();
+                Reload();
             }
         }
 
-        private void reload()
+        private void Reload()
         {
             cuttingManager = new CuttingManager(layoutManager.Layout.Grid);
             nativeWindowManager = new ConvertWindowManager(new User32Manager());
             sandbox = new SandboxWindowManager(Tiles);
-            windowManager.CurrentManager = sandbox;
+            windowManager.CurrentManager = nativeWindowManager;
 
             var move = new MoveStrategy(Tiles, windowManager);
             var select = new SelectStrategy(Tiles, windowManager);
@@ -82,6 +82,9 @@ namespace App
                     {HotkeyType.SelectUp, h1 => @select.Up()},
                     {HotkeyType.SelectDown, h1 => @select.Down()}
                 });
+
+            ActiveHotkeys = ActiveHotkeys;
+            EnterSandboxMode = EnterSandboxMode;
         }
 
         public ObservableCollection<Handle> Rows => layoutManager.Layout.Grid.Rows;

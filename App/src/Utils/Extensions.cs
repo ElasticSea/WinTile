@@ -23,11 +23,6 @@ namespace App
             return float.TryParse(s, out i) ? i : def;
         }
 
-        public static void let<T>(this T item, Action<T> action)
-        {
-            action?.Invoke(item);
-        }
-
         public static int Clamp(this int value, int min, int max)
         {
             return Math.Max(min, Math.Min(max, value));

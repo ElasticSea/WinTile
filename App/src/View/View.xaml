@@ -22,13 +22,13 @@
         <Style TargetType="ListViewItem">
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         </Style>
-        <x:Array Type="Brush" x:Key="selectedDeselectedBrushes">
-            <Brush>White</Brush>
-            <Brush>Aqua</Brush>
+        <x:Array Type="Brush" x:Key="selectedDeselectedBackground">
+            <Brush>#0290d1</Brush>
+            <Brush>#303030</Brush>
         </x:Array>
-        <x:Array Type="system:Int32" x:Key="5to0Thicknes">
-            <system:Int32>5</system:Int32>
-            <system:Int32>0</system:Int32>
+        <x:Array Type="Brush" x:Key="selectedDeselectedForeground">
+            <Brush>#03afff</Brush>
+            <Brush>#403d3e</Brush>
         </x:Array>
         <x:Array Type="Visibility" x:Key="visibleHiddenArray">
             <Visibility>Visible</Visibility>
@@ -160,7 +160,7 @@
                                                                              FontSize="20" VerticalAlignment="Center"
                                                                              TextAlignment="Center"
                                                                              GotFocus="HandleOnFocus"
-                                                                             PreviewMouseLeftButtonDown="HandleOnFocus"
+                                                                             PreviewMouseLeftButtonDown="HandlePreviewMouse"
                                                                              HorizontalAlignment="Center" />
                                                                     <Button Grid.Column="0" BorderThickness="0"
                                                                             Grid.Row="2" ToolTip="Remove Handler"
@@ -243,7 +243,7 @@
                                                                              FontSize="20" VerticalAlignment="Center"
                                                                              TextAlignment="Center"
                                                                              GotFocus="HandleOnFocus"
-                                                                             PreviewMouseLeftButtonDown="HandleOnFocus"
+                                                                             PreviewMouseLeftButtonDown="HandlePreviewMouse"
                                                                              HorizontalAlignment="Center" />
                                                                     <Button Grid.Column="2" BorderThickness="0"
                                                                             Grid.Row="0" ToolTip="Remove Handler"
@@ -408,10 +408,10 @@
 
                                             <Border BorderBrush="Black" BorderThickness="1">
                                                 <Border
-                                                    Background="{Binding Bursh}"
-                                                    BorderThickness="{Binding Path=Selected, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource 5to0Thicknes}}"
-                                                    BorderBrush="{Binding Path=Selected, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource selectedDeselectedBrushes}}">
-                                                    <TextBlock Text="" Foreground="White" VerticalAlignment="Center"
+                                                    Background="{Binding Path=Selected, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource selectedDeselectedBackground}}" >
+                                                    <TextBlock Text="" VerticalAlignment="Center"
+                                                               FontWeight="ExtraBold"
+                                                               Foreground="{Binding Path=Selected, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource selectedDeselectedForeground}}"
                                                                HorizontalAlignment="Center" FontSize="45">
                                                         <Run
                                                             Text="{Binding Rect.Width,Converter={StaticResource PercentConvertor}}" />
