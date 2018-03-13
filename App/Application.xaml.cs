@@ -42,7 +42,7 @@ namespace App
         private void ExitApplication()
         {
             isExit = true;
-            MainWindow.Close();
+            MainWindow?.Close();
             notifyIcon.Dispose();
             notifyIcon = null;
         }
