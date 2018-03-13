@@ -1,15 +1,8 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.IO;
-using System.Reflection;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Forms;
 using System.Windows.Input;
-using System.Windows.Media;
-using Microsoft.Win32;
-using ContextMenu = System.Windows.Controls.ContextMenu;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
@@ -19,29 +12,12 @@ namespace App
 {
     public partial class MainWindow : Window
     {
-        private readonly NotifyIcon notifyIcon;
         private readonly ViewModel VM = new ViewModel();
 
         public MainWindow()
         {
             InitializeComponent();
-
-            notifyIcon = new NotifyIcon
-            {
-                Icon = System.Drawing.Icon.FromHandle(Properties.Resources.icon.GetHicon()),
-                Visible = true
-            };
-            notifyIcon.DoubleClick += (sender, args) =>
-            {
-                Show();
-                WindowState = WindowState.Normal;
-            };
-            notifyIcon.MouseClick += (sender, args) =>
-            {
-                if (args.Button == MouseButtons.Right)
-                    ((ContextMenu) FindResource("NotifierContextMenu")).IsOpen = true;
-            };
-
+        
             if (!DesignerProperties.GetIsInDesignMode(this))
             {
                 VM.PropertyChanged += (sender, args) =>
@@ -52,44 +28,8 @@ namespace App
                         DataContext = VM;
                     }
                 };
-
-
                 VM.Load();
             }
-
-            InstallMeOnStartUp();
-        }
-
-        private void InstallMeOnStartUp()
-        {
-            try
-            {
-                var key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-                var curAssembly = Assembly.GetExecutingAssembly();
-                key.SetValue(curAssembly.GetName().Name, curAssembly.Location);
-            }
-            catch
-            {
-            }
-        }
-
-        // minimize to system tray when applicaiton is minimized
-        protected override void OnStateChanged(EventArgs e)
-        {
-            if (WindowState == WindowState.Minimized) Hide();
-            base.OnStateChanged(e);
-        }
-
-        // minimize to system tray when applicaiton is closed
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            // setting cancel to true will cancel the close request
-            // so the application is not closed
-            e.Cancel = true;
-
-            Hide();
-
-            base.OnClosing(e);
         }
 
         private void ExportButton_OnClick(object sender, RoutedEventArgs e)
@@ -132,12 +72,6 @@ namespace App
             HotkeyBinding.assignHotkey(args, h => VM.AddHotkeyHotkey = h);
         }
 
-        private void Menu_Exit(object sender, RoutedEventArgs e)
-        {
-            notifyIcon.Visible = false;
-            System.Windows.Application.Current.Shutdown();
-        }
-
         private void onVerticalHandler(object sender, DragDeltaEventArgs e)
         {
             moveHandle(sender, e, e.VerticalChange / Canvaz.ActualHeight);
@@ -168,14 +102,14 @@ namespace App
 
         private void HandlePreviewMouse(object sender, MouseButtonEventArgs e)
         {
-                var textBox = (sender as TextBox);
-                if (!textBox.IsKeyboardFocusWithin)
-                {
-                    // If the text box is not yet focused, give it the focus and
-                    // stop further processing of this click event.
-                    textBox.Focus();
-                    e.Handled = true;
-                }
+            var textBox = sender as TextBox;
+            if (!textBox.IsKeyboardFocusWithin)
+            {
+                // If the text box is not yet focused, give it the focus and
+                // stop further processing of this click event.
+                textBox.Focus();
+                e.Handled = true;
+            }
         }
     }
 }

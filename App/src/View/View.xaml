@@ -16,9 +16,6 @@
         <convertors:PercentConvertor x:Key="PercentConvertor" />
         <view:TrueFalseConverter x:Key="TrueFalseConverter" />
         <convertors:InverseBooleanConverter x:Key="InverseBooleanConverter" />
-        <ContextMenu x:Key="NotifierContextMenu" Placement="MousePoint">
-            <MenuItem Header="Exit" Click="Menu_Exit" />
-        </ContextMenu>
         <Style TargetType="ListViewItem">
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         </Style>
