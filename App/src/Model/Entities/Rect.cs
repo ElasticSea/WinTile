@@ -6,30 +6,42 @@ namespace App.Model
     [ImplementPropertyChanged]
     public class Rect
     {
-        private int _cx;
-        public int Left { get; set; }
-        public int Top { get; set; }
-        public int Right { get; set; }
-        public int Bottom { get; set; }
+        public Rect(Rect rect) : this(rect.Left, rect.Top, rect.Right, rect.Bottom)
+        {
+        }
+
+        [JsonConstructor]
+        public Rect(float left = 0, float top = 0, float right = 0, float bottom = 0)
+        {
+            Left = left;
+            Top = top;
+            Right = right;
+            Bottom = bottom;
+        }
+
+        public float Left { get; set; }
+        public float Top { get; set; }
+        public float Right { get; set; }
+        public float Bottom { get; set; }
 
         [JsonIgnore]
-        public int Width
+        public float Width
         {
             get => Right - Left;
             set => Right = value + Left;
         }
 
         [JsonIgnore]
-        public int Height
+        public float Height
         {
             get => Bottom - Top;
             set => Bottom = value + Top;
         }
 
         [JsonIgnore]
-        public int Cx
+        public float Cx
         {
-            get => Left +Width / 2;
+            get => Left + Width / 2;
             set
             {
                 Left = value - Width / 2;
@@ -38,9 +50,9 @@ namespace App.Model
         }
 
         [JsonIgnore]
-        public int Cy
+        public float Cy
         {
-            get => Top +  Height / 2;
+            get => Top + Height / 2;
             set
             {
                 Top = value - Height / 2;
@@ -48,42 +60,19 @@ namespace App.Model
             }
         }
 
-        public Rect(int left = 0, int top = 0, int right = 0, int bottom = 0)
-        {
-            Left = left;
-            Top = top;
-            Right = right;
-            Bottom = bottom;
-        }
-
-        public Rect extend(int width, int height)
+        public Rect extend(float width, float height)
         {
             return new Rect(Left * width, Top * height, Right * width, Bottom * height);
         }
 
-        public Rect shrink(int width, int height)
+        public Rect shrink(float width, float height)
         {
             return new Rect(Left / width, Top / height, Right / width, Bottom / height);
         }
 
-        public static Rect operator *(Rect r0, int value)
-        {
-            return new Rect(r0.Left * value, r0.Top * value, r0.Right * value, r0.Bottom * value);
-        }
-
-        public static Rect operator /(Rect r0, int value)
-        {
-            return new Rect(r0.Left / value, r0.Top / value, r0.Right / value, r0.Bottom / value);
-        }
-
-        public override string ToString()
-        {
-            return $"{nameof(Left)}: {Left}, {nameof(Top)}: {Top}, {nameof(Right)}: {Right}, {nameof(Bottom)}: {Bottom}";
-        }
-
         protected bool Equals(Rect other)
         {
-            return Left == other.Left && Top == other.Top && Right == other.Right && Bottom == other.Bottom;
+            return Left.Equals(other.Left) && Top.Equals(other.Top) && Right.Equals(other.Right) && Bottom.Equals(other.Bottom);
         }
 
         public override bool Equals(object obj)
@@ -98,10 +87,10 @@ namespace App.Model
         {
             unchecked
             {
-                var hashCode = Left;
-                hashCode = (hashCode * 397) ^ Top;
-                hashCode = (hashCode * 397) ^ Right;
-                hashCode = (hashCode * 397) ^ Bottom;
+                var hashCode = Left.GetHashCode();
+                hashCode = (hashCode * 397) ^ Top.GetHashCode();
+                hashCode = (hashCode * 397) ^ Right.GetHashCode();
+                hashCode = (hashCode * 397) ^ Bottom.GetHashCode();
                 return hashCode;
             }
         }

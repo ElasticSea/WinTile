@@ -69,28 +69,36 @@
       <DependentUpon>Application.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\Model\Entities\Grid.cs" />
+    <Compile Include="src\Model\Entities\Handle.cs" />
     <Compile Include="src\Model\Entities\Hotkey.cs" />
+    <Compile Include="src\Model\Entities\HotkeyPair.cs" />
+    <Compile Include="src\Model\Entities\HotkeyType.cs" />
     <Compile Include="src\Model\Entities\Layout.cs" />
     <Compile Include="src\Model\Entities\Rect.cs" />
     <Compile Include="src\Model\Entities\Tile.cs" />
+    <Compile Include="src\Model\Entities\Window.cs" />
+    <Compile Include="src\Model\Managers\CuttingManager.cs" />
+    <Compile Include="src\Model\Managers\Strategies\AbstractClosestStrategy.cs" />
     <Compile Include="src\Model\Managers\Strategies\LayoutStrategy.cs" />
     <Compile Include="src\Model\Managers\Strategies\ExtendStrategy.cs" />
-    <Compile Include="src\Model\Managers\Strategies\ClosestStrategy.cs" />
+    <Compile Include="src\Model\Managers\Strategies\MoveStrategy.cs" />
+    <Compile Include="src\Model\Managers\Strategies\SelectStrategy.cs" />
     <Compile Include="src\Model\Managers\HotkeyManager.cs" />
     <Compile Include="src\Model\Managers\Strategies\PositioningStrategy.cs" />
     <Compile Include="src\Model\Managers\LayoutManager.cs" />
-    <Compile Include="src\Utils\CompositeWindowManager.cs" />
-    <Compile Include="src\Utils\ConvertWindowManager.cs" />
+    <Compile Include="src\Model\Managers\Window\CompositeWindowManager.cs" />
+    <Compile Include="src\Model\Managers\Window\ConvertWindowManager.cs" />
     <Compile Include="src\Utils\Extensions.cs" />
-    <Compile Include="src\Utils\HotKeyUtils.cs" />
-    <Compile Include="src\Utils\IWindowManager.cs" />
-    <Compile Include="src\Utils\SelectedHolder.cs" />
-    <Compile Include="src\Utils\WindowManagerDummy.cs" />
-    <Compile Include="src\Utils\User32Manager.cs" />
-    <Compile Include="src\View\IntegerValidationRule.cs" />
-    <Compile Include="src\View\InverseBooleanConverter.cs" />
-    <Compile Include="src\View\RectConverter.cs" />
-    <Compile Include="src\Utils\User32Utils.cs" />
+    <Compile Include="src\Model\Managers\HotkeyBinding.cs" />
+    <Compile Include="src\Model\Managers\Window\IWindowManager.cs" />
+    <Compile Include="src\Model\Managers\Window\SandboxWindowManager.cs" />
+    <Compile Include="src\Model\Managers\Window\User32Manager.cs" />
+    <Compile Include="src\View\Rules\IntegerValidationRule.cs" />
+    <Compile Include="src\View\Convertors\InverseBooleanConverter.cs" />
+    <Compile Include="src\View\RelativeLayoutPanel.cs" />
+    <Compile Include="src\View\Convertors\PercentConvertor.cs" />
+    <Compile Include="src\View\Convertors\TrueFalseConverter.cs" />
     <Compile Include="src\View\View.xaml.cs">
       <DependentUpon>View.xaml</DependentUpon>
     </Compile>
@@ -139,6 +147,7 @@
   <ItemGroup>
     <Resource Include="Resources\icon.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.2.0.0\build\netstandard1.4\Fody.targets" Condition="Exists('..\packages\Fody.2.0.0\build\netstandard1.4\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

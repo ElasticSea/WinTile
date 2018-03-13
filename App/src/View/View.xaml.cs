@@ -4,27 +4,23 @@ using System.IO;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
+using System.Windows.Controls.Primitives;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Shapes;
-using System.Windows.Threading;
 using Microsoft.Win32;
-using Binding = System.Windows.Data.Binding;
 using ContextMenu = System.Windows.Controls.ContextMenu;
-using HorizontalAlignment = System.Windows.HorizontalAlignment;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
-using Rect = App.Model.Rect;
 using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
+using TextBox = System.Windows.Controls.TextBox;
 
 namespace App
 {
     public partial class MainWindow : Window
     {
+        private readonly NotifyIcon notifyIcon;
         private readonly ViewModel VM = new ViewModel();
-        private NotifyIcon notifyIcon;
 
         public MainWindow()
         {
@@ -43,26 +39,11 @@ namespace App
             notifyIcon.MouseClick += (sender, args) =>
             {
                 if (args.Button == MouseButtons.Right)
-                {
-                    var menu = this.FindResource("NotifierContextMenu") as ContextMenu;
-                    menu.IsOpen = true;
-                }
+                    ((ContextMenu) FindResource("NotifierContextMenu")).IsOpen = true;
             };
 
             if (!DesignerProperties.GetIsInDesignMode(this))
             {
-                SizeChanged += (sender, args) =>
-                {
-                    Canvas.Children.Clear();
-                    var canvasRect = new Rect(0, 0, (int) Canvas.ActualWidth, (int) Canvas.ActualHeight);
-
-                    tileShape(canvasRect);
-
-                    lines(canvasRect);
-
-                    texts(canvasRect);
-                };
-
                 VM.PropertyChanged += (sender, args) =>
                 {
                     if (args.PropertyName == nameof(VM.JsonLayout))
@@ -72,152 +53,12 @@ namespace App
                     }
                 };
 
+
                 VM.Load();
             }
 
             InstallMeOnStartUp();
         }
-
-        private void tileShape(Rect canvasRect)
-        {
-            var boder = new Border { Background = Brushes.DimGray };
-            var text = new TextBlock { Foreground = Brushes.White,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
-                TextWrapping = TextWrapping.Wrap,
-            FontSize = 45};
-
-            squareElement(canvasRect, boder);
-
-            var listViewBinding = new Binding
-            {
-                Source = ListView,
-                Path = new PropertyPath("SelectedIndex"),
-                Mode = BindingMode.OneWay,
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-            };
-
-            BindingOperations.SetBinding(text, TextBlock.TextProperty, listViewBinding);
-            boder.Child = text;
-            Canvas.Children.Add(boder);
-        }
-
-        private void squareElement(Rect canvasRect, FrameworkElement element)
-        {
-            BindingOperations.SetBinding(element, Canvas.LeftProperty,
-                createRectBindable("Selected.Rect.Left", canvasRect.Width / 100f));
-            BindingOperations.SetBinding(element, Canvas.TopProperty,
-                createRectBindable("Selected.Rect.Top", canvasRect.Height / 100f));
-            BindingOperations.SetBinding(element, WidthProperty,
-                createRectBindable("Selected.Rect.Width", canvasRect.Width / 100f));
-            BindingOperations.SetBinding(element, HeightProperty,
-                createRectBindable("Selected.Rect.Height", canvasRect.Height / 100f));
-        }
-
-        private void lines(Rect canvasRect)
-        {
-            var line = createLine();
-
-            BindingOperations.SetBinding(line, Canvas.TopProperty,
-                createRectBindable("Selected.Rect.Top", canvasRect.Height / 100f));
-            BindingOperations.SetBinding(line, Line.X2Property,
-                createRectBindable("Selected.Rect.Left", canvasRect.Width / 100f));
-            Canvas.Children.Add(line);
-
-            var lineb = createLine();
-
-            BindingOperations.SetBinding(lineb, Canvas.TopProperty,
-                createRectBindable("Selected.Rect.Bottom", canvasRect.Height / 100f));
-            BindingOperations.SetBinding(lineb, Line.X2Property,
-                createRectBindable("Selected.Rect.Left", canvasRect.Width / 100f));
-            Canvas.Children.Add(lineb);
-
-
-            var linec = createLine();
-
-            BindingOperations.SetBinding(linec, Canvas.LeftProperty,
-                createRectBindable("Selected.Rect.Left", canvasRect.Width / 100f));
-            BindingOperations.SetBinding(linec, Line.Y2Property,
-                createRectBindable("Selected.Rect.Top", canvasRect.Height / 100f));
-            Canvas.Children.Add(linec);
-
-
-            var lined = createLine();
-
-            BindingOperations.SetBinding(lined, Canvas.LeftProperty,
-                createRectBindable("Selected.Rect.Right", canvasRect.Width / 100f));
-            BindingOperations.SetBinding(lined, Line.Y2Property,
-                createRectBindable("Selected.Rect.Top", canvasRect.Height / 100f));
-            Canvas.Children.Add(lined);
-        }
-
-        private void texts(Rect canvasRect)
-        {
-            var text = Text();
-
-            BindingOperations.SetBinding(text, Canvas.TopProperty,
-                createRectBindable("Selected.Rect.Top", canvasRect.Height / 100f));
-            BindingOperations.SetBinding(text, TextBlock.TextProperty,
-                createSimple("Selected.Rect.Top"));
-            Canvas.Children.Add(text);
-
-            var texta = Text();
-
-            BindingOperations.SetBinding(texta, Canvas.TopProperty,
-                createRectBindable("Selected.Rect.Bottom", canvasRect.Height / 100f));
-            BindingOperations.SetBinding(texta, TextBlock.TextProperty,
-                createSimple("Selected.Rect.Bottom"));
-            Canvas.Children.Add(texta);
-
-            var textb = Text();
-
-            BindingOperations.SetBinding(textb, Canvas.LeftProperty,
-                createRectBindable("Selected.Rect.Left", canvasRect.Width / 100f));
-            BindingOperations.SetBinding(textb, TextBlock.TextProperty,
-                createSimple("Selected.Rect.Left"));
-            Canvas.Children.Add(textb);
-
-            var textc = Text();
-
-            BindingOperations.SetBinding(textc, Canvas.LeftProperty,
-                createRectBindable("Selected.Rect.Right", canvasRect.Width / 100f));
-            BindingOperations.SetBinding(textc, TextBlock.TextProperty,
-                createSimple("Selected.Rect.Right"));
-            Canvas.Children.Add(textc);
-        }
-
-        private static Line createLine()
-        {
-            return new Line
-            {
-                Stroke = Brushes.Black,
-                StrokeThickness = 1,
-                StrokeDashArray = new DoubleCollection(new double[] { 4, 4 })
-            };
-        }
-
-        private TextBlock Text() => new TextBlock
-        {
-            Text = "OK",
-            Foreground = Brushes.Black
-        };
-
-        private Binding createRectBindable(string name, float scale) => new Binding
-        {
-            Source = VM,
-            Path = new PropertyPath(name),
-            Mode = BindingMode.OneWay,
-            Converter = new Multiplier(scale),
-            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-        };
-
-        private Binding createSimple(string name) => new Binding
-        {
-            Source = VM,
-            Path = new PropertyPath(name),
-            Mode = BindingMode.OneWay,
-            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-        };
 
         private void InstallMeOnStartUp()
         {
@@ -235,16 +76,7 @@ namespace App
         // minimize to system tray when applicaiton is minimized
         protected override void OnStateChanged(EventArgs e)
         {
-            if (WindowState == WindowState.Minimized)
-            {
-                Hide();
-                VM.BindHotkeys();
-            }
-            if (WindowState == WindowState.Normal)
-            {
-                VM.UnbindHotkeys();
-            }
-
+            if (WindowState == WindowState.Minimized) Hide();
             base.OnStateChanged(e);
         }
 
@@ -256,7 +88,6 @@ namespace App
             e.Cancel = true;
 
             Hide();
-            VM.BindHotkeys();
 
             base.OnClosing(e);
         }
@@ -287,31 +118,64 @@ namespace App
                 VM.JsonLayout = File.ReadAllText(dlg.FileName);
         }
 
+        private void RemoveWindow(object sender, RoutedEventArgs e) => VM.RemoveWindow();
+        private void AddWindow(object sender, RoutedEventArgs e) => VM.AddWindow();
+        private void SaveLayout(object sender, RoutedEventArgs e) => VM.Save();
+        private void ResetLayout(object sender, RoutedEventArgs e) => VM.Load();
+        private void AddHotkey(object sender, RoutedEventArgs e) => VM.AddHotkey();
+        private void RemoveHotkey(object sender, RoutedEventArgs e) => VM.RemoveHotkey();
+        private void CutVertical(object sender, RoutedEventArgs e) => VM.CutVertical();
+        private void CutHorizontal(object sender, RoutedEventArgs e) => VM.CutHorizontal();
 
-        private void RemoveWindowButton_OnClick(object sender, RoutedEventArgs e) => VM.RemoveTile(VM.Selected);
-        private void AddWindowButton_OnClick(object sender, RoutedEventArgs e) => VM.AddTile();
-        private void SaveLayoutButton_OnClick(object sender, RoutedEventArgs e) => VM.Save();
-        private void ResetLayoutButton_OnClick(object sender, RoutedEventArgs e) => VM.Load();
-
-        private void ClosestLeft_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ClosestLeft = h);
-        private void ClosestRight_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ClosestRight = h);
-        private void ClosestUp_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ClosestUp = h);
-        private void ClosestDown_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ClosestDown = h);
-
-        private void ExpandLeft_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ExpandLeft = h);
-        private void ExpandRight_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ExpandRight = h);
-        private void ExpandUp_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ExpandUp = h);
-        private void ExpandDown_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.ExpandDown = h);
-
-        private void LayoutLeft_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.LayoutLeft = h);
-        private void LayoutRight_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.LayoutRight = h);
-        private void LayoutUp_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.LayoutUp = h);
-        private void LayoutDown_OnPreviewKeyDown(object sender, KeyEventArgs args) => HotKeyUtils.assignHotkey(args, h => VM.LayoutDown = h);
+        private void Hotkey_OnPreviewKeyDown(object sender, KeyEventArgs args)
+        {
+            HotkeyBinding.assignHotkey(args, h => VM.AddHotkeyHotkey = h);
+        }
 
         private void Menu_Exit(object sender, RoutedEventArgs e)
         {
             notifyIcon.Visible = false;
             System.Windows.Application.Current.Shutdown();
+        }
+
+        private void onVerticalHandler(object sender, DragDeltaEventArgs e)
+        {
+            moveHandle(sender, e, e.VerticalChange / Canvaz.ActualHeight);
+        }
+
+        private void onHorizontalHandler(object sender, DragDeltaEventArgs e)
+        {
+            moveHandle(sender, e, e.HorizontalChange / Canvaz.ActualWidth);
+        }
+
+        private void moveHandle(object sender, DragDeltaEventArgs e, double value)
+        {
+            var handle = (sender as FrameworkElement).DataContext as Handle;
+            handle.Position = (float) (handle.Position + value).Clamp(0, 1);
+        }
+
+        private void RemoveHandle(object sender, RoutedEventArgs e)
+        {
+            var handle = (sender as FrameworkElement).DataContext as Handle;
+            VM.Rows.Remove(handle);
+            VM.Columns.Remove(handle);
+        }
+
+        private void HandleOnFocus(object sender, RoutedEventArgs e)
+        {
+            (e.OriginalSource as TextBox)?.SelectAll();
+        }
+
+        private void HandlePreviewMouse(object sender, MouseButtonEventArgs e)
+        {
+                var textBox = (sender as TextBox);
+                if (!textBox.IsKeyboardFocusWithin)
+                {
+                    // If the text box is not yet focused, give it the focus and
+                    // stop further processing of this click event.
+                    textBox.Focus();
+                    e.Handled = true;
+                }
         }
     }
 }

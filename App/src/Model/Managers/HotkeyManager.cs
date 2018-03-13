@@ -1,35 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using App.Model.Managers.Strategies;
 
 namespace App.Model.Managers
 {
     public class HotkeyManager
     {
-        private readonly Layout layout;
-        private IEnumerable<HotKeyUtils> hotkeys;
+        private readonly IList<HotkeyPair> hotkeys;
+        private readonly Dictionary<HotkeyType, Action<object>> mapping;
         private bool binded;
-        private ClosestStrategy closestStrategy;
-        private ExtendStrategy extendStrategy;
-        private LayoutStrategy layoutStrategy;
 
-        public HotkeyManager(Layout layout, ClosestStrategy closestStrategy, ExtendStrategy extendStrategy, LayoutStrategy layoutStrategy)
+        private IEnumerable<HotkeyBinding> bindings;
+
+        public HotkeyManager(IList<HotkeyPair> hotkeys, Dictionary<HotkeyType, Action<object>> mapping)
         {
-            this.layout = layout;
-            this.closestStrategy = closestStrategy;
-            this.extendStrategy = extendStrategy;
-            this.layoutStrategy = layoutStrategy;
+            this.hotkeys = hotkeys;
+            this.mapping = mapping;
         }
 
         public void UnbindHotkeys()
         {
             if (binded)
             {
-                foreach (var hotkey in hotkeys)
-                {
-                    hotkey.Unregister();
-                }
+                foreach (var hotkey in bindings)
+                    hotkey.Unbind();
                 binded = false;
             }
         }
@@ -38,35 +32,15 @@ namespace App.Model.Managers
         {
             if (binded == false)
             {
-                hotkeys = createHotkeys();
+                bindings = from typeHotkey in hotkeys
+                    where typeHotkey.Hotkey != null
+                    select new HotkeyBinding(typeHotkey.Hotkey.Key, typeHotkey.Hotkey.Modifiers,
+                        mapping[typeHotkey.Type], false);
 
-                foreach (var hotkey in hotkeys)
-                {
-                    hotkey.Register();
-                }
+                foreach (var binding in bindings)
+                    binding.Bind();
                 binded = true;
             }
-        }
-
-        private IEnumerable<HotKeyUtils> createHotkeys() => new List<HotKeyUtils>
-        {
-            create(layout.ClosestRight, h1 => closestStrategy.Right()),
-            create(layout.ClosestLeft, h1 => closestStrategy.Left()),
-            create(layout.ClosestUp, h1 => closestStrategy.Up()),
-            create(layout.ClosestDown, h1 => closestStrategy.Down()),
-            create(layout.ExpandRight, h1 => extendStrategy.Right()),
-            create(layout.ExpandLeft, h1 => extendStrategy.Left()),
-            create(layout.ExpandUp, h1 => extendStrategy.Up()),
-            create(layout.ExpandDown, h1 => extendStrategy.Down()),
-            create(layout.LayoutRight, h1 => layoutStrategy.Right()),
-            create(layout.LayoutLeft, h1 => layoutStrategy.Left()),
-            create(layout.LayoutUp, h1 => layoutStrategy.Up()),
-            create(layout.LayoutDown, h1 => layoutStrategy.Down())
-        }.Where(h => h != null);
-
-        private HotKeyUtils create(Hotkey hotkey, Action<object> action)
-        {
-            return hotkey != null ? new HotKeyUtils(hotkey.Key, hotkey.Modifiers, action, false) : null;
         }
     }
 }

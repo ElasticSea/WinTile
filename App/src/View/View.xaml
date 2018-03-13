@@ -5,17 +5,39 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:App"
         xmlns:view="clr-namespace:App.View"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
+        xmlns:convertors="clr-namespace:App.View.Convertors"
         mc:Ignorable="d"
         Icon="../../Resources/icon.png"
         Title="WinTile" Height="720" Width="1280"
         d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True, Type=local:ViewModel}">
 
     <Window.Resources>
-        <local:Multiplier x:Key="converter" />
-        <view:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+        <convertors:PercentConvertor x:Key="PercentConvertor" />
+        <view:TrueFalseConverter x:Key="TrueFalseConverter" />
+        <convertors:InverseBooleanConverter x:Key="InverseBooleanConverter" />
         <ContextMenu x:Key="NotifierContextMenu" Placement="MousePoint">
             <MenuItem Header="Exit" Click="Menu_Exit" />
         </ContextMenu>
+        <Style TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        </Style>
+        <x:Array Type="Brush" x:Key="selectedDeselectedBackground">
+            <Brush>#0290d1</Brush>
+            <Brush>#303030</Brush>
+        </x:Array>
+        <x:Array Type="Brush" x:Key="selectedDeselectedForeground">
+            <Brush>#03afff</Brush>
+            <Brush>#403d3e</Brush>
+        </x:Array>
+        <x:Array Type="Visibility" x:Key="visibleHiddenArray">
+            <Visibility>Visible</Visibility>
+            <Visibility>Hidden</Visibility>
+        </x:Array>
+        <x:Array Type="Visibility" x:Key="hiddenVisibleArray">
+            <Visibility>Hidden</Visibility>
+            <Visibility>Visible</Visibility>
+        </x:Array>
     </Window.Resources>
 
     <Border Padding="16">
@@ -27,7 +49,8 @@
             </Grid.ColumnDefinitions>
 
 
-            <GroupBox Grid.Column="0" Header="Tile Editor">
+            <GroupBox Grid.Column="0" Header="Tile Editor"
+                      Visibility="{Binding Path=EnterSandboxMode, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource hiddenVisibleArray}}">
                 <Border Padding="8">
 
                     <Grid>
@@ -35,121 +58,389 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                             <RowDefinition Height="16" />
-                            <RowDefinition Height="128" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Border Grid.Row="0" BorderBrush="Black" BorderThickness="1">
+                            <view:RelativeLayoutPanel x:Name="Canvaz">
+                                <ItemsControl
+                                    view:RelativeLayoutPanel.RelativeX="0"
+                                    view:RelativeLayoutPanel.RelativeY="0"
+                                    view:RelativeLayoutPanel.RelativeWidth="1"
+                                    view:RelativeLayoutPanel.RelativeHeight="1"
+                                    ItemsSource="{Binding Tiles}">
+
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <view:RelativeLayoutPanel />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text=""
+                                                       Margin="5"
+                                                       Foreground="Black"
+                                                       HorizontalAlignment="Right"
+                                                       VerticalAlignment="Bottom"
+                                                       FontSize="12">
+                                                <Run Text="[" />
+                                                <Run
+                                                    Text="{Binding Rect.Right, Converter={StaticResource PercentConvertor}}" />
+                                                <Run Text=", " />
+                                                <Run
+                                                    Text="{Binding Rect.Bottom, Converter={StaticResource PercentConvertor}}" />
+                                                <Run Text="]" />
+                                            </TextBlock>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+
+                                    <ItemsControl.ItemContainerStyle>
+                                        <Style TargetType="ContentPresenter">
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeX"
+                                                    Value="{Binding Rect.Left, Mode=OneWay}" />
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeY"
+                                                    Value="{Binding Rect.Top, Mode=OneWay}" />
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeWidth"
+                                                    Value="{Binding Rect.Width, Mode=OneWay}" />
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeHeight"
+                                                    Value="{Binding Rect.Height, Mode=OneWay}" />
+                                        </Style>
+                                    </ItemsControl.ItemContainerStyle>
+                                </ItemsControl>
+                                <ItemsControl
+                                    view:RelativeLayoutPanel.RelativeX="0"
+                                    view:RelativeLayoutPanel.RelativeY="0"
+                                    view:RelativeLayoutPanel.RelativeWidth="1"
+                                    view:RelativeLayoutPanel.RelativeHeight="1"
+                                    ItemsSource="{Binding Rows}">
+
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <view:RelativeLayoutPanel />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Canvas ClipToBounds="True"
+                                                    Margin="-20 -60 0 0">
+                                                <Line Stroke="Black" Margin="20 60 0 0" X2="10000"
+                                                      StrokeDashArray="4,4" />
+                                                <Thumb
+                                                    HorizontalAlignment="Left" DragDelta="onVerticalHandler"
+                                                    VerticalAlignment="Top"
+                                                    Width="40"
+                                                    Height="120">
+                                                    <Thumb.Template>
+                                                        <ControlTemplate>
+                                                            <Border BorderThickness="2" BorderBrush="Black"
+                                                                    Background="DeepSkyBlue">
+                                                                <Grid>
+                                                                    <Grid.RowDefinitions>
+                                                                        <RowDefinition Height="40" />
+                                                                        <RowDefinition Height="40" />
+                                                                        <RowDefinition Height="40" />
+                                                                    </Grid.RowDefinitions>
+
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="40" />
+                                                                    </Grid.ColumnDefinitions>
+
+                                                                    <Path Grid.Column="0" Grid.Row="0"
+                                                                          SnapsToDevicePixels="True"
+                                                                          ToolTip="Move Handler" Margin="14"
+                                                                          Stretch="Uniform" Stroke="Black"
+                                                                          Data="M0,0.3 L1,0.3 M0,0.7 L1,0.7" />
+
+                                                                    <TextBox Grid.Column="0" Grid.Row="1"
+                                                                             Foreground="Black" Width="40" Height="40"
+                                                                             Padding="0 2 0 0"
+                                                                             Text="{Binding Position, Converter={StaticResource PercentConvertor}, UpdateSourceTrigger=PropertyChanged}"
+                                                                             FontSize="20" VerticalAlignment="Center"
+                                                                             TextAlignment="Center"
+                                                                             GotFocus="HandleOnFocus"
+                                                                             PreviewMouseLeftButtonDown="HandlePreviewMouse"
+                                                                             HorizontalAlignment="Center" />
+                                                                    <Button Grid.Column="0" BorderThickness="0"
+                                                                            Grid.Row="2" ToolTip="Remove Handler"
+                                                                            Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                                                                            Foreground="White" Click="RemoveHandle">
+                                                                        <Path x:Name="CloseWindow"
+                                                                              SnapsToDevicePixels="True" Margin="12"
+                                                                              Stretch="Fill" Stroke="Black"
+                                                                              Data="M0,0 L1,1 M0,1 L1,0" />
+                                                                    </Button>
+
+                                                                </Grid>
+                                                            </Border>
+                                                        </ControlTemplate>
+                                                    </Thumb.Template>
+                                                </Thumb>
+                                            </Canvas>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+
+                                    <ItemsControl.ItemContainerStyle>
+                                        <Style TargetType="ContentPresenter">
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeX" Value="0" />
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeY"
+                                                    Value="{Binding Position, Mode=OneWay}" />
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeWidth" Value="1" />
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeHeight" Value="1" />
+                                        </Style>
+                                    </ItemsControl.ItemContainerStyle>
+                                </ItemsControl>
+                                <ItemsControl
+                                    view:RelativeLayoutPanel.RelativeX="0"
+                                    view:RelativeLayoutPanel.RelativeY="0"
+                                    view:RelativeLayoutPanel.RelativeWidth="1"
+                                    view:RelativeLayoutPanel.RelativeHeight="1"
+                                    ItemsSource="{Binding Columns}">
+
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <view:RelativeLayoutPanel />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Canvas ClipToBounds="True"
+                                                    Margin="-60 -20 0 0">
+                                                <Line Stroke="Black" Margin="60 20 0 0" Y2="10000"
+                                                      StrokeDashArray="4,4" />
+                                                <Thumb
+                                                    HorizontalAlignment="Left" DragDelta="onHorizontalHandler"
+                                                    VerticalAlignment="Top"
+                                                    Height="40"
+                                                    Width="120">
+                                                    <Thumb.Template>
+                                                        <ControlTemplate>
+                                                            <Border BorderThickness="2" BorderBrush="Black"
+                                                                    Background="DeepSkyBlue">
+                                                                <Grid>
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="40" />
+                                                                        <ColumnDefinition Width="40" />
+                                                                        <ColumnDefinition Width="40" />
+                                                                    </Grid.ColumnDefinitions>
+
+                                                                    <Grid.RowDefinitions>
+                                                                        <RowDefinition Height="40" />
+                                                                    </Grid.RowDefinitions>
+
+                                                                    <Path Grid.Column="0" Grid.Row="0"
+                                                                          SnapsToDevicePixels="True"
+                                                                          ToolTip="Move Handler" Margin="14"
+                                                                          Stretch="Uniform" Stroke="Black"
+                                                                          Data="M0,0.3 L1,0.3 M0,0.7 L1,0.7" />
+
+                                                                    <TextBox Grid.Column="1" Grid.Row="0"
+                                                                             Foreground="Black" Width="40" Height="40"
+                                                                             Padding="0 2 0 0"
+                                                                             Text="{Binding Position, Converter={StaticResource PercentConvertor}, UpdateSourceTrigger=PropertyChanged}"
+                                                                             FontSize="20" VerticalAlignment="Center"
+                                                                             TextAlignment="Center"
+                                                                             GotFocus="HandleOnFocus"
+                                                                             PreviewMouseLeftButtonDown="HandlePreviewMouse"
+                                                                             HorizontalAlignment="Center" />
+                                                                    <Button Grid.Column="2" BorderThickness="0"
+                                                                            Grid.Row="0" ToolTip="Remove Handler"
+                                                                            Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                                                                            Foreground="White" Click="RemoveHandle">
+                                                                        <Path x:Name="CloseWindow"
+                                                                              SnapsToDevicePixels="True" Margin="12"
+                                                                              Stretch="Fill" Stroke="Black"
+                                                                              Data="M0,0 L1,1 M0,1 L1,0" />
+                                                                    </Button>
+
+                                                                </Grid>
+                                                            </Border>
+                                                        </ControlTemplate>
+                                                    </Thumb.Template>
+                                                </Thumb>
+                                            </Canvas>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+
+                                    <ItemsControl.ItemContainerStyle>
+                                        <Style TargetType="ContentPresenter">
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeX"
+                                                    Value="{Binding Position, Mode=OneWay}" />
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeY"
+                                                    Value="0" />
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeWidth" Value="1" />
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeHeight" Value="1" />
+                                        </Style>
+                                    </ItemsControl.ItemContainerStyle>
+                                </ItemsControl>
+                            </view:RelativeLayoutPanel>
+                        </Border>
+
+                        <StackPanel Grid.Row="2" MaxWidth="600">
+                            <Grid>
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="16" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Button Grid.Column="0" x:Name="CutHorizontalButton"
+                                        Click="CutHorizontal" Content="Cut Horizontal" />
+                                <FrameworkElement Grid.Column="1" />
+                                <Button Grid.Column="2" x:Name="CutVerticalButton" Click="CutVertical"
+                                        Content="Cut Vertical" />
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+
+                </Border>
+            </GroupBox>
+            <GroupBox Grid.Column="0" Header="Window Editor"
+                      Visibility="{Binding Path=EnterSandboxMode, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource visibleHiddenArray}}">
+                <Border Padding="8">
+
+                    <Grid>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
                             <RowDefinition Height="16" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
                         <Border Grid.Row="0" BorderBrush="Black" BorderThickness="1">
-                            <Canvas x:Name="Canvas" />
+                            <view:RelativeLayoutPanel>
+                                <ItemsControl
+                                    view:RelativeLayoutPanel.RelativeX="0"
+                                    view:RelativeLayoutPanel.RelativeY="0"
+                                    view:RelativeLayoutPanel.RelativeWidth="1"
+                                    view:RelativeLayoutPanel.RelativeHeight="1"
+                                    ItemsSource="{Binding Rows}">
+
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <view:RelativeLayoutPanel />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Line view:RelativeLayoutPanel.RelativeX="0"
+                                                  view:RelativeLayoutPanel.RelativeY="{Binding Position, Mode=OneWay}"
+                                                  view:RelativeLayoutPanel.RelativeWidth="1"
+                                                  Stroke="Black" StrokeThickness="1" StrokeDashArray="4,4"
+                                                  X1="0"
+                                                  X2="10000"
+                                                  view:RelativeLayoutPanel.RelativeHeight="1" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+
+                                    <ItemsControl.ItemContainerStyle>
+                                        <Style TargetType="ContentPresenter">
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeX" Value="0" />
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeY"
+                                                    Value="{Binding Position, Mode=OneWay}" />
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeWidth"
+                                                    Value="1" />
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeHeight"
+                                                    Value="1" />
+                                        </Style>
+                                    </ItemsControl.ItemContainerStyle>
+                                </ItemsControl>
+                                <ItemsControl
+                                    view:RelativeLayoutPanel.RelativeX="0"
+                                    view:RelativeLayoutPanel.RelativeY="0"
+                                    view:RelativeLayoutPanel.RelativeWidth="1"
+                                    view:RelativeLayoutPanel.RelativeHeight="1"
+                                    ItemsSource="{Binding Columns}">
+
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <view:RelativeLayoutPanel />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Line
+                                                view:RelativeLayoutPanel.RelativeX="0"
+                                                view:RelativeLayoutPanel.RelativeY="{Binding Position, Mode=OneWay}"
+                                                view:RelativeLayoutPanel.RelativeWidth="1"
+                                                StrokeDashArray="4,4"
+                                                Stroke="Black" StrokeThickness="1"
+                                                Y1="0"
+                                                Y2="10000"
+                                                view:RelativeLayoutPanel.RelativeHeight="1" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+
+                                    <ItemsControl.ItemContainerStyle>
+                                        <Style TargetType="ContentPresenter">
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeX"
+                                                    Value="{Binding Position, Mode=OneWay}" />
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeY"
+                                                    Value="0" />
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeWidth"
+                                                    Value="1" />
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeHeight"
+                                                    Value="1" />
+                                        </Style>
+                                    </ItemsControl.ItemContainerStyle>
+                                </ItemsControl>
+                                <ItemsControl
+                                    Visibility="{Binding Path=ActiveInEditor, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource visibleHiddenArray}}"
+                                    view:RelativeLayoutPanel.RelativeX="0"
+                                    view:RelativeLayoutPanel.RelativeY="0"
+                                    view:RelativeLayoutPanel.RelativeWidth="1"
+                                    view:RelativeLayoutPanel.RelativeHeight="1"
+                                    ItemsSource="{Binding Windows}">
+
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <view:RelativeLayoutPanel />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+
+                                            <Border BorderBrush="Black" BorderThickness="1">
+                                                <Border
+                                                    Background="{Binding Path=Selected, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource selectedDeselectedBackground}}" >
+                                                    <TextBlock Text="" VerticalAlignment="Center"
+                                                               FontWeight="ExtraBold"
+                                                               Foreground="{Binding Path=Selected, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource selectedDeselectedForeground}}"
+                                                               HorizontalAlignment="Center" FontSize="45">
+                                                        <Run
+                                                            Text="{Binding Rect.Width,Converter={StaticResource PercentConvertor}}" />
+                                                        <Run Text="x" />
+                                                        <Run
+                                                            Text="{Binding Rect.Height,Converter={StaticResource PercentConvertor}}" />
+                                                    </TextBlock>
+                                                </Border>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+
+                                    <ItemsControl.ItemContainerStyle>
+                                        <Style TargetType="ContentPresenter">
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeX"
+                                                    Value="{Binding Rect.Left, Mode=OneWay}" />
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeY"
+                                                    Value="{Binding Rect.Top, Mode=OneWay}" />
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeWidth"
+                                                    Value="{Binding Rect.Width, Mode=OneWay}" />
+                                            <Setter Property="view:RelativeLayoutPanel.RelativeHeight"
+                                                    Value="{Binding Rect.Height, Mode=OneWay}" />
+                                        </Style>
+                                    </ItemsControl.ItemContainerStyle>
+                                </ItemsControl>
+                            </view:RelativeLayoutPanel>
                         </Border>
                         <FrameworkElement Grid.Row="1" />
-
-                        <ListBox x:Name="ListView" Grid.Row="2" MaxWidth="600" SelectedItem="{Binding Selected}"
-                                 SelectionMode="Single"
-                                 IsSynchronizedWithCurrentItem="True"
-                                 ItemsSource="{Binding Tiles}">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock>
-                                        <Run Text="Left:" />
-                                        <Run Text="{Binding Rect.Left}" />
-                                        <Run Text="Right:" />
-                                        <Run Text="{Binding Rect.Right}" />
-                                        <Run Text="Top:" />
-                                        <Run Text="{Binding Rect.Top}" />
-                                        <Run Text="Bottom:" />
-                                        <Run Text="{Binding Rect.Bottom}" />
-                                        <Run Text="Hotkey:" />
-                                        <Run Text="{Binding Hotkey, Mode=OneWay}" />
-                                    </TextBlock>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                            <ListBox.ItemContainerStyle>
-                                <Style TargetType="ListBoxItem">
-                                    <Style.Triggers>
-                                        <Trigger Property="IsSelected" Value="True">
-                                            <Setter Property="FontWeight" Value="Bold" />
-                                            <Setter Property="Background" Value="Transparent" />
-                                            <Setter Property="Foreground" Value="Black" />
-                                        </Trigger>
-                                    </Style.Triggers>
-                                    <Style.Resources>
-                                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}"
-                                                         Color="Black" />
-                                        <!-- Background of selected item when focussed -->
-                                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
-                                                         Color="LightCyan" />
-                                        <!-- Background of selected item when not focussed -->
-                                        <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}"
-                                                         Color="LightGray" />
-                                    </Style.Resources>
-                                </Style>
-                            </ListBox.ItemContainerStyle>
-                        </ListBox>
-                        <FrameworkElement Grid.Row="3" />
                         <StackPanel Grid.Row="4" MaxWidth="600">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="16" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="16" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="16" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-
-                                <StackPanel Grid.Column="0">
-                                    <TextBlock Text="Left" />
-                                    <TextBox x:Name="XTextBox" Padding="2">
-                                        <Binding Path="Selected.Rect.Left" UpdateSourceTrigger="PropertyChanged">
-                                            <Binding.ValidationRules>
-                                                <local:IntegerValidationRule Min="0" Max="100" />
-                                            </Binding.ValidationRules>
-                                        </Binding>
-                                    </TextBox>
-                                </StackPanel>
-                                <FrameworkElement Grid.Column="1" />
-
-                                <StackPanel Grid.Column="2">
-                                    <TextBlock Text="Top" />
-                                    <TextBox x:Name="YTextBox" Padding="2">
-                                        <Binding Path="Selected.Rect.Top" UpdateSourceTrigger="PropertyChanged">
-                                            <Binding.ValidationRules>
-                                                <local:IntegerValidationRule Min="0" Max="100" />
-                                            </Binding.ValidationRules>
-                                        </Binding>
-                                    </TextBox>
-                                </StackPanel>
-                                <FrameworkElement Grid.Column="3" />
-
-                                <StackPanel Grid.Column="4">
-                                    <TextBlock Text="Right" />
-                                    <TextBox x:Name="WidthTextBox" Padding="2">
-                                        <Binding Path="Selected.Rect.Right" UpdateSourceTrigger="PropertyChanged">
-                                            <Binding.ValidationRules>
-                                                <local:IntegerValidationRule Min="0" Max="100" />
-                                            </Binding.ValidationRules>
-                                        </Binding>
-                                    </TextBox>
-                                </StackPanel>
-                                <FrameworkElement Grid.Column="5" />
-
-                                <StackPanel Grid.Column="6">
-                                    <TextBlock Text="Bottom" />
-                                    <TextBox x:Name="HeightTextBox" Padding="2">
-                                        <Binding Path="Selected.Rect.Bottom" UpdateSourceTrigger="PropertyChanged">
-                                            <Binding.ValidationRules>
-                                                <local:IntegerValidationRule Min="0" Max="100" />
-                                            </Binding.ValidationRules>
-                                        </Binding>
-                                    </TextBox>
-                                </StackPanel>
-
-                            </Grid>
-
-                            <FrameworkElement Height="16" />
 
                             <Grid>
 
@@ -157,21 +448,13 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="16" />
                                     <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="16" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="16" />
-                                    <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <Button Grid.Column="0" x:Name="AddWindowButton" Click="AddWindowButton_OnClick"
-                                        Content="Add" />
+                                <Button Grid.Column="0" x:Name="AddWindowButton" Click="AddWindow"
+                                        Content="Add Window" />
                                 <FrameworkElement Grid.Column="1" />
-                                <Button Grid.Column="2" x:Name="RemoveWindowButton" Click="RemoveWindowButton_OnClick"
-                                        Content="Remove" />
-                                <FrameworkElement Grid.Column="3" />
-                                <FrameworkElement Grid.Column="4" />
-                                <FrameworkElement Grid.Column="5" />
-                                <FrameworkElement Grid.Column="6" />
+                                <Button Grid.Column="2" x:Name="RemoveWindowButton" Click="RemoveWindow"
+                                        Content="Remove Window" />
                             </Grid>
                         </StackPanel>
                     </Grid>
@@ -180,10 +463,10 @@
             </GroupBox>
             <FrameworkElement Grid.Column="1" />
 
-            <StackPanel Grid.Column="2">
+            <StackPanel Grid.Column="2" Width="400">
                 <GroupBox Header="Layout">
                     <Border Padding="8">
-                        <Grid>
+                        <Grid Margin="-1,0,1,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="16" />
@@ -198,119 +481,82 @@
                             <FrameworkElement Grid.Column="1" />
                             <Button Grid.Column="2" x:Name="ImportButton" Content="Import" Click="ImportButton_OnClick" />
                             <FrameworkElement Grid.Column="3" />
-                            <Button Grid.Column="4" x:Name="SaveLayoutButton" Click="SaveLayoutButton_OnClick"
+                            <Button Grid.Column="4" x:Name="SaveLayoutButton" Click="SaveLayout"
                                     Content="Save" />
                             <FrameworkElement Grid.Column="5" />
-                            <Button Grid.Column="6" x:Name="ResetLayoutButton" Click="ResetLayoutButton_OnClick"
+                            <Button Grid.Column="6" x:Name="ResetLayoutButton" Click="ResetLayout"
                                     Content="Reset" />
                         </Grid>
                     </Border>
                 </GroupBox>
 
-                <GroupBox Header="Hotkeys">
+                <GroupBox Header="Hotkeys"
+                          IsEnabled="{Binding ActiveHotkeys, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}">
                     <Border Padding="8">
 
                         <StackPanel>
-
-                            <StackPanel Orientation="Horizontal">
-                                <GroupBox Header="Closest Tile" Width="200px">
-                                    <Border Padding="8">
-                                        <StackPanel>
-                                            <TextBlock Text="Left" />
-                                            <TextBox x:Name="ClosestLeft" Text="{Binding ClosestLeft, Mode=OneWay}"
-                                                     PreviewKeyDown="ClosestLeft_OnPreviewKeyDown"
-                                                     Padding="2" IsReadOnly="True"
-                                                     IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
-                                            <FrameworkElement Height="8" />
-                                            <TextBlock Text="Right" />
-                                            <TextBox x:Name="ClosestRight" Text="{Binding ClosestRight, Mode=OneWay}"
-                                                     PreviewKeyDown="ClosestRight_OnPreviewKeyDown"
-                                                     Padding="2" IsReadOnly="True"
-                                                     IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
-                                            <FrameworkElement Height="8" />
-                                            <TextBlock Text="Up" />
-                                            <TextBox x:Name="ClosestUp" Text="{Binding ClosestUp, Mode=OneWay}"
-                                                     PreviewKeyDown="ClosestUp_OnPreviewKeyDown"
-                                                     Padding="2" IsReadOnly="True"
-                                                     IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
-                                            <FrameworkElement Height="8" />
-                                            <TextBlock Text="Down" />
-                                            <TextBox x:Name="ClosestDown" Text="{Binding ClosestDown, Mode=OneWay}"
-                                                     PreviewKeyDown="ClosestDown_OnPreviewKeyDown"
-                                                     Padding="2" IsReadOnly="True"
-                                                     IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
-                                        </StackPanel>
-                                    </Border>
-                                </GroupBox>
-
-
-                                <GroupBox Header="Expand Tile" Width="200px">
-                                    <Border Padding="8">
-                                        <StackPanel>
-                                            <TextBlock Text="Left" />
-                                            <TextBox x:Name="ExpandLeft" Text="{Binding ExpandLeft, Mode=OneWay}"
-                                                     PreviewKeyDown="ExpandLeft_OnPreviewKeyDown"
-                                                     Padding="2" IsReadOnly="True"
-                                                     IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
-                                            <FrameworkElement Height="8" />
-                                            <TextBlock Text="Right" />
-                                            <TextBox x:Name="ExpandRight" Text="{Binding ExpandRight, Mode=OneWay}"
-                                                     PreviewKeyDown="ExpandRight_OnPreviewKeyDown"
-                                                     Padding="2" IsReadOnly="True"
-                                                     IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
-                                            <FrameworkElement Height="8" />
-                                            <TextBlock Text="Up" />
-                                            <TextBox x:Name="ExpandUp" Text="{Binding ExpandUp, Mode=OneWay}"
-                                                     PreviewKeyDown="ExpandUp_OnPreviewKeyDown"
-                                                     Padding="2" IsReadOnly="True"
-                                                     IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
-                                            <FrameworkElement Height="8" />
-                                            <TextBlock Text="Down" />
-                                            <TextBox x:Name="ExpandDown" Text="{Binding ExpandDown, Mode=OneWay}"
-                                                     PreviewKeyDown="ExpandDown_OnPreviewKeyDown"
-                                                     Padding="2" IsReadOnly="True"
-                                                     IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
-                                        </StackPanel>
-                                    </Border>
-                                </GroupBox>
-
-                                <GroupBox Header="Layout" Width="200px">
-                                    <Border Padding="8">
-                                        <StackPanel>
-                                            <TextBlock Text="Left" />
-                                            <TextBox x:Name="LayoutLeft" Text="{Binding LayoutLeft, Mode=OneWay}"
-                                                     PreviewKeyDown="LayoutLeft_OnPreviewKeyDown"
-                                                     Padding="2" IsReadOnly="True"
-                                                     IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
-                                            <FrameworkElement Height="8" />
-                                            <TextBlock Text="Right" />
-                                            <TextBox x:Name="LayoutRight" Text="{Binding LayoutRight, Mode=OneWay}"
-                                                     PreviewKeyDown="LayoutRight_OnPreviewKeyDown"
-                                                     Padding="2" IsReadOnly="True"
-                                                     IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
-                                            <FrameworkElement Height="8" />
-                                            <TextBlock Text="Up" />
-                                            <TextBox x:Name="LayoutUp" Text="{Binding LayoutUp, Mode=OneWay}"
-                                                     PreviewKeyDown="LayoutUp_OnPreviewKeyDown"
-                                                     Padding="2" IsReadOnly="True"
-                                                     IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
-                                            <FrameworkElement Height="8" />
-                                            <TextBlock Text="Down" />
-                                            <TextBox x:Name="LayoutDown" Text="{Binding LayoutDown, Mode=OneWay}"
-                                                     PreviewKeyDown="LayoutDown_OnPreviewKeyDown"
-                                                     Padding="2" IsReadOnly="True"
-                                                     IsEnabled="{Binding ActiveInEditor, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
-                                        </StackPanel>
-                                    </Border>
-                                </GroupBox>
-
-                            </StackPanel>
+                            <ListView ItemsSource="{Binding Hotkeys}" Height="300"
+                                      SelectedItem="{Binding SelectedHotkeyPair, Mode=OneWayToSource}"
+                                      SelectionMode="Single"
+                                      IsSynchronizedWithCurrentItem="True">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridView.Columns>
+                                            <GridViewColumn Header="Hotkey" Width="100"
+                                                            DisplayMemberBinding="{Binding Path=Type}" />
+                                            <GridViewColumn Header="Action" Width="200"
+                                                            DisplayMemberBinding="{Binding Path=Hotkey}" />
+                                        </GridView.Columns>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
 
                             <FrameworkElement Height="8" />
-                            <CheckBox Content="Active in Editor" IsChecked="{Binding ActiveInEditor}" />
+                            <StackPanel>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="16" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="Name" />
+                                        <ComboBox ItemsSource="{Binding HotkeyTypes, Mode=OneWay}"
+                                                  IsSynchronizedWithCurrentItem="True"
+                                                  SelectedItem="{Binding AddHotkeyType, Mode=OneWayToSource}"
+                                                  Padding="2" />
+                                    </StackPanel>
+                                    <FrameworkElement Grid.Column="1" />
+                                    <StackPanel Grid.Column="2">
+                                        <TextBlock Text="Hotkey" />
+                                        <TextBox x:Name="HotkeyKey"
+                                                 PreviewKeyDown="Hotkey_OnPreviewKeyDown"
+                                                 Text="{Binding AddHotkeyHotkey, Mode=OneWay}"
+                                                 Padding="2" IsReadOnly="True" />
+                                    </StackPanel>
+                                </Grid>
+
+                                <FrameworkElement Height="16" />
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="16" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Button Grid.Column="0" x:Name="AddHotkeyButton" Content="Add"
+                                            Click="AddHotkey" />
+                                    <FrameworkElement Grid.Column="1" />
+                                    <Button Grid.Column="2" x:Name="RemoveHotkeyButton" Content="Remove"
+                                            Click="RemoveHotkey" />
+                                </Grid>
+                            </StackPanel>
                         </StackPanel>
                     </Border>
                 </GroupBox>
+                <FrameworkElement Height="8" />
+                <CheckBox Content="Hotkeys" IsChecked="{Binding ActiveHotkeys}" />
+                <FrameworkElement Height="8" />
+                <CheckBox Content="Sandbox" IsChecked="{Binding EnterSandboxMode}" />
             </StackPanel>
         </Grid>
     </Border>
