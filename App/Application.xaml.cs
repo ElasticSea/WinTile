@@ -66,6 +66,11 @@ namespace App
             }
         }
 
+        private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            System.Windows.MessageBox.Show(e.Exception.ToString(), Assembly.GetEntryAssembly().GetName().Name);
+        }
+
         private void MainWindow_Closing(object sender, CancelEventArgs e)
         {
             if (!isExit)
