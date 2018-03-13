@@ -12,23 +12,28 @@ namespace App
 {
     public partial class MainWindow : Window
     {
-        private readonly ViewModel VM = new ViewModel();
-
         public MainWindow()
         {
             InitializeComponent();
-        
-            if (!DesignerProperties.GetIsInDesignMode(this))
+        }
+
+        public ViewModel Vm
+        {
+            get => DataContext as ViewModel;
+            set
             {
-                VM.PropertyChanged += (sender, args) =>
+                if (!DesignerProperties.GetIsInDesignMode(this) && DataContext == null)
                 {
-                    if (args.PropertyName == nameof(VM.JsonLayout))
+                    value.PropertyChanged += (sender, args) =>
                     {
-                        DataContext = null;
-                        DataContext = VM;
-                    }
-                };
-                VM.Load();
+                        if (args.PropertyName == nameof(ViewModel.JsonLayout))
+                        {
+                            DataContext = null;
+                            DataContext = value;
+                        }
+                    };
+                }
+                DataContext = value;
             }
         }
 
@@ -42,7 +47,7 @@ namespace App
             };
 
             if (dlg.ShowDialog() == true)
-                File.WriteAllText(dlg.FileName, VM.JsonLayout);
+                File.WriteAllText(dlg.FileName, Vm.JsonLayout);
         }
 
         private void ImportButton_OnClick(object sender, RoutedEventArgs e)
@@ -55,21 +60,21 @@ namespace App
             };
 
             if (dlg.ShowDialog() == true)
-                VM.JsonLayout = File.ReadAllText(dlg.FileName);
+                Vm.JsonLayout = File.ReadAllText(dlg.FileName);
         }
 
-        private void RemoveWindow(object sender, RoutedEventArgs e) => VM.RemoveWindow();
-        private void AddWindow(object sender, RoutedEventArgs e) => VM.AddWindow();
-        private void SaveLayout(object sender, RoutedEventArgs e) => VM.Save();
-        private void ResetLayout(object sender, RoutedEventArgs e) => VM.Load();
-        private void AddHotkey(object sender, RoutedEventArgs e) => VM.AddHotkey();
-        private void RemoveHotkey(object sender, RoutedEventArgs e) => VM.RemoveHotkey();
-        private void CutVertical(object sender, RoutedEventArgs e) => VM.CutVertical();
-        private void CutHorizontal(object sender, RoutedEventArgs e) => VM.CutHorizontal();
+        private void RemoveWindow(object sender, RoutedEventArgs e) => Vm.RemoveWindow();
+        private void AddWindow(object sender, RoutedEventArgs e) => Vm.AddWindow();
+        private void SaveLayout(object sender, RoutedEventArgs e) => Vm.Save();
+        private void ResetLayout(object sender, RoutedEventArgs e) => Vm.Load();
+        private void AddHotkey(object sender, RoutedEventArgs e) => Vm.AddHotkey();
+        private void RemoveHotkey(object sender, RoutedEventArgs e) => Vm.RemoveHotkey();
+        private void CutVertical(object sender, RoutedEventArgs e) => Vm.CutVertical();
+        private void CutHorizontal(object sender, RoutedEventArgs e) => Vm.CutHorizontal();
 
         private void Hotkey_OnPreviewKeyDown(object sender, KeyEventArgs args)
         {
-            HotkeyBinding.assignHotkey(args, h => VM.AddHotkeyHotkey = h);
+            HotkeyBinding.assignHotkey(args, h => Vm.AddHotkeyHotkey = h);
         }
 
         private void onVerticalHandler(object sender, DragDeltaEventArgs e)
@@ -91,8 +96,8 @@ namespace App
         private void RemoveHandle(object sender, RoutedEventArgs e)
         {
             var handle = (sender as FrameworkElement).DataContext as Handle;
-            VM.Rows.Remove(handle);
-            VM.Columns.Remove(handle);
+            Vm.Rows.Remove(handle);
+            Vm.Columns.Remove(handle);
         }
 
         private void HandleOnFocus(object sender, RoutedEventArgs e)

@@ -14,12 +14,11 @@ namespace App
     {
         private NotifyIcon notifyIcon;
         private bool isExit;
+        private ViewModel vm;
 
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            MainWindow = new MainWindow();
-            MainWindow.Closing += MainWindow_Closing;
 
             notifyIcon = new NotifyIcon();
             notifyIcon.DoubleClick += (s, args) => ShowMainWindow();
@@ -28,6 +27,9 @@ namespace App
 
             CreateContextMenu();
             RunOnStartup();
+
+            vm = new ViewModel();
+            vm.Load();
         }
 
         private void CreateContextMenu()
@@ -47,6 +49,9 @@ namespace App
 
         private void ShowMainWindow()
         {
+            MainWindow = new MainWindow();
+            MainWindow.Closing += MainWindow_Closing;
+            ((MainWindow)MainWindow).Vm = vm;
             if (MainWindow.IsVisible)
             {
                 if (MainWindow.WindowState == WindowState.Minimized)
