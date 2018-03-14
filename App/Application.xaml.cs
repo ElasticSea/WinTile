@@ -1,8 +1,12 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Reflection;
+using System.Threading;
 using System.Windows;
 using System.Windows.Forms;
+using App.Properties;
 using Microsoft.Win32;
 
 namespace App
@@ -20,6 +24,8 @@ namespace App
         {
             base.OnStartup(e);
 
+            vm = new ViewModel { JsonLayout = Settings.Default.Layout ?? App.Properties.Resources.defaultProfile };
+
             notifyIcon = new NotifyIcon();
             notifyIcon.DoubleClick += (s, args) => ShowMainWindow();
             notifyIcon.Icon = Icon.FromHandle(App.Properties.Resources.icon.GetHicon());
@@ -27,9 +33,44 @@ namespace App
 
             CreateContextMenu();
             RunOnStartup();
+            ScanForChanges();
+        }
 
-            vm = new ViewModel();
-            vm.Load();
+        private void ScanForChanges()
+        {
+            bool active;
+            string init;
+
+            Activated += (sender, args) =>
+            {
+                init = vm.JsonLayout;
+                active = true;
+                new Thread(() =>
+                {
+                    Thread.CurrentThread.IsBackground = true;
+
+                    while (active)
+                    {
+                        if (vm != null && active)
+                        {
+                            var current = vm.JsonLayout;
+                            if (current != init)
+                            {
+                                Settings.Default.Layout = current;
+                                Settings.Default.Save();
+                                init = current;
+                            }
+                        }
+
+                        Thread.Sleep(300);
+                    }
+                }).Start();
+            };
+
+            Deactivated += (sender, args) =>
+            {
+                active = false;
+            };
         }
 
         private void CreateContextMenu()

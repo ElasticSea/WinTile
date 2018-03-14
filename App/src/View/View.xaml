@@ -474,15 +474,18 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
+
                             <Button Grid.Column="0" x:Name="ExportButton" Content="Export" Click="ExportButton_OnClick" />
                             <FrameworkElement Grid.Column="1" />
                             <Button Grid.Column="2" x:Name="ImportButton" Content="Import" Click="ImportButton_OnClick" />
                             <FrameworkElement Grid.Column="3" />
-                            <Button Grid.Column="4" x:Name="SaveLayoutButton" Click="SaveLayout"
-                                    Content="Save" />
+                            <FrameworkElement Grid.Column="4" />
+<!--                            <Button Grid.Column="4" x:Name="SaveLayoutButton" Click="SaveLayout"-->
+<!--                                    Content="Save" />-->
                             <FrameworkElement Grid.Column="5" />
-                            <Button Grid.Column="6" x:Name="ResetLayoutButton" Click="ResetLayout"
-                                    Content="Reset" />
+                            <FrameworkElement Grid.Column="6" />
+<!--                            <Button Grid.Column="6" x:Name="ResetLayoutButton" Click="ResetLayout"-->
+<!--                                    Content="Reset" />-->
                         </Grid>
                     </Border>
                 </GroupBox>

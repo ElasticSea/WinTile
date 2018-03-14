@@ -87,6 +87,7 @@ namespace App
             EnterSandboxMode = EnterSandboxMode;
         }
 
+        public Layout Layout => layoutManager.Layout;
         public ObservableCollection<Handle> Rows => layoutManager.Layout.Grid.Rows;
         public ObservableCollection<Handle> Columns => layoutManager.Layout.Grid.Columns;
         public ObservableCollection<Tile> Tiles => cuttingManager.Tiles;
@@ -132,11 +133,6 @@ namespace App
 
         public event PropertyChangedEventHandler PropertyChanged = (sender, args) => { };
 
-        public void Load()
-        {
-            JsonLayout = Settings.Default.Layout ?? "{}";
-        }
-
         public void AddWindow()
         {
             sandbox.AddWindow();
@@ -145,12 +141,6 @@ namespace App
         public void RemoveWindow()
         {
             sandbox.RemoveWindow();
-        }
-
-        internal void Save()
-        {
-            Settings.Default.Layout = layoutManager.Json;
-            Settings.Default.Save();
         }
 
         public void AddHotkey()

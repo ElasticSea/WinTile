@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls.Primitives;
@@ -65,8 +66,8 @@ namespace App
 
         private void RemoveWindow(object sender, RoutedEventArgs e) => Vm.RemoveWindow();
         private void AddWindow(object sender, RoutedEventArgs e) => Vm.AddWindow();
-        private void SaveLayout(object sender, RoutedEventArgs e) => Vm.Save();
-        private void ResetLayout(object sender, RoutedEventArgs e) => Vm.Load();
+//        private void SaveLayout(object sender, RoutedEventArgs e) => Vm.Save();
+//        private void ResetLayout(object sender, RoutedEventArgs e) => Vm.Load();
         private void AddHotkey(object sender, RoutedEventArgs e) => Vm.AddHotkey();
         private void RemoveHotkey(object sender, RoutedEventArgs e) => Vm.RemoveHotkey();
         private void CutVertical(object sender, RoutedEventArgs e) => Vm.CutVertical();

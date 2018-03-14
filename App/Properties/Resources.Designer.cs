@@ -19,7 +19,7 @@ namespace App.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -57,6 +57,43 @@ namespace App.Properties {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///  &quot;hotkeys&quot;: [
+        ///    {
+        ///      &quot;Type&quot;: &quot;MoveLeft&quot;,
+        ///      &quot;Hotkey&quot;: {
+        ///        &quot;Key&quot;: &quot;Left&quot;,
+        ///        &quot;Modifiers&quot;: &quot;Alt, Ctrl&quot;
+        ///      }
+        ///    },
+        ///    {
+        ///      &quot;Type&quot;: &quot;MoveRight&quot;,
+        ///      &quot;Hotkey&quot;: {
+        ///        &quot;Key&quot;: &quot;Right&quot;,
+        ///        &quot;Modifiers&quot;: &quot;Alt, Ctrl&quot;
+        ///      }
+        ///    },
+        ///    {
+        ///      &quot;Type&quot;: &quot;MoveUp&quot;,
+        ///      &quot;Hotkey&quot;: {
+        ///        &quot;Key&quot;: &quot;Up&quot;,
+        ///        &quot;Modifiers&quot;: &quot;Alt, Ctrl&quot;
+        ///      }
+        ///    },
+        ///    {
+        ///      &quot;Type&quot;: &quot;MoveDown&quot;,
+        ///      &quot;Hotkey&quot;: {
+        ///        &quot;Key&quot;: &quot;Down&quot;,
+        ///        &quot;Modifiers&quot;: &quot;Alt, Ctrl&quot;
+        /// [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string defaultProfile {
+            get {
+                return ResourceManager.GetString("defaultProfile", resourceCulture);
             }
         }
         
