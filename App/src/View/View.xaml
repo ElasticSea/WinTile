@@ -476,7 +476,7 @@
                 </Grid.RowDefinitions>
 
                 <GroupBox Header="Layout" Grid.Row="0">
-                    <Border Padding="8">
+                    <Border Padding="8" Margin="-1,0,1,0">
                         <Grid Margin="-1,0,1,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -574,11 +574,21 @@
                 </GroupBox>
 
 
-                <GroupBox Header="Status" Grid.Row="2"
-                          IsEnabled="{Binding ActiveHotkeys, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}">
+                <GroupBox Header="Status" Grid.Row="2">
                     <Border Padding="8">
+                        <Grid Margin="-1,0,1,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="16" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
 
-                        <CheckBox Content="Hotkeys" IsChecked="{Binding ActiveHotkeys}" />
+                            <Button Grid.Column="0" x:Name="StartButton" Content="Start" Click="BindHotkeys"
+                                    IsEnabled="{Binding ActiveHotkeys, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
+                            <FrameworkElement Grid.Column="1" />
+                            <Button Grid.Column="2" x:Name="StopButton" Content="Stop" Click="UnbindHotkeys"
+                                    IsEnabled="{Binding ActiveHotkeys, Mode=OneWay}" />
+                        </Grid>
                     </Border>
                 </GroupBox>
             </Grid>
