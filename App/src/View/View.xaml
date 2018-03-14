@@ -9,7 +9,7 @@
         xmlns:convertors="clr-namespace:App.View.Convertors"
         mc:Ignorable="d"
         Icon="../../Resources/icon.png"
-        Title="WinTile" Height="720" Width="1280"
+        Title="WinTile" Height="480" Width="960"
         d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True, Type=local:ViewModel}">
 
     <Window.Resources>
@@ -468,7 +468,7 @@
             </GroupBox>
             <FrameworkElement Grid.Column="1" />
 
-            <Grid Grid.Column="2" Width="400">
+            <Grid Grid.Column="2" Width="300">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
