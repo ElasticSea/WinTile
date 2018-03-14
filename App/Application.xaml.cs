@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Windows;
@@ -34,6 +35,11 @@ namespace App
             CreateContextMenu();
             RunOnStartup();
             ScanForChanges();
+
+            if (e.Args.Any(arg => arg == "-minimized") == false)
+            {
+                ShowMainWindow();
+            }
         }
 
         private void ScanForChanges()
@@ -90,9 +96,13 @@ namespace App
 
         private void ShowMainWindow()
         {
-            MainWindow = new MainWindow();
-            MainWindow.Closing += MainWindow_Closing;
-            ((MainWindow)MainWindow).Vm = vm;
+            if (MainWindow == null)
+            {
+                MainWindow = new MainWindow();
+                MainWindow.Closing += MainWindow_Closing;
+                ((MainWindow) MainWindow).Vm = vm;
+            }
+
             if (MainWindow.IsVisible)
             {
                 if (MainWindow.WindowState == WindowState.Minimized)
@@ -127,7 +137,7 @@ namespace App
             {
                 var key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
                 var curAssembly = Assembly.GetExecutingAssembly();
-                key.SetValue(curAssembly.GetName().Name, curAssembly.Location);
+                key.SetValue(curAssembly.GetName().Name, curAssembly.Location + " -minimized");
             }
             catch
             {
