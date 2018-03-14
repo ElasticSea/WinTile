@@ -282,6 +282,8 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="16" />
                                     <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="16" />
+                                    <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
                                 <Button Grid.Column="0" x:Name="CutHorizontalButton"
@@ -289,6 +291,8 @@
                                 <FrameworkElement Grid.Column="1" />
                                 <Button Grid.Column="2" x:Name="CutVerticalButton" Click="CutVertical"
                                         Content="Cut Vertical" />
+                                <FrameworkElement Grid.Column="3" />
+                                <CheckBox Grid.Column="4" Content="Sandbox" IsChecked="{Binding EnterSandboxMode}" />
                             </Grid>
                         </StackPanel>
                     </Grid>
@@ -405,7 +409,7 @@
 
                                             <Border BorderBrush="Black" BorderThickness="1">
                                                 <Border
-                                                    Background="{Binding Path=Selected, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource selectedDeselectedBackground}}" >
+                                                    Background="{Binding Path=Selected, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource selectedDeselectedBackground}}">
                                                     <TextBlock Text="" VerticalAlignment="Center"
                                                                FontWeight="ExtraBold"
                                                                Foreground="{Binding Path=Selected, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource selectedDeselectedForeground}}"
@@ -445,6 +449,8 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="16" />
                                     <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="16" />
+                                    <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
                                 <Button Grid.Column="0" x:Name="AddWindowButton" Click="AddWindow"
@@ -452,6 +458,8 @@
                                 <FrameworkElement Grid.Column="1" />
                                 <Button Grid.Column="2" x:Name="RemoveWindowButton" Click="RemoveWindow"
                                         Content="Remove Window" />
+                                <FrameworkElement Grid.Column="3" />
+                                <CheckBox Grid.Column="4" Content="Sandbox" IsChecked="{Binding EnterSandboxMode}" />
                             </Grid>
                         </StackPanel>
                     </Grid>
@@ -460,8 +468,14 @@
             </GroupBox>
             <FrameworkElement Grid.Column="1" />
 
-            <StackPanel Grid.Column="2" Width="400">
-                <GroupBox Header="Layout">
+            <Grid Grid.Column="2" Width="400">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <GroupBox Header="Layout" Grid.Row="0">
                     <Border Padding="8">
                         <Grid Margin="-1,0,1,0">
                             <Grid.ColumnDefinitions>
@@ -480,8 +494,8 @@
                             <Button Grid.Column="2" x:Name="ImportButton" Content="Import" Click="ImportButton_OnClick" />
                             <FrameworkElement Grid.Column="3" />
                             <FrameworkElement Grid.Column="4" />
-<!--                            <Button Grid.Column="4" x:Name="SaveLayoutButton" Click="SaveLayout"-->
-<!--                                    Content="Save" />-->
+                            <!--                            <Button Grid.Column="4" x:Name="SaveLayoutButton" Click="SaveLayout"-->
+                            <!--                                    Content="Save" />-->
                             <FrameworkElement Grid.Column="5" />
                             <Button Grid.Column="6" x:Name="DefaultLayoutButton" Click="DefaultLayout"
                                     Content="Default" />
@@ -489,12 +503,18 @@
                     </Border>
                 </GroupBox>
 
-                <GroupBox Header="Hotkeys"
+                <GroupBox Header="Hotkeys" Grid.Row="1"
                           IsEnabled="{Binding ActiveHotkeys, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}">
                     <Border Padding="8">
 
-                        <StackPanel>
-                            <ListView ItemsSource="{Binding Hotkeys}" Height="300"
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <ListView ItemsSource="{Binding Hotkeys}" Grid.Row="0"
                                       SelectedItem="{Binding SelectedHotkeyPair, Mode=OneWayToSource}"
                                       SelectionMode="Single"
                                       IsSynchronizedWithCurrentItem="True">
@@ -510,8 +530,8 @@
                                 </ListView.View>
                             </ListView>
 
-                            <FrameworkElement Height="8" />
-                            <StackPanel>
+                            <FrameworkElement Height="8" Grid.Row="2" />
+                            <StackPanel Grid.Row="3">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
@@ -549,14 +569,19 @@
                                             Click="RemoveHotkey" />
                                 </Grid>
                             </StackPanel>
-                        </StackPanel>
+                        </Grid>
                     </Border>
                 </GroupBox>
-                <FrameworkElement Height="8" />
-                <CheckBox Content="Hotkeys" IsChecked="{Binding ActiveHotkeys}" />
-                <FrameworkElement Height="8" />
-                <CheckBox Content="Sandbox" IsChecked="{Binding EnterSandboxMode}" />
-            </StackPanel>
+
+
+                <GroupBox Header="Status" Grid.Row="2"
+                          IsEnabled="{Binding ActiveHotkeys, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}">
+                    <Border Padding="8">
+
+                        <CheckBox Content="Hotkeys" IsChecked="{Binding ActiveHotkeys}" />
+                    </Border>
+                </GroupBox>
+            </Grid>
         </Grid>
     </Border>
 </Window>
