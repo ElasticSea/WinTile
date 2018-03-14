@@ -66,8 +66,7 @@ namespace App
 
         private void RemoveWindow(object sender, RoutedEventArgs e) => Vm.RemoveWindow();
         private void AddWindow(object sender, RoutedEventArgs e) => Vm.AddWindow();
-//        private void SaveLayout(object sender, RoutedEventArgs e) => Vm.Save();
-//        private void ResetLayout(object sender, RoutedEventArgs e) => Vm.Load();
+        private void DefaultLayout(object sender, RoutedEventArgs e) => Vm.DefaultLayout();
         private void AddHotkey(object sender, RoutedEventArgs e) => Vm.AddHotkey();
         private void RemoveHotkey(object sender, RoutedEventArgs e) => Vm.RemoveHotkey();
         private void CutVertical(object sender, RoutedEventArgs e) => Vm.CutVertical();

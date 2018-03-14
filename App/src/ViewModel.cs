@@ -130,6 +130,7 @@ namespace App
                 }
             }
         }
+        public void DefaultLayout() => JsonLayout = Resources.defaultProfile;
 
         public event PropertyChangedEventHandler PropertyChanged = (sender, args) => { };
 
@@ -159,5 +160,6 @@ namespace App
 
         public void CutVertical() => cuttingManager.CutVertical();
         public void CutHorizontal() => cuttingManager.CutHorizontal();
+
     }
 }

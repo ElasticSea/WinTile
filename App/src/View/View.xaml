@@ -483,9 +483,8 @@
 <!--                            <Button Grid.Column="4" x:Name="SaveLayoutButton" Click="SaveLayout"-->
 <!--                                    Content="Save" />-->
                             <FrameworkElement Grid.Column="5" />
-                            <FrameworkElement Grid.Column="6" />
-<!--                            <Button Grid.Column="6" x:Name="ResetLayoutButton" Click="ResetLayout"-->
-<!--                                    Content="Reset" />-->
+                            <Button Grid.Column="6" x:Name="DefaultLayoutButton" Click="DefaultLayout"
+                                    Content="Default" />
                         </Grid>
                     </Border>
                 </GroupBox>

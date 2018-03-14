@@ -209,26 +209,11 @@
     "Rows": [
       {
         "Position": 0.5
-      },
-      {
-        "Position": 0.2
-      },
-      {
-        "Position": 0.8
       }
     ],
     "Columns": [
       {
-        "Position": 0.7
-      },
-      {
-        "Position": 0.55
-      },
-      {
-        "Position": 0.85
-      },
-      {
-        "Position": 0.2
+        "Position": 0.5
       }
     ]
   }
