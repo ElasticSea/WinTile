@@ -83,15 +83,7 @@ namespace App
         {
             notifyIcon.ContextMenuStrip = new ContextMenuStrip();
             notifyIcon.ContextMenuStrip.Items.Add("Settings").Click += (s, e) => ShowMainWindow();
-            notifyIcon.ContextMenuStrip.Items.Add("Exit").Click += (s, e) => ExitApplication();
-        }
-
-        private void ExitApplication()
-        {
-            isExit = true;
-            MainWindow?.Close();
-            notifyIcon.Dispose();
-            notifyIcon = null;
+            notifyIcon.ContextMenuStrip.Items.Add("Exit").Click += (s, e) => Current.Shutdown();
         }
 
         private void ShowMainWindow()
