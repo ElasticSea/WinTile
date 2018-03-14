@@ -42,7 +42,7 @@ namespace App
         {
             var dlg = new SaveFileDialog
             {
-                FileName = "Wintile Layout Profile",
+                FileName = "Wintile Layout",
                 DefaultExt = ".json",
                 Filter = "Json Files(*.json)|*.json|All(*.*)|*"
             };
@@ -55,7 +55,7 @@ namespace App
         {
             var dlg = new OpenFileDialog
             {
-                FileName = "Wintile Layout Profile",
+                FileName = "Wintile Layout",
                 DefaultExt = ".json",
                 Filter = "Json Files(*.json)|*.json|All(*.*)|*"
             };
