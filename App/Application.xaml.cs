@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -9,6 +10,7 @@ using System.Windows;
 using System.Windows.Forms;
 using App.Properties;
 using Microsoft.Win32;
+using MessageBox = System.Windows.MessageBox;
 
 namespace App
 {
@@ -23,6 +25,8 @@ namespace App
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            if (EnforceSingleInstance() == false) return;
+
             base.OnStartup(e);
 
             vm = new ViewModel { JsonLayout = Settings.Default.Layout ?? App.Properties.Resources.defaultProfile };
@@ -40,6 +44,20 @@ namespace App
             {
                 ShowMainWindow();
             }
+        }
+
+        private static bool EnforceSingleInstance()
+        {
+            var proc = Process.GetCurrentProcess();
+            var count = Process.GetProcesses().Count(p => p.ProcessName == proc.ProcessName);
+            if (count > 1)
+            {
+                MessageBox.Show("Already an instance is running...");
+                Current.Shutdown();
+                return false;
+            }
+
+            return true;
         }
 
         private void ScanForChanges()
@@ -111,7 +129,7 @@ namespace App
 
         private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            System.Windows.MessageBox.Show(e.Exception.ToString(), Assembly.GetEntryAssembly().GetName().Name);
+            MessageBox.Show(e.Exception.ToString());
         }
 
         private void MainWindow_Closing(object sender, CancelEventArgs e)
