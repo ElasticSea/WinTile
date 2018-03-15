@@ -95,7 +95,7 @@ namespace App.View
         private void moveHandle(object sender, DragDeltaEventArgs e, double value)
         {
             var handle = (sender as FrameworkElement).DataContext as Handle;
-            handle.Position = (float) (handle.Position + value).Clamp(0, 1);
+            handle.Position = (double) (handle.Position + value).Clamp(0, 1);
         }
 
         private void RemoveHandle(object sender, RoutedEventArgs e)

@@ -55,17 +55,15 @@ namespace App.Model.Managers.Strategies
                 ProcessRect(rect);
         }
 
-        private static float ComputePenalty(Vector lookDirection, Rect original, Rect target)
+        private static double ComputePenalty(Vector lookDirection, Rect original, Rect target)
         {
-            var originalC = new Vector(original.Cx, original.Cy);
-            var targetC = new Vector(target.Cx, target.Cy);
-            var rectCenterVector = (targetC - originalC);
+            var relativePosition = (target.Center - original.Center);
 
-            var distance = rectCenterVector.Length;
-            var direction = rectCenterVector.Normalized();
+            var distance = relativePosition.Length;
+            var direction = relativePosition.Normalized();
 
             var dot = lookDirection * direction;
-            return (float)(dot * (1 / distance));
+            return (double)(dot * (1 / distance));
         }
 
         protected abstract void ProcessRect(Rect rect);

@@ -50,7 +50,7 @@ namespace App.Model.Managers.Strategies
             Move(value, 5, rect => rect.Bottom, (rect, i) => rect.Bottom = i);
         }
 
-        private void Move(float border, float amount, Func<Rect, float> get, Action<Rect, float> set)
+        private void Move(double border, double amount, Func<Rect, double> get, Action<Rect, double> set)
         {
             var allwin = windowManager.GetVisibleWindows()
                 .Select(t => new {Rect = windowManager.GetWindowRect(t), Handle = t});

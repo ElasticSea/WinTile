@@ -99,9 +99,9 @@
                                             <Setter Property="view:RelativeLayoutPanel.RelativeY"
                                                     Value="{Binding Rect.Top, Mode=OneWay}" />
                                             <Setter Property="view:RelativeLayoutPanel.RelativeWidth"
-                                                    Value="{Binding Rect.Width, Mode=OneWay}" />
+                                                    Value="{Binding Rect.Size.X, Mode=OneWay}" />
                                             <Setter Property="view:RelativeLayoutPanel.RelativeHeight"
-                                                    Value="{Binding Rect.Height, Mode=OneWay}" />
+                                                    Value="{Binding Rect.Size.Y, Mode=OneWay}" />
                                         </Style>
                                     </ItemsControl.ItemContainerStyle>
                                 </ItemsControl>
@@ -415,10 +415,10 @@
                                                                Foreground="{Binding Path=Selected, Converter={StaticResource TrueFalseConverter},  ConverterParameter={StaticResource selectedDeselectedForeground}}"
                                                                HorizontalAlignment="Center" FontSize="45">
                                                         <Run
-                                                            Text="{Binding Rect.Width,Converter={StaticResource PercentConvertor}}" />
+                                                            Text="{Binding Rect.Size.X,Converter={StaticResource PercentConvertor}}" />
                                                         <Run Text="x" />
                                                         <Run
-                                                            Text="{Binding Rect.Height,Converter={StaticResource PercentConvertor}}" />
+                                                            Text="{Binding Rect.Size.Y,Converter={StaticResource PercentConvertor}}" />
                                                     </TextBlock>
                                                 </Border>
                                             </Border>
@@ -432,9 +432,9 @@
                                             <Setter Property="view:RelativeLayoutPanel.RelativeY"
                                                     Value="{Binding Rect.Top, Mode=OneWay}" />
                                             <Setter Property="view:RelativeLayoutPanel.RelativeWidth"
-                                                    Value="{Binding Rect.Width, Mode=OneWay}" />
+                                                    Value="{Binding Rect.Size.X, Mode=OneWay}" />
                                             <Setter Property="view:RelativeLayoutPanel.RelativeHeight"
-                                                    Value="{Binding Rect.Height, Mode=OneWay}" />
+                                                    Value="{Binding Rect.Size.Y, Mode=OneWay}" />
                                         </Style>
                                     </ItemsControl.ItemContainerStyle>
                                 </ItemsControl>

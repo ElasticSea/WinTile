@@ -25,7 +25,7 @@ namespace App.Model.Managers.Strategies
                 .Where(l => l < Selected.Left)
                 .OrderByDescending(t => t);
 
-            var left = candidates.Any() ? candidates.First() : (float?) null;
+            var left = candidates.Any() ? candidates.First() : (double?) null;
 
             var r = Selected;
             var rect = new Rect(left ?? r.Left, r.Top, r.Right, r.Bottom);
@@ -41,7 +41,7 @@ namespace App.Model.Managers.Strategies
                 .Where(l => l > Selected.Right)
                 .OrderBy(t => t);
 
-            var right = candidates.Any() ? candidates.First() : (float?) null;
+            var right = candidates.Any() ? candidates.First() : (double?) null;
 
             var r = Selected;
             var rect = new Rect(r.Left, r.Top, right ?? r.Right, r.Bottom);
@@ -57,7 +57,7 @@ namespace App.Model.Managers.Strategies
                 .Where(l => l < Selected.Top)
                 .OrderByDescending(t => t);
 
-            var top = candidates.Any() ? candidates.First() : (float?) null;
+            var top = candidates.Any() ? candidates.First() : (double?) null;
 
             var r = Selected;
             var rect = new Rect(r.Left, top ?? r.Top, r.Right, r.Bottom);
@@ -73,7 +73,7 @@ namespace App.Model.Managers.Strategies
                 .Where(l => l > Selected.Bottom)
                 .OrderBy(t => t);
 
-            var bottom = candidates.Any() ? candidates.First() : (float?) null;
+            var bottom = candidates.Any() ? candidates.First() : (double?) null;
 
             var r = Selected;
             var rect = new Rect(r.Left, r.Top, r.Right, bottom ?? r.Bottom);

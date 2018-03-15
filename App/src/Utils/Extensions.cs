@@ -18,10 +18,16 @@ namespace App.Utils
             return int.TryParse(s, out i) ? i : def;
         }
 
-        public static float? ToFloat(this string s, float? def = (int?) null)
+        public static float? ToFloat(this string s, float? def = (int?)null)
         {
             float i;
             return float.TryParse(s, out i) ? i : def;
+        }
+
+        public static double? ToDouble(this string s, double? def = (int?)null)
+        {
+            double i;
+            return double.TryParse(s, out i) ? i : def;
         }
 
         public static int Clamp(this int value, int min, int max)
@@ -29,7 +35,7 @@ namespace App.Utils
             return Math.Max(min, Math.Min(max, value));
         }
 
-        public static float Clamp(this float value, float min, float max)
+        public static double Clamp(this float value, float min, float max)
         {
             return Math.Max(min, Math.Min(max, value));
         }

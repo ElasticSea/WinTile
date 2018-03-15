@@ -45,9 +45,9 @@ namespace App.Model.Managers
 
         private void cut(IList<Handle> handles)
         {
-            var dist = 0f;
-            var start = 0f;
-            var end = 1f;
+            var dist = 0.0;
+            var start = 0.0;
+            var end = 1.0;
             var values = handleValues(handles);
             for (var index = 0; index < values.Count - 1; index++)
             {
@@ -88,9 +88,9 @@ namespace App.Model.Managers
             }
         }
 
-        private List<float> handleValues(IEnumerable<Handle> handles)
+        private List<double> handleValues(IEnumerable<Handle> handles)
         {
-            var vals = new List<float>();
+            var vals = new List<double>();
             vals.Add(0);
             vals.AddRange(handles.Select(h => h.Position));
             vals.Add(1);

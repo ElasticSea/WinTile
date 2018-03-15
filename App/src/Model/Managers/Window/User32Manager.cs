@@ -20,10 +20,10 @@ namespace App.Model.Managers.Window
             var winRect = rerct(nativeWinRect);
             var clientRect = rerct(nativeClientRect);
 
-            var dx = Math.Min(winRect.Width - clientRect.Right, 16);
-            var dy = Math.Min(winRect.Height - clientRect.Bottom, 8);
+            var dx = Math.Min(winRect.Size.X - clientRect.Right, 16);
+            var dy = Math.Min(winRect.Size.Y - clientRect.Bottom, 8);
 
-            SetWindowPos(handle, 0, (int) (rect.Left - dx / 2), (int) rect.Top, (int) (rect.Width + dx), (int) (rect.Height + dy),
+            SetWindowPos(handle, 0, (int) (rect.Left - dx / 2), (int) rect.Top, (int) (rect.Size.X + dx), (int) (rect.Size.Y + dy),
                 SWP_NOZORDER | SWP_SHOWWINDOW);
         }
 
@@ -37,8 +37,8 @@ namespace App.Model.Managers.Window
             var winRect = rerct(nativeWinRect);
             var clientRect = rerct(nativeClientRect);
 
-            var dx = Math.Min(winRect.Width - clientRect.Right, 16);
-            var dy = Math.Min(winRect.Height - clientRect.Bottom, 8);
+            var dx = Math.Min(winRect.Size.X - clientRect.Right, 16);
+            var dy = Math.Min(winRect.Size.Y - clientRect.Bottom, 8);
 
             winRect.Left += dx / 2;
             winRect.Right -= dx / 2;

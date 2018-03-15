@@ -5,9 +5,9 @@ namespace App.Model.Entities
     [ImplementPropertyChanged]
     public class Handle
     {
-        public float Position { get; set; }
+        public double Position { get; set; }
 
-        public Handle(float position)
+        public Handle(double position)
         {
             Position = position;
         }

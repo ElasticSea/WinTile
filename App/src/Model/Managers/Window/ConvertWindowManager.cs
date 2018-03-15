@@ -39,12 +39,12 @@ namespace App.Model.Managers.Window
 
         private Rect PxtoPercent(Rect rect)
         {
-            return rect.shrink(MonitorRect.Width, MonitorRect.Height);
+            return rect.Shrink(MonitorRect.Size);
         }
 
         private Rect PercentToPx(Rect rect)
         {
-            return rect.extend(MonitorRect.Width, MonitorRect.Height);
+            return rect.Extend(MonitorRect.Size);
         }
     }
 }
