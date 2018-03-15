@@ -55,7 +55,7 @@ namespace App
             windowManager.CurrentManager = nativeWindowManager;
 
             var move = new MoveStrategy(Tiles, windowManager);
-            var select = new SelectStrategy(Tiles, windowManager);
+            var select = new SelectStrategy(windowManager);
             var extend = new ExtendStrategy(Tiles, windowManager);
 //                var layout = new LayoutStrategy(Tiles, windowManager);
 

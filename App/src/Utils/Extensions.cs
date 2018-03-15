@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows;
 
 namespace App.Utils
 {
@@ -36,6 +37,12 @@ namespace App.Utils
         public static double Clamp(this double value, double min, double max)
         {
             return Math.Max(min, Math.Min(max, value));
+        }
+
+        public static Vector Normalized(this Vector vector)
+        {
+            vector.Normalize();
+            return vector;
         }
     }
 }

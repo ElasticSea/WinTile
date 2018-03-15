@@ -60,7 +60,9 @@ namespace App.Model.Managers.Window
 
             EnumWindows(delegate(IntPtr wnd, IntPtr param)
             {
-                if (IsWindowVisible(wnd)) windows.Add(wnd);
+                if (IsWindow(wnd) && IsWindowVisible(wnd) && !IsIconic(wnd))
+                    windows.Add(wnd);
+
                 return true;
             }, IntPtr.Zero);
 
@@ -77,7 +79,15 @@ namespace App.Model.Managers.Window
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool IsWindowVisible(IntPtr hWnd);
+        static extern bool IsWindowVisible(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool IsWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool IsIconic(IntPtr hWnd);
 
         [DllImport("user32.dll")]
         private static extern bool GetWindowRect(IntPtr hwnd, ref NativeRect rectangle);

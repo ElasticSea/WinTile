@@ -94,5 +94,15 @@ namespace App.Model.Entities
                 return hashCode;
             }
         }
+
+        public static bool operator ==(Rect left, Rect right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(Rect left, Rect right)
+        {
+            return !Equals(left, right);
+        }
     }
 }

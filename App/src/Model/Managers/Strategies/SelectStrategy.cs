@@ -1,30 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using App.Model.Entities;
 using App.Model.Managers.Window;
+using Rect = App.Model.Entities.Rect;
 
 namespace App.Model.Managers.Strategies
 {
-    public class SelectStrategy : AbstractClosestStrategy
+    public class SelectStrategy : ClosesRectToWindow
     {
-        public SelectStrategy(IList<Rect> rects, IWindowManager windowManager) : base(rects, windowManager)
+        public SelectStrategy(IWindowManager windowManager) : base(windowManager)
         {
         }
 
-        protected override void OnClosestTIle(Rect tile)
+        protected override void ProcessRect(Rect rect)
         {
-            var allwin = windowManager.GetVisibleWindows()
-                .Select(t => new {Rect = windowManager.GetWindowRect(t), Handle = t});
-
-            var closestWindowToRect = allwin.OrderBy(
-                t => Math.Abs(t.Rect.Left - tile.Left) +
-                     Math.Abs(t.Rect.Right - tile.Right) +
-                     Math.Abs(t.Rect.Top - tile.Top) +
-                     Math.Abs(t.Rect.Bottom - tile.Bottom)
-            ).First();
-
-            windowManager.FocusedWindow = closestWindowToRect.Handle;
+            windowManager.FocusedWindow =
+                windowManager.GetVisibleWindows().First(handle => windowManager.GetWindowRect(handle) == rect);
         }
+
+        protected override IEnumerable<Rect> Rects => windowManager.GetVisibleWindows()
+            .Select(t => windowManager.GetWindowRect(t)).ToList();
     }
 }

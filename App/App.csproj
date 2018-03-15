@@ -91,10 +91,10 @@
     <Compile Include="src\Model\Entities\Rect.cs" />
     <Compile Include="src\Model\Entities\Window.cs" />
     <Compile Include="src\Model\Managers\CuttingManager.cs" />
-    <Compile Include="src\Model\Managers\Strategies\AbstractClosestStrategy.cs" />
     <Compile Include="src\Model\Managers\Strategies\LayoutStrategy.cs" />
     <Compile Include="src\Model\Managers\Strategies\ExtendStrategy.cs" />
     <Compile Include="src\Model\Managers\Strategies\MoveStrategy.cs" />
+    <Compile Include="src\Model\Managers\Strategies\ClosesRectToWindow.cs" />
     <Compile Include="src\Model\Managers\Strategies\SelectStrategy.cs" />
     <Compile Include="src\Model\Managers\HotkeyManager.cs" />
     <Compile Include="src\Model\Managers\LayoutManager.cs" />
