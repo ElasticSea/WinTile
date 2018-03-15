@@ -89,7 +89,6 @@
     <Compile Include="src\Model\Entities\HotkeyType.cs" />
     <Compile Include="src\Model\Entities\Layout.cs" />
     <Compile Include="src\Model\Entities\Rect.cs" />
-    <Compile Include="src\Model\Entities\Tile.cs" />
     <Compile Include="src\Model\Entities\Window.cs" />
     <Compile Include="src\Model\Managers\CuttingManager.cs" />
     <Compile Include="src\Model\Managers\Strategies\AbstractClosestStrategy.cs" />

@@ -7,7 +7,7 @@ namespace App.Model.Managers.Strategies
 {
     public class ExtendStrategy : PositioningStrategy
     {
-        public ExtendStrategy(IList<Tile> tiles, IWindowManager windowManager) : base(tiles, windowManager)
+        public ExtendStrategy(IList<Rect> rects, IWindowManager windowManager) : base(rects, windowManager)
         {
         }
 
@@ -15,8 +15,8 @@ namespace App.Model.Managers.Strategies
         {
             var Selected = windowManager.GetWindowRect(windowManager.FocusedWindow);
 
-            var candidates = tiles
-                .Select(t => t.Rect.Left)
+            var candidates = rects
+                .Select(t => t.Left)
                 .Where(l => l < Selected.Left)
                 .OrderByDescending(t => t);
 
@@ -31,8 +31,8 @@ namespace App.Model.Managers.Strategies
         {
             var Selected = windowManager.GetWindowRect(windowManager.FocusedWindow);
 
-            var candidates = tiles
-                .Select(t => t.Rect.Right)
+            var candidates = rects
+                .Select(t => t.Right)
                 .Where(l => l > Selected.Right)
                 .OrderBy(t => t);
 
@@ -47,8 +47,8 @@ namespace App.Model.Managers.Strategies
         {
             var Selected = windowManager.GetWindowRect(windowManager.FocusedWindow);
 
-            var candidates = tiles
-                .Select(t => t.Rect.Top)
+            var candidates = rects
+                .Select(t => t.Top)
                 .Where(l => l < Selected.Top)
                 .OrderByDescending(t => t);
 
@@ -63,8 +63,8 @@ namespace App.Model.Managers.Strategies
         {
             var Selected = windowManager.GetWindowRect(windowManager.FocusedWindow);
 
-            var candidates = tiles
-                .Select(t => t.Rect.Bottom)
+            var candidates = rects
+                .Select(t => t.Bottom)
                 .Where(l => l > Selected.Bottom)
                 .OrderBy(t => t);
 

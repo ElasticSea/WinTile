@@ -6,13 +6,13 @@ namespace App.Model.Managers.Strategies
 {
     public class MoveStrategy : AbstractClosestStrategy
     {
-        public MoveStrategy(IList<Tile> tiles, IWindowManager windowManager) : base(tiles, windowManager)
+        public MoveStrategy(IList<Rect> rects, IWindowManager windowManager) : base(rects, windowManager)
         {
         }
 
-        protected override void OnClosestTIle(Tile tile)
+        protected override void OnClosestTIle(Rect tile)
         {
-            windowManager.PositionWindow(windowManager.FocusedWindow, tile.Rect);
+            windowManager.PositionWindow(windowManager.FocusedWindow, tile);
         }
     }
 }

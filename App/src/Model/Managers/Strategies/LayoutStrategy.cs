@@ -9,7 +9,7 @@ namespace App.Model.Managers.Strategies
 {
     public class LayoutStrategy : PositioningStrategy
     {
-        public LayoutStrategy(IList<Tile> tiles, IWindowManager windowManager) : base(tiles, windowManager)
+        public LayoutStrategy(IList<Rect> rects, IWindowManager windowManager) : base(rects, windowManager)
         {
         }
 
@@ -54,7 +54,7 @@ namespace App.Model.Managers.Strategies
                 set(a.Rect, (get(a.Rect) + amount).Clamp(0, 1));
                 windowManager.PositionWindow(a.Handle, a.Rect);
             });
-            tiles.Where(t => get(t.Rect) == border).ForEach(t => set(t.Rect, (get(t.Rect) + amount).Clamp(0, 1)));
+            rects.Where(t => get(t) == border).ForEach(t => set(t, (get(t) + amount).Clamp(0, 1)));
         }
     }
 }

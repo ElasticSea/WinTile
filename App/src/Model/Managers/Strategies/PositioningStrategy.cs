@@ -6,12 +6,12 @@ namespace App.Model.Managers.Strategies
 {
     public abstract class PositioningStrategy
     {
-        protected readonly IList<Tile> tiles;
+        protected readonly IList<Rect> rects;
         protected readonly IWindowManager windowManager;
 
-        protected PositioningStrategy(IList<Tile> tiles, IWindowManager windowManager)
+        protected PositioningStrategy(IList<Rect> rects, IWindowManager windowManager)
         {
-            this.tiles = tiles;
+            this.rects = rects;
             this.windowManager = windowManager;
         }
     }

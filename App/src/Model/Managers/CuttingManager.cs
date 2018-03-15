@@ -12,7 +12,7 @@ namespace App.Model.Managers
     {
         private Grid grid;
 
-        public ObservableCollection<Tile> Tiles { get; set; } = new ObservableCollection<Tile>();
+        public ObservableCollection<Rect> Tiles { get; set; } = new ObservableCollection<Rect>();
 
         public CuttingManager(Grid grid)
         {
@@ -82,7 +82,7 @@ namespace App.Model.Managers
                     var bottom = ver[y + 1];
 
                     var rect = new Rect(left, top, right, bottom);
-                    var tile = new Tile(rect);
+                    var tile = new Rect(rect);
                     Tiles.Add(tile);
                 }
             }

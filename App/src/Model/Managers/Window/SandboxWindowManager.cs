@@ -9,9 +9,9 @@ namespace App.Model.Managers.Window
 {
     public class SandboxWindowManager : IWindowManager
     {
-        private readonly ObservableCollection<Tile> tiles;
+        private readonly ObservableCollection<Rect> tiles;
 
-        public SandboxWindowManager(ObservableCollection<Tile> tiles)
+        public SandboxWindowManager(ObservableCollection<Rect> tiles)
         {
             this.tiles = tiles;
         }
@@ -54,7 +54,7 @@ namespace App.Model.Managers.Window
 
         public void AddWindow()
         {
-            Windows.Add(new Entities.Window(new Rect(tiles.First().Rect)));
+            Windows.Add(new Entities.Window(new Rect(tiles.First())));
 
             if (Windows.Any(w => w.Selected) == false)
                 Windows.First().Selected = true;

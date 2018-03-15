@@ -15,7 +15,7 @@ namespace App.Model.Managers.Strategies
         private static readonly Vector up = new Vector(0, -1);
         private static readonly Vector down = new Vector(0, 1);
 
-        public AbstractClosestStrategy(IList<Tile> tiles, IWindowManager windowManager) : base(tiles, windowManager)
+        public AbstractClosestStrategy(IList<Rect> rects, IWindowManager windowManager) : base(rects, windowManager)
         {
         }
 
@@ -43,7 +43,7 @@ namespace App.Model.Managers.Strategies
         {
             var Selected = Closest(windowManager.GetWindowRect(windowManager.FocusedWindow));
 
-            var tile = tiles
+            var tile = rects
                 .Select(t => new {Title = t, Penalty = TilePenalty(direction, Selected, t)})
                 .OrderByDescending(a => a.Penalty)
                 .FirstOrDefault(a => a.Penalty > 0)?.Title;
@@ -52,23 +52,23 @@ namespace App.Model.Managers.Strategies
                 OnClosestTIle(tile);
         }
 
-        protected abstract void OnClosestTIle(Tile tile);
+        protected abstract void OnClosestTIle(Rect tile);
 
-        private static float TilePenalty(Vector direction, Tile original, Tile target)
+        private static float TilePenalty(Vector direction, Rect original, Rect target)
         {
-            var ocx = original.Rect.Cx;
-            var ocy = original.Rect.Cy;
+            var ocx = original.Cx;
+            var ocy = original.Cy;
 
-            var tcx = target.Rect.Cx;
-            var tcy = target.Rect.Cy;
+            var tcx = target.Cx;
+            var tcy = target.Cy;
 
             var ovec = new Vector(ocx, ocy);
             var tvec = new Vector(tcx, tcy);
             var vec = tvec - ovec;
             vec.Normalize();
 
-            var ocor = TileCorners(original);
-            var tcor = TileCorners(target);
+            var ocor = RectCorners(original);
+            var tcor = RectCorners(target);
 
             var dist = double.MaxValue;
             foreach (var oc in ocor)
@@ -88,24 +88,24 @@ namespace App.Model.Managers.Strategies
             return (float) (dirHeur * distHeur);
         }
 
-        private static Vector[] TileCorners(Tile tile)
+        private static Vector[] RectCorners(Rect rect)
         {
             return new[]
             {
-                new Vector(tile.Rect.Left, tile.Rect.Bottom),
-                new Vector(tile.Rect.Right, tile.Rect.Bottom),
-                new Vector(tile.Rect.Right, tile.Rect.Top),
-                new Vector(tile.Rect.Left, tile.Rect.Top)
+                new Vector(rect.Left, rect.Bottom),
+                new Vector(rect.Right, rect.Bottom),
+                new Vector(rect.Right, rect.Top),
+                new Vector(rect.Left, rect.Top)
             };
         }
 
-        private Tile Closest(Rect rect)
+        private Rect Closest(Rect rect)
         {
-            return tiles.OrderBy(
-                t => Math.Abs(t.Rect.Left - rect.Left) +
-                     Math.Abs(t.Rect.Right - rect.Right) +
-                     Math.Abs(t.Rect.Top - rect.Top) +
-                     Math.Abs(t.Rect.Bottom - rect.Bottom)
+            return rects.OrderBy(
+                r => Math.Abs(r.Left - rect.Left) +
+                     Math.Abs(r.Right - rect.Right) +
+                     Math.Abs(r.Top - rect.Top) +
+                     Math.Abs(r.Bottom - rect.Bottom)
             ).First();
         }
     }

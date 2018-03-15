@@ -18,7 +18,7 @@ namespace App
     {
         private readonly LayoutManager layoutManager = new LayoutManager();
         private bool _activeHotkeys;
-        private Tile _selected;
+        private Rect _selected;
         private HotkeyPair _selectedHotkeyPair;
         private SandboxWindowManager sandbox;
         private HotkeyManager hotkeyManager;
@@ -90,7 +90,7 @@ namespace App
         public Layout Layout => layoutManager.Layout;
         public ObservableCollection<Handle> Rows => layoutManager.Layout.Grid.Rows;
         public ObservableCollection<Handle> Columns => layoutManager.Layout.Grid.Columns;
-        public ObservableCollection<Tile> Tiles => cuttingManager.Tiles;
+        public ObservableCollection<Rect> Tiles => cuttingManager.Tiles;
         public ObservableCollection<HotkeyPair> Hotkeys => layoutManager.Layout.hotkeys;
         public ObservableCollection<Window> Windows => sandbox.Windows;
 
