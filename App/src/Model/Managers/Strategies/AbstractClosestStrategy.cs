@@ -8,15 +8,20 @@ using Rect = App.Model.Entities.Rect;
 
 namespace App.Model.Managers.Strategies
 {
-    public abstract class AbstractClosestStrategy : PositioningStrategy
+    public abstract class AbstractClosestStrategy
     {
         private static readonly Vector left = new Vector(-1, 0);
         private static readonly Vector right = new Vector(1, 0);
         private static readonly Vector up = new Vector(0, -1);
         private static readonly Vector down = new Vector(0, 1);
 
-        public AbstractClosestStrategy(IList<Rect> rects, IWindowManager windowManager) : base(rects, windowManager)
+        protected readonly IList<Rect> rects;
+        protected readonly IWindowManager windowManager;
+
+        protected AbstractClosestStrategy(IList<Rect> rects, IWindowManager windowManager)
         {
+            this.rects = rects;
+            this.windowManager = windowManager;
         }
 
         public void Left()

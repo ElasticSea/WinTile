@@ -97,7 +97,6 @@
     <Compile Include="src\Model\Managers\Strategies\MoveStrategy.cs" />
     <Compile Include="src\Model\Managers\Strategies\SelectStrategy.cs" />
     <Compile Include="src\Model\Managers\HotkeyManager.cs" />
-    <Compile Include="src\Model\Managers\Strategies\PositioningStrategy.cs" />
     <Compile Include="src\Model\Managers\LayoutManager.cs" />
     <Compile Include="src\Model\Managers\Window\CompositeWindowManager.cs" />
     <Compile Include="src\Model\Managers\Window\ConvertWindowManager.cs" />

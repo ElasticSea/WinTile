@@ -7,10 +7,15 @@ using App.Utils;
 
 namespace App.Model.Managers.Strategies
 {
-    public class LayoutStrategy : PositioningStrategy
+    public class LayoutStrategy
     {
-        public LayoutStrategy(IList<Rect> rects, IWindowManager windowManager) : base(rects, windowManager)
+        protected readonly IList<Rect> rects;
+        protected readonly IWindowManager windowManager;
+
+        protected LayoutStrategy(IList<Rect> rects, IWindowManager windowManager)
         {
+            this.rects = rects;
+            this.windowManager = windowManager;
         }
 
         public void Left()

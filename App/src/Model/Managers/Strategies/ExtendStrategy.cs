@@ -5,10 +5,15 @@ using App.Model.Managers.Window;
 
 namespace App.Model.Managers.Strategies
 {
-    public class ExtendStrategy : PositioningStrategy
+    public class ExtendStrategy
     {
-        public ExtendStrategy(IList<Rect> rects, IWindowManager windowManager) : base(rects, windowManager)
+        protected readonly IList<Rect> rects;
+        protected readonly IWindowManager windowManager;
+
+        public ExtendStrategy(IList<Rect> rects, IWindowManager windowManager)
         {
+            this.rects = rects;
+            this.windowManager = windowManager;
         }
 
         public void Left()
