@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using App.Model;
-using static System.Windows.SystemParameters;
+using System.Windows;
+using Rect = App.Model.Entities.Rect;
 
-namespace App
+namespace App.Model.Managers.Window
 {
     public class ConvertWindowManager : IWindowManager
     {
@@ -14,7 +14,7 @@ namespace App
             this.wrapped = wrapped;
         }
 
-        private Rect MonitorRect => new Rect(0, 0, (int) WorkArea.Width, (int) WorkArea.Height);
+        private Rect MonitorRect => new Rect(0, 0, (int) SystemParameters.WorkArea.Width, (int) SystemParameters.WorkArea.Height);
 
         public IntPtr FocusedWindow
         {

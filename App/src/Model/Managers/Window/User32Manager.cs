@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using App.Model;
+using App.Model.Entities;
 
-namespace App.Utils
+namespace App.Model.Managers.Window
 {
     public class User32Manager : IWindowManager
     {

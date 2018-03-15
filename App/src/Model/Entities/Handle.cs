@@ -1,6 +1,6 @@
 ﻿using PropertyChanged;
 
-namespace App
+namespace App.Model.Entities
 {
     [ImplementPropertyChanged]
     public class Handle

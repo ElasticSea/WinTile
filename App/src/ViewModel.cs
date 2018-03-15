@@ -7,8 +7,8 @@ using App.Model;
 using App.Model.Entities;
 using App.Model.Managers;
 using App.Model.Managers.Strategies;
+using App.Model.Managers.Window;
 using App.Properties;
-using App.Utils;
 using PropertyChanged;
 
 namespace App

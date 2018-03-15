@@ -1,8 +1,9 @@
 ﻿using System.Windows.Input;
+using App.Model.Managers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace App.Model
+namespace App.Model.Entities
 {
     public class Hotkey
     {

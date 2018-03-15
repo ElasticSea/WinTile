@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using App.Model;
 using App.Model.Entities;
+using App.Utils;
 
-namespace App
+namespace App.Model.Managers.Window
 {
     public class SandboxWindowManager : IWindowManager
     {
@@ -16,7 +16,7 @@ namespace App
             this.tiles = tiles;
         }
 
-        public ObservableCollection<Window> Windows { get; } = new ObservableCollection<Window>();
+        public ObservableCollection<Entities.Window> Windows { get; } = new ObservableCollection<Entities.Window>();
 
         public IntPtr FocusedWindow
         {
@@ -47,14 +47,14 @@ namespace App
             GetTileFrom(handle).Rect = rect;
         }
 
-        public Window GetTileFrom(IntPtr handle)
+        public Entities.Window GetTileFrom(IntPtr handle)
         {
             return Windows.First(w => w.GetHashCode() == handle.ToInt32());
         }
 
         public void AddWindow()
         {
-            Windows.Add(new Window(new Rect(tiles.First().Rect)));
+            Windows.Add(new Entities.Window(new Rect(tiles.First().Rect)));
 
             if (Windows.Any(w => w.Selected) == false)
                 Windows.First().Selected = true;

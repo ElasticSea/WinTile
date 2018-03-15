@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using App.Model.Entities;
+using App.Model.Managers.Window;
 
 namespace App.Model.Managers.Strategies
 {

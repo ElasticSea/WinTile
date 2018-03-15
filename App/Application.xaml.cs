@@ -108,9 +108,9 @@ namespace App
         {
             if (MainWindow == null)
             {
-                MainWindow = new MainWindow();
+                MainWindow = new View.MainWindow();
                 MainWindow.Closing += MainWindow_Closing;
-                ((MainWindow) MainWindow).Vm = vm;
+                ((View.MainWindow) MainWindow).Vm = vm;
             }
 
             if (MainWindow.IsVisible)

@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using App.Model.Entities;
+using App.Model.Managers.Window;
+using Rect = App.Model.Entities.Rect;
 
 namespace App.Model.Managers.Strategies
 {

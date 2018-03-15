@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
 
-namespace App.View
+namespace App.View.Convertors
 {
     public class TrueFalseConverter : IValueConverter
     {

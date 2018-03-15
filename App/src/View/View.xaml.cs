@@ -1,15 +1,18 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using App.Model.Entities;
+using App.Model.Managers;
+using App.Utils;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 using TextBox = System.Windows.Controls.TextBox;
+using Window = System.Windows.Window;
 
-namespace App
+namespace App.View
 {
     public partial class MainWindow : Window
     {

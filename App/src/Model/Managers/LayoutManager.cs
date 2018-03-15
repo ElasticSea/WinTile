@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using App.Model.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 

@@ -1,4 +1,4 @@
-﻿namespace App.Model
+﻿namespace App.Model.Entities
 {
     public enum HotkeyType
     {

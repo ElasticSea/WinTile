@@ -1,7 +1,8 @@
 ﻿using System.Globalization;
 using System.Windows.Controls;
+using App.Utils;
 
-namespace App
+namespace App.View.Rules
 {
     public class IntegerValidationRule : ValidationRule
     {

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using App.Model;
+using App.Model.Entities;
 
-namespace App
+namespace App.Model.Managers.Window
 {
     public interface IWindowManager
     {

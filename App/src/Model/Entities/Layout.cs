@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
-using App.Model.Entities;
 
-namespace App.Model
+namespace App.Model.Entities
 {
     public class Layout
     {

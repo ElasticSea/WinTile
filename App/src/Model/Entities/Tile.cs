@@ -1,6 +1,6 @@
 ﻿using PropertyChanged;
 
-namespace App.Model
+namespace App.Model.Entities
 {
     [ImplementPropertyChanged]
     public class Tile

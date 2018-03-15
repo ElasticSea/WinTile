@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using App.Model;
+using App.Model.Entities;
 
-namespace App.Utils
+namespace App.Model.Managers.Window
 {
     public class CompositeWindowManager : IWindowManager
     {
