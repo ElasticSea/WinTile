@@ -282,8 +282,6 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="16" />
                                     <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="16" />
-                                    <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
                                 <Button Grid.Column="0" x:Name="CutHorizontalButton"
@@ -291,8 +289,6 @@
                                 <FrameworkElement Grid.Column="1" />
                                 <Button Grid.Column="2" x:Name="CutVerticalButton" Click="CutVertical"
                                         Content="Cut Vertical" />
-                                <FrameworkElement Grid.Column="3" />
-                                <CheckBox Grid.Column="4" Content="Sandbox" IsChecked="{Binding EnterSandboxMode}" />
                             </Grid>
                         </StackPanel>
                     </Grid>
@@ -449,8 +445,6 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="16" />
                                     <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="16" />
-                                    <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
                                 <Button Grid.Column="0" x:Name="AddWindowButton" Click="AddWindow"
@@ -458,8 +452,6 @@
                                 <FrameworkElement Grid.Column="1" />
                                 <Button Grid.Column="2" x:Name="RemoveWindowButton" Click="RemoveWindow"
                                         Content="Remove Window" />
-                                <FrameworkElement Grid.Column="3" />
-                                <CheckBox Grid.Column="4" Content="Sandbox" IsChecked="{Binding EnterSandboxMode}" />
                             </Grid>
                         </StackPanel>
                     </Grid>
@@ -472,6 +464,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
@@ -574,7 +567,26 @@
                 </GroupBox>
 
 
-                <GroupBox Header="Status" Grid.Row="2">
+                <GroupBox Header="Editor" Grid.Row="2">
+                    <Border Padding="8">
+                        <Grid Margin="-1,0,1,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="16" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Button Grid.Column="0" x:Name="EditButton" Content="Edit" Click="EnterEditMode"
+                                    IsEnabled="{Binding EnterSandboxMode, Mode=OneWay}" />
+                            <FrameworkElement Grid.Column="1" />
+                            <Button Grid.Column="2" x:Name="SandboxButton" Content="Sandbox" Click="EnterSandboxMode"
+                                    IsEnabled="{Binding EnterSandboxMode, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
+                        </Grid>
+                    </Border>
+                </GroupBox>
+
+
+                <GroupBox Header="Status" Grid.Row="3">
                     <Border Padding="8">
                         <Grid Margin="-1,0,1,0">
                             <Grid.ColumnDefinitions>
@@ -596,7 +608,7 @@
                                     IsEnabled="{Binding ActiveHotkeys, Mode=OneWay}" />
 
                             <CheckBox Grid.Row="2" x:Name="RunOnStartup" Content="Start with Windows"
-                                    IsChecked="{Binding RunOnStartup, Mode=TwoWay}" />
+                                      IsChecked="{Binding RunOnStartup, Mode=TwoWay}" />
                         </Grid>
                     </Border>
                 </GroupBox>

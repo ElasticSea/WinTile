@@ -76,6 +76,8 @@ namespace App.View
         private void CutHorizontal(object sender, RoutedEventArgs e) => Vm.CutHorizontal();
         private void BindHotkeys(object sender, RoutedEventArgs e) => Vm.ActiveHotkeys = true;
         private void UnbindHotkeys(object sender, RoutedEventArgs e) => Vm.ActiveHotkeys = false;
+        private void EnterEditMode(object sender, RoutedEventArgs e) => Vm.EnterSandboxMode = false;
+        private void EnterSandboxMode(object sender, RoutedEventArgs e) => Vm.EnterSandboxMode = true;
 
         private void Hotkey_OnPreviewKeyDown(object sender, KeyEventArgs args)
         {
