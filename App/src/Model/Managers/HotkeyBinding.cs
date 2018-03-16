@@ -42,7 +42,8 @@ namespace App.Model.Managers
         public Key Key { get; }
         public KeyModifier KeyModifiers { get; }
         public Action<HotkeyBinding> Action { get; }
-        public int Id { get; set; }
+        public int virtualKeyCode => KeyInterop.VirtualKeyFromKey(Key);
+        public int Id => virtualKeyCode + (int)KeyModifiers * 0x10000;
 
         // ******************************************************************
         // Implement IDisposable.
@@ -67,8 +68,6 @@ namespace App.Model.Managers
 
         public bool Bind()
         {
-            var virtualKeyCode = KeyInterop.VirtualKeyFromKey(Key);
-            Id = virtualKeyCode + (int) KeyModifiers * 0x10000;
             var result = RegisterHotKey(IntPtr.Zero, Id, (uint) KeyModifiers, (uint) virtualKeyCode);
 
             DictHotKeyToCalBackProc.Add(Id, this);
@@ -79,21 +78,15 @@ namespace App.Model.Managers
 
         public void Unbind()
         {
-            HotkeyBinding hotkeyBinding;
-            if (DictHotKeyToCalBackProc.TryGetValue(Id, out hotkeyBinding))
-            {
-                UnregisterHotKey(IntPtr.Zero, Id);
-                DictHotKeyToCalBackProc.Remove(Id);
-            }
+            UnregisterHotKey(IntPtr.Zero, Id);
+            DictHotKeyToCalBackProc.Remove(Id);
         }
 
         private static void ComponentDispatcherThreadFilterMessage(ref MSG msg, ref bool handled)
         {
-            HotkeyBinding hotkeyBinding;
-
             if (handled) return;
             if (msg.message != WmHotKey) return;
-            if (!DictHotKeyToCalBackProc.TryGetValue((int) msg.wParam, out hotkeyBinding)) return;
+            if (!DictHotKeyToCalBackProc.TryGetValue((int) msg.wParam, out var hotkeyBinding)) return;
 
             hotkeyBinding.Action?.Invoke(hotkeyBinding);
             handled = true;
