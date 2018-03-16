@@ -22,6 +22,8 @@ namespace App.Model.Managers.Strategies
             this.windowManager = windowManager;
         }
 
+        protected abstract IEnumerable<Rect> Rects { get; }
+
         public void Left()
         {
             GetClosest(left);
@@ -47,29 +49,27 @@ namespace App.Model.Managers.Strategies
             var windowRect = windowManager.GetWindowRect(windowManager.FocusedWindow);
 
             var rect = Rects
-                .Select(t => new { rect = t, Penalty = ComputePenalty(direction, windowRect, t)})
-                .OrderByDescending(a => a.Penalty)
-                .FirstOrDefault(a => a.Penalty > 0)?.rect;
+                .Select((t,i) => new {rect = t, Score = ComputeScore(i,direction, windowRect, t)})
+                .OrderByDescending(a => a.Score)
+                .FirstOrDefault(a => a.Score > 0)?.rect;
 
             if (rect != null)
                 ProcessRect(rect);
         }
 
-        private static double ComputePenalty(Vector lookDirection, Rect original, Rect target)
+        private static double ComputeScore(int i, Vector lookDirection, Rect original, Rect target)
         {
             var targetCenter = target.Center + target.Size.Multiply(lookDirection / 2);
             var originalCenter = original.Center + original.Size.Multiply(lookDirection / 2);
-            var relativePosition = (targetCenter - originalCenter);
+            var relativePosition = targetCenter - originalCenter;
 
             var distance = relativePosition.Length;
             var direction = relativePosition.Normalized();
 
             var dot = lookDirection * direction;
-            return (double)(dot * (1 / distance));
+            return dot * (1 / distance);
         }
 
         protected abstract void ProcessRect(Rect rect);
-
-        protected abstract IEnumerable<Rect> Rects { get; }
     }
 }
