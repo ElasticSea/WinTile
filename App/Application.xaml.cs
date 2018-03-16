@@ -37,7 +37,6 @@ namespace App
             notifyIcon.Visible = true;
 
             CreateContextMenu();
-            RunOnStartup();
             ScanForChanges();
 
             if (e.Args.Any(arg => arg == "-minimized") == false)
@@ -138,19 +137,6 @@ namespace App
             {
                 e.Cancel = true;
                 MainWindow.Hide(); // A hidden window can be shown again, a closed one not
-            }
-        }
-
-        private void RunOnStartup()
-        {
-            try
-            {
-                var key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-                var curAssembly = Assembly.GetExecutingAssembly();
-                key.SetValue(curAssembly.GetName().Name, curAssembly.Location + " -minimized");
-            }
-            catch
-            {
             }
         }
     }

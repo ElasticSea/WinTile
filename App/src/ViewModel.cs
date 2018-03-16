@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using App.Model;
 using App.Model.Entities;
 using App.Model.Managers;
 using App.Model.Managers.Strategies;
 using App.Model.Managers.Window;
 using App.Properties;
+using Microsoft.Win32;
 using PropertyChanged;
 
 namespace App
@@ -26,6 +28,11 @@ namespace App
         private readonly CompositeWindowManager windowManager = new CompositeWindowManager();
         private CuttingManager cuttingManager;
         private bool _enterSandboxMode;
+
+        public ViewModel()
+        {
+            RegisterAppOnStartup(RunOnStartup);
+        }
 
         public IEnumerable<HotkeyType> HotkeyTypes
         {
@@ -130,6 +137,7 @@ namespace App
                 }
             }
         }
+
         public void DefaultLayout() => JsonLayout = Resources.defaultProfile;
 
         public event PropertyChangedEventHandler PropertyChanged = (sender, args) => { };
@@ -161,5 +169,34 @@ namespace App
         public void CutVertical() => cuttingManager.CutVertical();
         public void CutHorizontal() => cuttingManager.CutHorizontal();
 
+        public bool RunOnStartup
+        {
+            get => Settings.Default.RunOnStartup;
+            set
+            {
+                Settings.Default.RunOnStartup = value;
+                Settings.Default.Save();
+
+                RegisterAppOnStartup(value);
+            }
+        }
+
+        private void RegisterAppOnStartup(bool value)
+        {
+            using (var key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
+            {
+                var curAssembly = Assembly.GetExecutingAssembly();
+                var keyName = curAssembly.GetName().Name;
+
+                if (value)
+                {
+                    key.SetValue(keyName, curAssembly.Location + " -minimized");
+                }
+                else if (key.GetValue(keyName) != null)
+                {
+                    key.DeleteValue(keyName);
+                }
+            }
+        }
     }
 }

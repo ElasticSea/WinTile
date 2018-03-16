@@ -583,11 +583,20 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="16" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
                             <Button Grid.Column="0" x:Name="StartButton" Content="Start" Click="BindHotkeys"
                                     IsEnabled="{Binding ActiveHotkeys, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
                             <FrameworkElement Grid.Column="1" />
                             <Button Grid.Column="2" x:Name="StopButton" Content="Stop" Click="UnbindHotkeys"
                                     IsEnabled="{Binding ActiveHotkeys, Mode=OneWay}" />
+
+                            <CheckBox Grid.Row="2" x:Name="RunOnStartup" Content="Start with Windows"
+                                    IsChecked="{Binding RunOnStartup, Mode=TwoWay}" />
                         </Grid>
                     </Border>
                 </GroupBox>
