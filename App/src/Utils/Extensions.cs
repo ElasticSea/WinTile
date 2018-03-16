@@ -50,5 +50,10 @@ namespace App.Utils
             vector.Normalize();
             return vector;
         }
+
+        public static Vector Multiply(this Vector a, Vector b)
+        {
+            return new Vector(a.X * b.X, a.Y * b.Y);
+        }
     }
 }

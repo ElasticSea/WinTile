@@ -57,7 +57,9 @@ namespace App.Model.Managers.Strategies
 
         private static double ComputePenalty(Vector lookDirection, Rect original, Rect target)
         {
-            var relativePosition = (target.Center - original.Center);
+            var targetCenter = target.Center + target.Size.Multiply(lookDirection / 2);
+            var originalCenter = original.Center + original.Size.Multiply(lookDirection / 2);
+            var relativePosition = (targetCenter - originalCenter);
 
             var distance = relativePosition.Length;
             var direction = relativePosition.Normalized();
