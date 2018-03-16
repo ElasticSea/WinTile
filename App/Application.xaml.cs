@@ -43,6 +43,10 @@ namespace App
             {
                 ShowMainWindow();
             }
+            else
+            {
+                vm.ActiveHotkeys = true;
+            }
         }
 
         private static bool EnforceSingleInstance()
