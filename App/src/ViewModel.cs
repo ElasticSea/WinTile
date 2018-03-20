@@ -64,8 +64,9 @@ namespace App
             var move = new MoveStrategy(Tiles, windowManager);
             var select = new SelectStrategy(windowManager);
             var extend = new ExtendStrategy(Tiles, windowManager);
-//                var layout = new LayoutStrategy(Tiles, windowManager);
+            //                var layout = new LayoutStrategy(Tiles, windowManager);
 
+            hotkeyManager?.UnbindHotkeys();
             hotkeyManager = new HotkeyManager(layoutManager.Layout.hotkeys,
                 new Dictionary<HotkeyType, Action<object>>
                 {
@@ -90,8 +91,8 @@ namespace App
                     {HotkeyType.SelectDown, h1 => @select.Down()}
                 });
 
-            ActiveHotkeys = ActiveHotkeys;
-            EnterSandboxMode = EnterSandboxMode;
+            RegisterHotkeys(ActiveHotkeys);
+            RegisterSandbox(EnterSandboxMode);
         }
 
         public Layout Layout => layoutManager.Layout;
@@ -112,11 +113,16 @@ namespace App
             {
                 _activeHotkeys = value;
 
-                if (ActiveHotkeys)
-                    hotkeyManager.BindHotkeys();
-                else
-                    hotkeyManager.UnbindHotkeys();
+                RegisterHotkeys(value);
             }
+        }
+
+        private void RegisterHotkeys(bool active)
+        {
+            if (active)
+                hotkeyManager.BindHotkeys();
+            else
+                hotkeyManager.UnbindHotkeys();
         }
 
         public bool EnterSandboxMode
@@ -126,15 +132,20 @@ namespace App
             {
                 _enterSandboxMode = value;
 
-                if (EnterSandboxMode)
-                {
-                    ActiveHotkeys = true;
-                    windowManager.CurrentManager = sandbox;
-                }
-                else
-                {
-                    windowManager.CurrentManager = nativeWindowManager;
-                }
+                RegisterSandbox(value);
+            }
+        }
+
+        private void RegisterSandbox(bool active)
+        {
+            if (active)
+            {
+                ActiveHotkeys = true;
+                windowManager.CurrentManager = sandbox;
+            }
+            else
+            {
+                windowManager.CurrentManager = nativeWindowManager;
             }
         }
 
