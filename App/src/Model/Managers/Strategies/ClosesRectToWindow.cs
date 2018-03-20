@@ -21,12 +21,11 @@ namespace App.Model.Managers.Strategies
             this.windowManager = windowManager;
         }
 
-        protected Rect GetClosest(IEnumerable<Rect> rects, Vector direction)
+        protected Rect GetClosest(IEnumerable<Rect> rects, Rect rect, Vector direction)
         {
-            var windowRect = windowManager.GetWindowRect(windowManager.FocusedWindow);
 
             return rects
-                .Select(r => new { rect = r, Score = ComputeScore(direction, windowRect, r) })
+                .Select(r => new { rect = r, Score = ComputeScore(direction, rect, r) })
                 .OrderByDescending(a => a.Score)
                 .FirstOrDefault(a => a.Score > 0)?.rect;
         }

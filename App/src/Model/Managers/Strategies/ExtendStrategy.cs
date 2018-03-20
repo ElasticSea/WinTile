@@ -18,7 +18,9 @@ namespace App.Model.Managers.Strategies
 
         public void Left()
         {
-            var Selected = windowManager.GetWindowRect(windowManager.FocusedWindow);
+            if (windowManager.FocusedWindow == null) return;
+
+            var Selected = windowManager.GetWindowRect(windowManager.FocusedWindow.Value);
 
             var candidates = rects
                 .Select(t => t.Left)
@@ -29,12 +31,14 @@ namespace App.Model.Managers.Strategies
 
             var r = Selected;
             var rect = new Rect(left ?? r.Left, r.Top, r.Right, r.Bottom);
-            windowManager.PositionWindow(windowManager.FocusedWindow, rect);
+            windowManager.PositionWindow(windowManager.FocusedWindow.Value, rect);
         }
 
         public void Right()
         {
-            var Selected = windowManager.GetWindowRect(windowManager.FocusedWindow);
+            if (windowManager.FocusedWindow == null) return;
+
+            var Selected = windowManager.GetWindowRect(windowManager.FocusedWindow.Value);
 
             var candidates = rects
                 .Select(t => t.Right)
@@ -45,12 +49,14 @@ namespace App.Model.Managers.Strategies
 
             var r = Selected;
             var rect = new Rect(r.Left, r.Top, right ?? r.Right, r.Bottom);
-            windowManager.PositionWindow(windowManager.FocusedWindow, rect);
+            windowManager.PositionWindow(windowManager.FocusedWindow.Value, rect);
         }
 
         public void Up()
         {
-            var Selected = windowManager.GetWindowRect(windowManager.FocusedWindow);
+            if (windowManager.FocusedWindow == null) return;
+
+            var Selected = windowManager.GetWindowRect(windowManager.FocusedWindow.Value);
 
             var candidates = rects
                 .Select(t => t.Top)
@@ -61,12 +67,14 @@ namespace App.Model.Managers.Strategies
 
             var r = Selected;
             var rect = new Rect(r.Left, top ?? r.Top, r.Right, r.Bottom);
-            windowManager.PositionWindow(windowManager.FocusedWindow, rect);
+            windowManager.PositionWindow(windowManager.FocusedWindow.Value, rect);
         }
 
         public void Down()
         {
-            var Selected = windowManager.GetWindowRect(windowManager.FocusedWindow);
+            if (windowManager.FocusedWindow == null) return;
+
+            var Selected = windowManager.GetWindowRect(windowManager.FocusedWindow.Value);
 
             var candidates = rects
                 .Select(t => t.Bottom)
@@ -77,7 +85,7 @@ namespace App.Model.Managers.Strategies
 
             var r = Selected;
             var rect = new Rect(r.Left, r.Top, r.Right, bottom ?? r.Bottom);
-            windowManager.PositionWindow(windowManager.FocusedWindow, rect);
+            windowManager.PositionWindow(windowManager.FocusedWindow.Value, rect);
         }
     }
 }

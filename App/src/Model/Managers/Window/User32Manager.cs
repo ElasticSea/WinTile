@@ -48,10 +48,10 @@ namespace App.Model.Managers.Window
             return winRect;
         }
 
-        public IntPtr FocusedWindow
+        public IntPtr? FocusedWindow
         {
             get => GetForegroundWindow();
-            set => SetForegroundWindow(value);
+            set => SetForegroundWindow(value.Value);
         }
 
         public IEnumerable<IntPtr> GetVisibleWindows()

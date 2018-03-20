@@ -18,13 +18,17 @@ namespace App.Model.Managers.Window
 
         public ObservableCollection<Entities.Window> Windows { get; } = new ObservableCollection<Entities.Window>();
 
-        public IntPtr FocusedWindow
+        public IntPtr? FocusedWindow
         {
-            get => new IntPtr(Windows.First(w => w.Selected).GetHashCode());
+            get
+            {
+                var window = Windows.FirstOrDefault(w => w.Selected);
+                return window != null ? new IntPtr(window.GetHashCode()) : (IntPtr?)null;
+            }
             set
             {
                 Windows.ForEach(w => w.Selected = false);
-                var tileFrom = GetTileFrom(value);
+                var tileFrom = GetTileFrom(value.Value);
                 tileFrom.Selected = true;
 
                 var index = Windows.IndexOf(tileFrom);

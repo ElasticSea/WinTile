@@ -12,26 +12,38 @@ namespace App.Model.Managers.Strategies
 
         public void Left()
         {
+            if (windowManager.FocusedWindow == null) return;
+
+            var windowRect = windowManager.GetWindowRect(windowManager.FocusedWindow.Value);
             var rects = windowManager.GetVisibleWindows().Select(t => windowManager.GetWindowRect(t)).ToList();
-            ProcessRect(GetClosest(rects, left));
+            ProcessRect(GetClosest(rects, windowRect, left));
         }
 
         public void Right()
         {
+            if (windowManager.FocusedWindow == null) return;
+
+            var windowRect = windowManager.GetWindowRect(windowManager.FocusedWindow.Value);
             var rects = windowManager.GetVisibleWindows().Select(t => windowManager.GetWindowRect(t)).ToList();
-            ProcessRect(GetClosest(rects, right));
+            ProcessRect(GetClosest(rects, windowRect, right));
         }
 
         public void Up()
         {
+            if (windowManager.FocusedWindow == null) return;
+
+            var windowRect = windowManager.GetWindowRect(windowManager.FocusedWindow.Value);
             var rects = windowManager.GetVisibleWindows().Select(t => windowManager.GetWindowRect(t)).ToList();
-            ProcessRect(GetClosest(rects, up));
+            ProcessRect(GetClosest(rects, windowRect, up));
         }
 
         public void Down()
         {
+            if (windowManager.FocusedWindow == null) return;
+
+            var windowRect = windowManager.GetWindowRect(windowManager.FocusedWindow.Value);
             var rects = windowManager.GetVisibleWindows().Select(t => windowManager.GetWindowRect(t)).ToList();
-            ProcessRect(GetClosest(rects, down));
+            ProcessRect(GetClosest(rects, windowRect, down));
         }
 
         private void ProcessRect(Rect rect)

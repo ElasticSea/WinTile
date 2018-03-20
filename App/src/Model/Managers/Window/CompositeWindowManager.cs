@@ -8,7 +8,7 @@ namespace App.Model.Managers.Window
     {
         public IWindowManager CurrentManager { get; set; }
 
-        public IntPtr FocusedWindow
+        public IntPtr? FocusedWindow
         {
             get => CurrentManager.FocusedWindow;
             set => CurrentManager.FocusedWindow = value;

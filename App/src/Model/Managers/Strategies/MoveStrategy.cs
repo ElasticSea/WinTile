@@ -16,38 +16,52 @@ namespace App.Model.Managers.Strategies
 
         public void Left()
         {
-            ProcessRect(GetClosest(tiles, left));
+            if (windowManager.FocusedWindow == null) return;
+
+            var windowRect = windowManager.GetWindowRect(windowManager.FocusedWindow.Value);
+            ProcessRect(GetClosest(tiles, windowRect, left));
         }
 
         public void Right()
         {
-            ProcessRect(GetClosest(tiles, right));
+            if (windowManager.FocusedWindow == null) return;
+
+            var windowRect = windowManager.GetWindowRect(windowManager.FocusedWindow.Value);
+            ProcessRect(GetClosest(tiles, windowRect, right));
         }
 
         public void Up()
         {
-            ProcessRect(GetClosest(tiles, up));
+            if (windowManager.FocusedWindow == null) return;
+
+            var windowRect = windowManager.GetWindowRect(windowManager.FocusedWindow.Value);
+            ProcessRect(GetClosest(tiles, windowRect, up));
         }
 
         public void Down()
         {
-            ProcessRect(GetClosest(tiles, down));
+            if (windowManager.FocusedWindow == null) return;
+
+            var windowRect = windowManager.GetWindowRect(windowManager.FocusedWindow.Value);
+            ProcessRect(GetClosest(tiles, windowRect, down));
         }
 
         private void ProcessRect(Rect rect)
         {
             if (rect != null)
             {
-                windowManager.PositionWindow(windowManager.FocusedWindow, rect);
+                windowManager.PositionWindow(windowManager.FocusedWindow.Value, rect);
             }
             else
             {
-                if (GetClosest(tiles, up) == null &&
-                    GetClosest(tiles, left) == null &&
-                    GetClosest(tiles, right) == null &&
-                    GetClosest(tiles, down) == null)
+                var windowRect = windowManager.GetWindowRect(windowManager.FocusedWindow.Value);
+
+                if (GetClosest(tiles, windowRect, up) == null &&
+                    GetClosest(tiles, windowRect, left) == null &&
+                    GetClosest(tiles, windowRect, right) == null &&
+                    GetClosest(tiles, windowRect, down) == null)
                 {
-                    windowManager.PositionWindow(windowManager.FocusedWindow, tiles.First());
+                    windowManager.PositionWindow(windowManager.FocusedWindow.Value, tiles.First());
                 }
             }
         }

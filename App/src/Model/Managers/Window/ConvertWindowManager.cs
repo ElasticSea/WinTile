@@ -16,7 +16,7 @@ namespace App.Model.Managers.Window
 
         private Rect MonitorRect => new Rect(0, 0, (int) SystemParameters.WorkArea.Width, (int) SystemParameters.WorkArea.Height);
 
-        public IntPtr FocusedWindow
+        public IntPtr? FocusedWindow
         {
             get => wrapped.FocusedWindow;
             set => wrapped.FocusedWindow = value;
