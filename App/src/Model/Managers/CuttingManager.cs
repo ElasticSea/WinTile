@@ -40,8 +40,8 @@ namespace App.Model.Managers
             handler(sender, new PropertyChangedEventArgs(nameof(sender)));
         }
 
-        public void CutVertical() => cut(grid.Rows);
-        public void CutHorizontal() => cut(grid.Columns);
+        public void CutVertical() => cut(grid.Columns);
+        public void CutHorizontal() => cut(grid.Rows);
 
         private void cut(IList<Handle> handles)
         {
