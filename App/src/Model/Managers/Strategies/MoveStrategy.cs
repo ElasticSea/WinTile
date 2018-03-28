@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using App.Model.Managers.Window;
 using Rect = App.Model.Entities.Rect;
@@ -30,7 +31,7 @@ namespace App.Model.Managers.Strategies
             {
                 windowManager.PositionWindow(windowManager.FocusedWindow.Value, rect);
             }
-            else
+            else if(tiles.Contains(windowRect) == false)
             {
                 var cent = windowRect.Center;
                 windowRect.Size = new Vector(0,0);
