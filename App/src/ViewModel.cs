@@ -201,7 +201,7 @@ namespace App
 
                 if (value)
                 {
-                    key.SetValue(keyName, curAssembly.Location + " -minimized");
+                    key.SetValue(keyName, "\"" + curAssembly.Location + "\"- minimized");
                 }
                 else if (key.GetValue(keyName) != null)
                 {
