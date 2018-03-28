@@ -285,10 +285,20 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Button Grid.Column="0" x:Name="CutHorizontalButton"
-                                        Click="CutHorizontal" Content="Cut Horizontal" />
+                                        Click="CutHorizontal" Content="Cut Horizontal">
+                                    <Button.ToolTip>
+                                        <TextBlock
+                                            Text="Cuts grid horizontally and adds another row." />
+                                    </Button.ToolTip>
+                                </Button>
                                 <FrameworkElement Grid.Column="1" />
                                 <Button Grid.Column="2" x:Name="CutVerticalButton" Click="CutVertical"
-                                        Content="Cut Vertical" />
+                                        Content="Cut Vertical">
+                                    <Button.ToolTip>
+                                        <TextBlock
+                                            Text="Cuts grid vertically and adds another column." />
+                                    </Button.ToolTip>
+                                </Button>
                             </Grid>
                         </StackPanel>
                     </Grid>
@@ -528,7 +538,7 @@
                                         <GridView.Columns>
                                             <GridViewColumn Header="Type" Width="100"
                                                             DisplayMemberBinding="{Binding Path=Type}" />
-                                            <GridViewColumn Header="Hotkey" Width="200"
+                                            <GridViewColumn Header="Hotkey" Width="150"
                                                             DisplayMemberBinding="{Binding Path=Hotkey}" />
                                         </GridView.Columns>
                                     </GridView>
