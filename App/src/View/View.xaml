@@ -468,7 +468,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <GroupBox Header="Layout" Grid.Row="0">
+                <GroupBox Header="Settings" Grid.Row="0">
                     <Border Padding="8" Margin="-1,0,1,0">
                         <Grid Margin="-1,0,1,0">
                             <Grid.ColumnDefinitions>
@@ -482,21 +482,33 @@
                             </Grid.ColumnDefinitions>
 
 
-                            <Button Grid.Column="0" x:Name="ExportButton" Content="Export" Click="ExportButton_OnClick" />
+                            <Button Grid.Column="0" x:Name="ExportButton" Content="Export" Click="ExportButton_OnClick">
+                                <Button.ToolTip>
+                                    <TextBlock Text="Saves current settings into a file." />
+                                </Button.ToolTip>
+                            </Button>
                             <FrameworkElement Grid.Column="1" />
-                            <Button Grid.Column="2" x:Name="ImportButton" Content="Import" Click="ImportButton_OnClick" />
+                            <Button Grid.Column="2" x:Name="ImportButton" Content="Import" Click="ImportButton_OnClick">
+                                <Button.ToolTip>
+                                    <TextBlock Text="Loads settings from a file." />
+                                </Button.ToolTip>
+                            </Button>
                             <FrameworkElement Grid.Column="3" />
                             <FrameworkElement Grid.Column="4" />
                             <!--                            <Button Grid.Column="4" x:Name="SaveLayoutButton" Click="SaveLayout"-->
                             <!--                                    Content="Save" />-->
                             <FrameworkElement Grid.Column="5" />
                             <Button Grid.Column="6" x:Name="DefaultLayoutButton" Click="DefaultLayout"
-                                    Content="Default" />
+                                    Content="Default">
+                                <Button.ToolTip>
+                                    <TextBlock Text="Resets current settings to default." />
+                                </Button.ToolTip>
+                            </Button>
                         </Grid>
                     </Border>
                 </GroupBox>
 
-                <GroupBox Header="Hotkeys" Grid.Row="1"
+                <GroupBox Header="Actions" Grid.Row="1"
                           IsEnabled="{Binding ActiveHotkeys, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}">
                     <Border Padding="8">
 
@@ -514,9 +526,9 @@
                                 <ListView.View>
                                     <GridView>
                                         <GridView.Columns>
-                                            <GridViewColumn Header="Hotkey" Width="100"
+                                            <GridViewColumn Header="Type" Width="100"
                                                             DisplayMemberBinding="{Binding Path=Type}" />
-                                            <GridViewColumn Header="Action" Width="200"
+                                            <GridViewColumn Header="Hotkey" Width="200"
                                                             DisplayMemberBinding="{Binding Path=Hotkey}" />
                                         </GridView.Columns>
                                     </GridView>
@@ -532,11 +544,16 @@
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
                                     <StackPanel Grid.Column="0">
-                                        <TextBlock Text="Name" />
+                                        <TextBlock Text="Type" />
                                         <ComboBox ItemsSource="{Binding HotkeyTypes, Mode=OneWay}"
                                                   IsSynchronizedWithCurrentItem="True"
                                                   SelectedItem="{Binding AddHotkeyType, Mode=OneWayToSource}"
-                                                  Padding="2" />
+                                                  Padding="2">
+
+                                            <ComboBox.ToolTip>
+                                                <TextBlock Text="{Binding AddHotkeyTypeTooltip, Mode=OneWay}" />
+                                            </ComboBox.ToolTip>
+                                        </ComboBox>
                                     </StackPanel>
                                     <FrameworkElement Grid.Column="1" />
                                     <StackPanel Grid.Column="2">
@@ -544,7 +561,13 @@
                                         <TextBox x:Name="HotkeyKey"
                                                  PreviewKeyDown="Hotkey_OnPreviewKeyDown"
                                                  Text="{Binding AddHotkeyHotkey, Mode=OneWay}"
-                                                 Padding="2" IsReadOnly="True" />
+                                                 Padding="2" IsReadOnly="True">
+
+                                            <TextBox.ToolTip>
+                                                <TextBlock
+                                                    Text="When this field is focus, press the desired hotkey combination." />
+                                            </TextBox.ToolTip>
+                                        </TextBox>
                                     </StackPanel>
                                 </Grid>
 
@@ -557,9 +580,17 @@
                                     </Grid.ColumnDefinitions>
                                     <Button Grid.Column="0" x:Name="AddHotkeyButton" Content="Add"
                                             Click="AddHotkey" />
+                                        <Button.ToolTip>
+                                            <TextBlock Text="Registers an action with a hotkey." />
+                                        </Button.ToolTip>
+                                    </Button>
                                     <FrameworkElement Grid.Column="1" />
                                     <Button Grid.Column="2" x:Name="RemoveHotkeyButton" Content="Remove"
-                                            Click="RemoveHotkey" />
+                                            Click="RemoveHotkey">
+                                        <Button.ToolTip>
+                                            <TextBlock Text="Removes an action." />
+                                        </Button.ToolTip>
+                                    </Button>
                                 </Grid>
                             </StackPanel>
                         </Grid>
@@ -577,16 +608,27 @@
                             </Grid.ColumnDefinitions>
 
                             <Button Grid.Column="0" x:Name="EditButton" Content="Edit" Click="EnterEditMode"
-                                    IsEnabled="{Binding EnterSandboxMode, Mode=OneWay}" />
+                                    IsEnabled="{Binding EnterSandboxMode, Mode=OneWay}">
+                                <Button.ToolTip>
+                                    <TextBlock Text="Switches to Editor mode in which you can change your layout." />
+                                </Button.ToolTip>
+                            </Button>
                             <FrameworkElement Grid.Column="1" />
                             <Button Grid.Column="2" x:Name="SandboxButton" Content="Sandbox" Click="EnterSandboxMode"
-                                    IsEnabled="{Binding EnterSandboxMode, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
+                                    IsEnabled="{Binding EnterSandboxMode, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}">
+
+                                <Button.ToolTip>
+                                    <TextBlock
+                                        Text="Switches to Sandbox mode in which you can test out how your layout behaves." />
+                                </Button.ToolTip>
+                            </Button>
                         </Grid>
                     </Border>
                 </GroupBox>
 
 
-                <GroupBox Header="{convertors:SwitchBinding ActiveHotkeys, Status \= [RUNNING], Status \= [STOPPED]}" Grid.Row="3">
+                <GroupBox Header="{convertors:SwitchBinding ActiveHotkeys, Status \= [RUNNING], Status \= [STOPPED]}"
+                          Grid.Row="3">
                     <Border Padding="8">
                         <Grid Margin="-1,0,1,0">
                             <Grid.ColumnDefinitions>
@@ -602,10 +644,20 @@
                             </Grid.RowDefinitions>
 
                             <Button Grid.Column="0" x:Name="StartButton" Content="Start" Click="BindHotkeys"
-                                    IsEnabled="{Binding ActiveHotkeys, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}" />
+                                    IsEnabled="{Binding ActiveHotkeys, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}">
+                                <Button.ToolTip>
+                                    <TextBlock
+                                        Text="Registers all hotkeys, so you can be able to move windows with the hotkeys shortcuts" />
+                                </Button.ToolTip>
+                            </Button>
                             <FrameworkElement Grid.Column="1" />
                             <Button Grid.Column="2" x:Name="StopButton" Content="Stop" Click="UnbindHotkeys"
-                                    IsEnabled="{Binding ActiveHotkeys, Mode=OneWay}" />
+                                    IsEnabled="{Binding ActiveHotkeys, Mode=OneWay}">
+                                <Button.ToolTip>
+                                    <TextBlock
+                                        Text="Unregisters all hotkeys, you will no longer be able to move windows with the hotkeys shortcuts" />
+                                </Button.ToolTip>
+                            </Button>
 
                             <CheckBox Grid.Row="2" x:Name="RunOnStartup" Content="Start with Windows"
                                       IsChecked="{Binding RunOnStartup, Mode=TwoWay}" />

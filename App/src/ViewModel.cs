@@ -106,6 +106,50 @@ namespace App
         public HotkeyType AddHotkeyType { get; set; }
         public Hotkey AddHotkeyHotkey { get; set; }
 
+        public string AddHotkeyTypeTooltip
+        {
+            get
+            {
+                switch (AddHotkeyType)
+                {
+                    case HotkeyType.MoveLeft:
+                        return "Moves current window left.";
+                    case HotkeyType.MoveRight:
+                        return "Moves current window right.";
+                    case HotkeyType.MoveUp:
+                        return "Moves current window up.";
+                    case HotkeyType.MoveDown:
+                        return "Moves current window down.";
+                    case HotkeyType.ExpandLeft:
+                        return "Expands current window left.";
+                    case HotkeyType.ExpandRight:
+                        return "Expands current window right.";
+                    case HotkeyType.ExpandUp:
+                        return "Expands current window up.";
+                    case HotkeyType.ExpandDown:
+                        return "Expands current window down.";
+//                    case HotkeyType.LayoutLeft:
+//                        return "";
+//                    case HotkeyType.LayoutRight:
+//                        return "";
+//                    case HotkeyType.LayoutUp:
+//                        return "";
+//                    case HotkeyType.LayoutDown:
+//                        return "";
+                    case HotkeyType.SelectLeft:
+                        return "Selects closest window that is left from current window.";
+                    case HotkeyType.SelectRight:
+                        return "Selects closest window that is right from current window.";
+                    case HotkeyType.SelectUp:
+                        return "Selects closest window that is up from current window.";
+                    case HotkeyType.SelectDown:
+                        return "Selects closest window that is down from current window.";
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+
         public bool ActiveHotkeys
         {
             get => _activeHotkeys;
