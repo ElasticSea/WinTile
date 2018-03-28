@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Windows;
 using App.Model;
 using App.Model.Entities;
 using App.Model.Managers;
@@ -12,6 +13,8 @@ using App.Model.Managers.Window;
 using App.Properties;
 using Microsoft.Win32;
 using PropertyChanged;
+using Rect = App.Model.Entities.Rect;
+using Window = App.Model.Entities.Window;
 
 namespace App
 {
@@ -209,9 +212,19 @@ namespace App
 
         public void AddHotkey()
         {
-            var htKey = new Hotkey(AddHotkeyHotkey.Key, AddHotkeyHotkey.Modifiers);
-            var pair = new HotkeyPair(AddHotkeyType, htKey);
-            Hotkeys.Add(pair);
+            if (AddHotkeyHotkey == null)
+            {
+                MessageBox.Show("Hotkey is empty. Click the Hotkey field and press desired hotkey combination.");
+                return;
+            }
+
+            if (Hotkeys.Any(p => p.Hotkey == AddHotkeyHotkey))
+            {
+                MessageBox.Show("This hotkey is already taken.");
+                return;
+            }
+
+            Hotkeys.Add(new HotkeyPair(AddHotkeyType, new Hotkey(AddHotkeyHotkey.Key, AddHotkeyHotkey.Modifiers)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HotkeyTypes)));
         }
 

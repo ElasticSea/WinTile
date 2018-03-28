@@ -44,5 +44,15 @@ namespace App.Model.Entities
                 return ((int) Key * 397) ^ (int) Modifiers;
             }
         }
+
+        public static bool operator ==(Hotkey left, Hotkey right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(Hotkey left, Hotkey right)
+        {
+            return !Equals(left, right);
+        }
     }
 }
