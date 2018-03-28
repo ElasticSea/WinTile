@@ -105,6 +105,7 @@
     <Compile Include="src\Model\Managers\Window\IWindowManager.cs" />
     <Compile Include="src\Model\Managers\Window\SandboxWindowManager.cs" />
     <Compile Include="src\Model\Managers\Window\User32Manager.cs" />
+    <Compile Include="src\View\Convertors\SwitchBindingExtension.cs" />
     <Compile Include="src\View\Rules\IntegerValidationRule.cs" />
     <Compile Include="src\View\Convertors\InverseBooleanConverter.cs" />
     <Compile Include="src\View\RelativeLayoutPanel.cs" />

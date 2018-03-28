@@ -586,7 +586,7 @@
                 </GroupBox>
 
 
-                <GroupBox Header="Status" Grid.Row="3">
+                <GroupBox Header="{convertors:SwitchBinding ActiveHotkeys, Status \= [RUNNING], Status \= [STOPPED]}" Grid.Row="3">
                     <Border Padding="8">
                         <Grid Margin="-1,0,1,0">
                             <Grid.ColumnDefinitions>
