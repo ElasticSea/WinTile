@@ -578,8 +578,7 @@
                                         <ColumnDefinition Width="16" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <Button Grid.Column="0" x:Name="AddHotkeyButton" Content="Add"
-                                            Click="AddHotkey" />
+                                    <Button Grid.Column="0" x:Name="AddHotkeyButton" Content="Add" Click="AddHotkey" IsEnabled="{Binding HotkeyTypes.Count}">
                                         <Button.ToolTip>
                                             <TextBlock Text="Registers an action with a hotkey." />
                                         </Button.ToolTip>

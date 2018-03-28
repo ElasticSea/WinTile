@@ -34,13 +34,13 @@ namespace App
             RegisterAppOnStartup(RunOnStartup);
         }
 
-        public IEnumerable<HotkeyType> HotkeyTypes
+        public List<HotkeyType> HotkeyTypes
         {
             get
             {
                 var used = Hotkeys.Select(h => h.Type);
                 var types = Enum.GetValues(typeof(HotkeyType)).Cast<HotkeyType>();
-                return types.Except(used);
+                return types.Except(used).ToList();
             }
         }
 
