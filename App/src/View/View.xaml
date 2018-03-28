@@ -595,7 +595,7 @@
                                     </Button>
                                     <FrameworkElement Grid.Column="1" />
                                     <Button Grid.Column="2" x:Name="RemoveHotkeyButton" Content="Remove"
-                                            Click="RemoveHotkey">
+                                            Click="RemoveHotkey" IsEnabled="{Binding Hotkeys.Count}">
                                         <Button.ToolTip>
                                             <TextBlock Text="Removes an action." />
                                         </Button.ToolTip>
