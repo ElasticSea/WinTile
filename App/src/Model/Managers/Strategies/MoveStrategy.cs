@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
+using System.Windows;
 using App.Model.Managers.Window;
 using Rect = App.Model.Entities.Rect;
 
@@ -14,54 +14,32 @@ namespace App.Model.Managers.Strategies
             this.tiles = tiles;
         }
 
-        public void Left()
+        public void Left() => Move(left);
+        public void Right() => Move(right);
+        public void Up() => Move(up);
+        public void Down() => Move(down);
+
+        private void Move(Vector dir)
         {
             if (windowManager.FocusedWindow == null) return;
 
             var windowRect = windowManager.GetWindowRect(windowManager.FocusedWindow.Value);
-            ProcessRect(GetClosest(tiles, windowRect, left));
-        }
 
-        public void Right()
-        {
-            if (windowManager.FocusedWindow == null) return;
-
-            var windowRect = windowManager.GetWindowRect(windowManager.FocusedWindow.Value);
-            ProcessRect(GetClosest(tiles, windowRect, right));
-        }
-
-        public void Up()
-        {
-            if (windowManager.FocusedWindow == null) return;
-
-            var windowRect = windowManager.GetWindowRect(windowManager.FocusedWindow.Value);
-            ProcessRect(GetClosest(tiles, windowRect, up));
-        }
-
-        public void Down()
-        {
-            if (windowManager.FocusedWindow == null) return;
-
-            var windowRect = windowManager.GetWindowRect(windowManager.FocusedWindow.Value);
-            ProcessRect(GetClosest(tiles, windowRect, down));
-        }
-
-        private void ProcessRect(Rect rect)
-        {
+            var rect = GetClosest(tiles, windowRect, dir);
             if (rect != null)
             {
                 windowManager.PositionWindow(windowManager.FocusedWindow.Value, rect);
             }
             else
             {
-                var windowRect = windowManager.GetWindowRect(windowManager.FocusedWindow.Value);
+                var cent = windowRect.Center;
+                windowRect.Size = new Vector(0,0);
+                windowRect.Center = cent;
 
-                if (GetClosest(tiles, windowRect, up) == null &&
-                    GetClosest(tiles, windowRect, left) == null &&
-                    GetClosest(tiles, windowRect, right) == null &&
-                    GetClosest(tiles, windowRect, down) == null)
+                var rect2 = GetClosest(tiles, windowRect, dir);
+                if (rect2 != null)
                 {
-                    windowManager.PositionWindow(windowManager.FocusedWindow.Value, tiles.First());
+                    windowManager.PositionWindow(windowManager.FocusedWindow.Value, rect2);
                 }
             }
         }
