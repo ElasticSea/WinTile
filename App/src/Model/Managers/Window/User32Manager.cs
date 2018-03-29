@@ -9,6 +9,7 @@ namespace App.Model.Managers.Window
     {
         private const short SWP_NOZORDER = 0X4;
         private const int SWP_SHOWWINDOW = 0x0040;
+        private const int SW_RESTORE = 9;
 
         public void PositionWindow(IntPtr handle, Rect rect)
         {
@@ -23,6 +24,7 @@ namespace App.Model.Managers.Window
             var dx = Math.Min(winRect.Size.X - clientRect.Right, 16);
             var dy = Math.Min(winRect.Size.Y - clientRect.Bottom, 8);
 
+            ShowWindow(handle, SW_RESTORE);
             SetWindowPos(handle, 0, (int) (rect.Left - dx / 2), (int) rect.Top, (int) (rect.Size.X + dx), (int) (rect.Size.Y + dy),
                 SWP_NOZORDER | SWP_SHOWWINDOW);
         }
@@ -84,6 +86,10 @@ namespace App.Model.Managers.Window
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool IsWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
