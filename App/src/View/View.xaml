@@ -61,11 +61,11 @@
                         <Border Grid.Row="0" BorderBrush="Black" BorderThickness="1">
                             <view:RelativeLayoutPanel x:Name="Canvaz">
                                 <ItemsControl
+                                    x:Name="Tiles"
                                     view:RelativeLayoutPanel.RelativeX="0"
                                     view:RelativeLayoutPanel.RelativeY="0"
                                     view:RelativeLayoutPanel.RelativeWidth="1"
-                                    view:RelativeLayoutPanel.RelativeHeight="1"
-                                    ItemsSource="{Binding Tiles}">
+                                    view:RelativeLayoutPanel.RelativeHeight="1">
 
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>

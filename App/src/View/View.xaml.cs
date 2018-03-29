@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using System.Windows.Input;
 using App.Model.Entities;
 using App.Model.Managers;
@@ -34,6 +36,18 @@ namespace App.View
                         {
                             DataContext = null;
                             DataContext = value;
+                        } else if (args.PropertyName == nameof(ViewModel.EnterSandboxMode))
+                        {
+                            if (Vm.EnterSandboxMode)
+                            {
+                                Tiles.ClearValue(ItemsControl.ItemsSourceProperty);
+                                var binding = new Binding(nameof(Vm.Tiles));
+                                Tiles.SetBinding(ItemsControl.ItemsSourceProperty, binding);
+                            }
+                            else
+                            {
+                                Tiles.ClearValue(ItemsControl.ItemsSourceProperty);
+                            }
                         }
                     };
                 }
