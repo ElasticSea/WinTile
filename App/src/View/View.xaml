@@ -478,7 +478,8 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <GroupBox Header="Settings" Grid.Row="0">
+                <GroupBox Header="Settings" Grid.Row="0" 
+                          IsEnabled="{Binding ActiveHotkeys, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}">
                     <Border Padding="8" Margin="-1,0,1,0">
                         <Grid Margin="-1,0,1,0">
                             <Grid.ColumnDefinitions>
@@ -529,7 +530,7 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <ListView ItemsSource="{Binding Hotkeys}" Grid.Row="0"
+                            <ListView x:Name="HotkeyKeys" ItemsSource="{Binding Hotkeys}" Grid.Row="0"
                                       SelectedItem="{Binding SelectedHotkeyPair, Mode=OneWayToSource}"
                                       SelectionMode="Single"
                                       IsSynchronizedWithCurrentItem="True">
@@ -595,7 +596,7 @@
                                     </Button>
                                     <FrameworkElement Grid.Column="1" />
                                     <Button Grid.Column="2" x:Name="RemoveHotkeyButton" Content="Remove"
-                                            Click="RemoveHotkey" IsEnabled="{Binding Hotkeys.Count}">
+                                            Click="RemoveHotkey" IsEnabled="{Binding  ElementName=HotkeyKeys, Path=SelectedItems.Count}">
                                         <Button.ToolTip>
                                             <TextBlock Text="Removes an action." />
                                         </Button.ToolTip>
