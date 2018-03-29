@@ -33,7 +33,7 @@ namespace App
 
             notifyIcon = new NotifyIcon();
             notifyIcon.DoubleClick += (s, args) => ShowMainWindow();
-            notifyIcon.Icon = Icon.FromHandle(App.Properties.Resources.icon.GetHicon());
+            notifyIcon.Icon = Icon.FromHandle(App.Properties.Resources.icon_notification.Handle);
             notifyIcon.Visible = true;
 
             CreateContextMenu();

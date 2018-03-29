@@ -98,12 +98,22 @@ namespace App.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Bitmap icon {
+        internal static System.Drawing.Icon icon {
             get {
                 object obj = ResourceManager.GetObject("icon", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon icon_notification {
+            get {
+                object obj = ResourceManager.GetObject("icon_notification", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
             }
         }
     }

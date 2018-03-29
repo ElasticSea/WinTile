@@ -8,7 +8,7 @@
         xmlns:system="clr-namespace:System;assembly=mscorlib"
         xmlns:convertors="clr-namespace:App.View.Convertors"
         mc:Ignorable="d"
-        Icon="../../Resources/icon.png"
+        Icon="../../Resources/icon.ico"
         Title="WinTile" Height="480" Width="960"
         d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True, Type=local:ViewModel}">
 
