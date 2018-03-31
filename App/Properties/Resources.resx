@@ -147,6 +147,34 @@
         "Key": "Down",
         "Modifiers": "Alt, Ctrl"
       }
+    },
+    {
+      "Type": "ExpandLeft",
+      "Hotkey": {
+        "Key": "Left",
+        "Modifiers": "Alt, Ctrl, Shift"
+      }
+    },
+    {
+      "Type": "ExpandRight",
+      "Hotkey": {
+        "Key": "Right",
+        "Modifiers": "Alt, Ctrl, Shift"
+      }
+    },
+    {
+      "Type": "ExpandUp",
+      "Hotkey": {
+        "Key": "Up",
+        "Modifiers": "Alt, Ctrl, Shift"
+      }
+    },
+    {
+      "Type": "ExpandDown",
+      "Hotkey": {
+        "Key": "Down",
+        "Modifiers": "Alt, Ctrl, Shift"
+      }
     }
   ],
   "Grid": {
