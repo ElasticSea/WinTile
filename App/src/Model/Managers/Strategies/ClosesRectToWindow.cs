@@ -23,8 +23,11 @@ namespace ElasticSea.Wintile.Model.Managers.Strategies
 
         protected Rect GetClosest(IEnumerable<Rect> rects, Rect rect, Vector direction)
         {
+            // TODO Hack, offset the rect a little bit so there are not margin problems
+            var rectFixed = new Rect(rect.Left - .1f, rect.Top - .1f, rect.Right + .1f, rect.Bottom + .1f);
+
             return rects
-                .Select(r => new {rect = r, Score = ComputeScore(direction, rect, r)})
+                .Select(r => new {rect = r, Score = ComputeScore(direction, rectFixed, r)})
                 .OrderByDescending(a => a.Score)
                 .FirstOrDefault(a => a.Score > 0)?.rect;
         }

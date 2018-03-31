@@ -24,7 +24,8 @@ namespace ElasticSea.Wintile.Model.Managers.Strategies
 
             var candidates = rects
                 .Select(t => t.Left)
-                .Where(l => l < Selected.Left)
+                // TODO Hack, offset the rect a little bit so there are not margin problems
+                .Where(l => l + .1f < Selected.Left)
                 .OrderByDescending(t => t);
 
             var left = candidates.Any() ? candidates.First() : (double?) null;
@@ -42,7 +43,8 @@ namespace ElasticSea.Wintile.Model.Managers.Strategies
 
             var candidates = rects
                 .Select(t => t.Right)
-                .Where(l => l > Selected.Right)
+                // TODO Hack, offset the rect a little bit so there are not margin problems
+                .Where(l => l - .1f > Selected.Right)
                 .OrderBy(t => t);
 
             var right = candidates.Any() ? candidates.First() : (double?) null;
@@ -60,7 +62,8 @@ namespace ElasticSea.Wintile.Model.Managers.Strategies
 
             var candidates = rects
                 .Select(t => t.Top)
-                .Where(l => l < Selected.Top)
+                // TODO Hack, offset the rect a little bit so there are not margin problems
+                .Where(l => l + .1f < Selected.Top)
                 .OrderByDescending(t => t);
 
             var top = candidates.Any() ? candidates.First() : (double?) null;
@@ -78,7 +81,8 @@ namespace ElasticSea.Wintile.Model.Managers.Strategies
 
             var candidates = rects
                 .Select(t => t.Bottom)
-                .Where(l => l > Selected.Bottom)
+                // TODO Hack, offset the rect a little bit so there are not margin problems
+                .Where(l => l - .1f > Selected.Bottom)
                 .OrderBy(t => t);
 
             var bottom = candidates.Any() ? candidates.First() : (double?) null;
