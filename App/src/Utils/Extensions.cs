@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using static System.String;
 
 namespace ElasticSea.Wintile.Utils
 {
@@ -54,6 +55,11 @@ namespace ElasticSea.Wintile.Utils
         public static Vector Multiply(this Vector a, Vector b)
         {
             return new Vector(a.X * b.X, a.Y * b.Y);
+        }
+
+        public static string IsNullIfEmpty(this string str)
+        {
+            return str == "" ? null : str;
         }
     }
 }

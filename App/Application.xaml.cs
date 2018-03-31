@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Threading;
 using ElasticSea.Wintile.Properties;
+using ElasticSea.Wintile.Utils;
 using ElasticSea.Wintile.View;
 using MessageBox = System.Windows.MessageBox;
 
@@ -24,7 +25,7 @@ namespace ElasticSea.Wintile
 
             base.OnStartup(e);
 
-            vm = new ViewModel {JsonLayout = Settings.Default.Layout ?? Wintile.Properties.Resources.defaultProfile};
+            vm = new ViewModel {JsonLayout = Settings.Default.Layout.IsNullIfEmpty() ?? Wintile.Properties.Resources.defaultProfile};
 
             notifyIcon = new NotifyIcon();
             notifyIcon.DoubleClick += (s, args) => ShowMainWindow();
