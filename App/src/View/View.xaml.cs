@@ -1,141 +1,100 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.IO;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Forms;
+using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Media;
+using ElasticSea.Wintile.Model.Entities;
+using ElasticSea.Wintile.Model.Managers;
+using ElasticSea.Wintile.Utils;
 using Microsoft.Win32;
-using ContextMenu = System.Windows.Controls.ContextMenu;
-using KeyEventArgs = System.Windows.Input.KeyEventArgs;
-using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
-using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
-using TextBox = System.Windows.Controls.TextBox;
+using Window = System.Windows.Window;
 
-namespace App
+namespace ElasticSea.Wintile.View
 {
     public partial class MainWindow : Window
     {
-        private readonly NotifyIcon notifyIcon;
-        private readonly ViewModel VM = new ViewModel();
-
         public MainWindow()
         {
             InitializeComponent();
+        }
 
-            notifyIcon = new NotifyIcon
+        public ViewModel Vm
+        {
+            get => DataContext as ViewModel;
+            set
             {
-                Icon = System.Drawing.Icon.FromHandle(Properties.Resources.icon.GetHicon()),
-                Visible = true
-            };
-            notifyIcon.DoubleClick += (sender, args) =>
-            {
-                Show();
-                WindowState = WindowState.Normal;
-            };
-            notifyIcon.MouseClick += (sender, args) =>
-            {
-                if (args.Button == MouseButtons.Right)
-                    ((ContextMenu) FindResource("NotifierContextMenu")).IsOpen = true;
-            };
-
-            if (!DesignerProperties.GetIsInDesignMode(this))
-            {
-                VM.PropertyChanged += (sender, args) =>
+                if (!DesignerProperties.GetIsInDesignMode(this) && DataContext == null)
                 {
-                    if (args.PropertyName == nameof(VM.JsonLayout))
+                    value.PropertyChanged += (sender, args) =>
                     {
-                        DataContext = null;
-                        DataContext = VM;
-                    }
-                };
+                        if (args.PropertyName == nameof(ViewModel.JsonLayout))
+                        {
+                            DataContext = null;
+                            DataContext = value;
+                        }
+                        else if (args.PropertyName == nameof(ViewModel.EnterSandboxMode))
+                        {
+                            if (Vm.EnterSandboxMode)
+                            {
+                                Tiles.ClearValue(ItemsControl.ItemsSourceProperty);
+                                var binding = new Binding(nameof(Vm.Tiles));
+                                Tiles.SetBinding(ItemsControl.ItemsSourceProperty, binding);
+                            }
+                            else
+                            {
+                                Tiles.ClearValue(ItemsControl.ItemsSourceProperty);
+                            }
+                        }
+                    };
+                }
 
-
-                VM.Load();
+                DataContext = value;
             }
-
-            InstallMeOnStartUp();
-        }
-
-        private void InstallMeOnStartUp()
-        {
-            try
-            {
-                var key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-                var curAssembly = Assembly.GetExecutingAssembly();
-                key.SetValue(curAssembly.GetName().Name, curAssembly.Location);
-            }
-            catch
-            {
-            }
-        }
-
-        // minimize to system tray when applicaiton is minimized
-        protected override void OnStateChanged(EventArgs e)
-        {
-            if (WindowState == WindowState.Minimized) Hide();
-            base.OnStateChanged(e);
-        }
-
-        // minimize to system tray when applicaiton is closed
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            // setting cancel to true will cancel the close request
-            // so the application is not closed
-            e.Cancel = true;
-
-            Hide();
-
-            base.OnClosing(e);
         }
 
         private void ExportButton_OnClick(object sender, RoutedEventArgs e)
         {
             var dlg = new SaveFileDialog
             {
-                FileName = "Wintile Layout Profile",
+                FileName = "Wintile Layout",
                 DefaultExt = ".json",
                 Filter = "Json Files(*.json)|*.json|All(*.*)|*"
             };
 
             if (dlg.ShowDialog() == true)
-                File.WriteAllText(dlg.FileName, VM.JsonLayout);
+                File.WriteAllText(dlg.FileName, Vm.JsonLayout);
         }
 
         private void ImportButton_OnClick(object sender, RoutedEventArgs e)
         {
             var dlg = new OpenFileDialog
             {
-                FileName = "Wintile Layout Profile",
+                FileName = "Wintile Layout",
                 DefaultExt = ".json",
                 Filter = "Json Files(*.json)|*.json|All(*.*)|*"
             };
 
             if (dlg.ShowDialog() == true)
-                VM.JsonLayout = File.ReadAllText(dlg.FileName);
+                Vm.JsonLayout = File.ReadAllText(dlg.FileName);
         }
 
-        private void RemoveWindow(object sender, RoutedEventArgs e) => VM.RemoveWindow();
-        private void AddWindow(object sender, RoutedEventArgs e) => VM.AddWindow();
-        private void SaveLayout(object sender, RoutedEventArgs e) => VM.Save();
-        private void ResetLayout(object sender, RoutedEventArgs e) => VM.Load();
-        private void AddHotkey(object sender, RoutedEventArgs e) => VM.AddHotkey();
-        private void RemoveHotkey(object sender, RoutedEventArgs e) => VM.RemoveHotkey();
-        private void CutVertical(object sender, RoutedEventArgs e) => VM.CutVertical();
-        private void CutHorizontal(object sender, RoutedEventArgs e) => VM.CutHorizontal();
+        private void RemoveWindow(object sender, RoutedEventArgs e) => Vm.RemoveWindow();
+        private void AddWindow(object sender, RoutedEventArgs e) => Vm.AddWindow();
+        private void DefaultLayout(object sender, RoutedEventArgs e) => Vm.DefaultLayout();
+        private void AddHotkey(object sender, RoutedEventArgs e) => Vm.AddHotkey();
+        private void RemoveHotkey(object sender, RoutedEventArgs e) => Vm.RemoveHotkey();
+        private void CutVertical(object sender, RoutedEventArgs e) => Vm.CutVertical();
+        private void CutHorizontal(object sender, RoutedEventArgs e) => Vm.CutHorizontal();
+        private void BindHotkeys(object sender, RoutedEventArgs e) => Vm.ActiveHotkeys = true;
+        private void UnbindHotkeys(object sender, RoutedEventArgs e) => Vm.ActiveHotkeys = false;
+        private void EnterEditMode(object sender, RoutedEventArgs e) => Vm.EnterSandboxMode = false;
+        private void EnterSandboxMode(object sender, RoutedEventArgs e) => Vm.EnterSandboxMode = true;
 
         private void Hotkey_OnPreviewKeyDown(object sender, KeyEventArgs args)
         {
-            HotkeyBinding.assignHotkey(args, h => VM.AddHotkeyHotkey = h);
-        }
-
-        private void Menu_Exit(object sender, RoutedEventArgs e)
-        {
-            notifyIcon.Visible = false;
-            System.Windows.Application.Current.Shutdown();
+            HotkeyBinding.assignHotkey(args, h => Vm.AddHotkeyHotkey = h);
         }
 
         private void onVerticalHandler(object sender, DragDeltaEventArgs e)
@@ -151,14 +110,14 @@ namespace App
         private void moveHandle(object sender, DragDeltaEventArgs e, double value)
         {
             var handle = (sender as FrameworkElement).DataContext as Handle;
-            handle.Position = (float) (handle.Position + value).Clamp(0, 1);
+            handle.Position = (handle.Position + value).Clamp(0, 1);
         }
 
         private void RemoveHandle(object sender, RoutedEventArgs e)
         {
             var handle = (sender as FrameworkElement).DataContext as Handle;
-            VM.Rows.Remove(handle);
-            VM.Columns.Remove(handle);
+            Vm.Rows.Remove(handle);
+            Vm.Columns.Remove(handle);
         }
 
         private void HandleOnFocus(object sender, RoutedEventArgs e)
@@ -168,14 +127,14 @@ namespace App
 
         private void HandlePreviewMouse(object sender, MouseButtonEventArgs e)
         {
-                var textBox = (sender as TextBox);
-                if (!textBox.IsKeyboardFocusWithin)
-                {
-                    // If the text box is not yet focused, give it the focus and
-                    // stop further processing of this click event.
-                    textBox.Focus();
-                    e.Handled = true;
-                }
+            var textBox = sender as TextBox;
+            if (!textBox.IsKeyboardFocusWithin)
+            {
+                // If the text box is not yet focused, give it the focus and
+                // stop further processing of this click event.
+                textBox.Focus();
+                e.Handled = true;
+            }
         }
     }
 }

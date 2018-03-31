@@ -1,7 +1,8 @@
 ﻿using System.Globalization;
 using System.Windows.Controls;
+using ElasticSea.Wintile.Utils;
 
-namespace App
+namespace ElasticSea.Wintile.View.Rules
 {
     public class IntegerValidationRule : ValidationRule
     {

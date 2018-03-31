@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ElasticSea.Wintile.Model.Entities;
 
-namespace App.Model.Managers
+namespace ElasticSea.Wintile.Model.Managers
 {
     public class HotkeyManager
     {
         private readonly IList<HotkeyPair> hotkeys;
         private readonly Dictionary<HotkeyType, Action<object>> mapping;
-        private bool binded;
 
-        private IEnumerable<HotkeyBinding> bindings;
+        private IEnumerable<HotkeyBinding> bindings = new List<HotkeyBinding>();
 
         public HotkeyManager(IList<HotkeyPair> hotkeys, Dictionary<HotkeyType, Action<object>> mapping)
         {
@@ -20,27 +20,20 @@ namespace App.Model.Managers
 
         public void UnbindHotkeys()
         {
-            if (binded)
-            {
-                foreach (var hotkey in bindings)
-                    hotkey.Unbind();
-                binded = false;
-            }
+            foreach (var hotkey in bindings)
+                hotkey.Unbind();
         }
 
         public void BindHotkeys()
         {
-            if (binded == false)
-            {
-                bindings = from typeHotkey in hotkeys
-                    where typeHotkey.Hotkey != null
-                    select new HotkeyBinding(typeHotkey.Hotkey.Key, typeHotkey.Hotkey.Modifiers,
-                        mapping[typeHotkey.Type], false);
+            UnbindHotkeys();
+            bindings = from typeHotkey in hotkeys
+                       where typeHotkey.Hotkey != null
+                       select new HotkeyBinding(typeHotkey.Hotkey.Key, typeHotkey.Hotkey.Modifiers,
+                           mapping[typeHotkey.Type], false);
 
-                foreach (var binding in bindings)
-                    binding.Bind();
-                binded = true;
-            }
+            foreach (var binding in bindings)
+                binding.Bind();
         }
     }
 }

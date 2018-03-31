@@ -1,4 +1,4 @@
-﻿namespace App.Model
+﻿namespace ElasticSea.Wintile.Model.Entities
 {
     public enum HotkeyType
     {
@@ -10,10 +10,11 @@
         ExpandRight,
         ExpandUp,
         ExpandDown,
-        LayoutLeft,
-        LayoutRight,
-        LayoutUp,
-        LayoutDown,
+
+//        LayoutLeft,
+//        LayoutRight,
+//        LayoutUp,
+//        LayoutDown,
         SelectLeft,
         SelectRight,
         SelectUp,

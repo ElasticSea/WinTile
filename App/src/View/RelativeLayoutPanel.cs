@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace App.View
+namespace ElasticSea.Wintile.View
 {
     public class RelativeLayoutPanel : Panel
     {
@@ -10,28 +10,32 @@ namespace App.View
         public static readonly DependencyProperty RelativeXProperty = DependencyProperty.RegisterAttached(
             "RelativeX", typeof(double), typeof(RelativeLayoutPanel),
             new FrameworkPropertyMetadata(0d,
-                FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsArrange |
+                FrameworkPropertyMetadataOptions.AffectsMeasure |
+                FrameworkPropertyMetadataOptions.AffectsArrange |
                 FrameworkPropertyMetadataOptions.AffectsParentArrange |
                 FrameworkPropertyMetadataOptions.AffectsParentMeasure));
 
         public static readonly DependencyProperty RelativeYProperty = DependencyProperty.RegisterAttached(
             "RelativeY", typeof(double), typeof(RelativeLayoutPanel),
             new FrameworkPropertyMetadata(0d,
-                FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsArrange |
+                FrameworkPropertyMetadataOptions.AffectsMeasure |
+                FrameworkPropertyMetadataOptions.AffectsArrange |
                 FrameworkPropertyMetadataOptions.AffectsParentArrange |
                 FrameworkPropertyMetadataOptions.AffectsParentMeasure));
 
         public static readonly DependencyProperty RelativeWidthProperty = DependencyProperty.RegisterAttached(
             "RelativeWidth", typeof(double), typeof(RelativeLayoutPanel),
             new FrameworkPropertyMetadata(0d,
-                FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsArrange |
+                FrameworkPropertyMetadataOptions.AffectsMeasure |
+                FrameworkPropertyMetadataOptions.AffectsArrange |
                 FrameworkPropertyMetadataOptions.AffectsParentArrange |
                 FrameworkPropertyMetadataOptions.AffectsParentMeasure));
 
         public static readonly DependencyProperty RelativeHeightProperty = DependencyProperty.RegisterAttached(
             "RelativeHeight", typeof(double), typeof(RelativeLayoutPanel),
             new FrameworkPropertyMetadata(0d,
-                FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsArrange |
+                FrameworkPropertyMetadataOptions.AffectsMeasure |
+                FrameworkPropertyMetadataOptions.AffectsArrange |
                 FrameworkPropertyMetadataOptions.AffectsParentArrange |
                 FrameworkPropertyMetadataOptions.AffectsParentMeasure));
 

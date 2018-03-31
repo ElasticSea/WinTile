@@ -1,8 +1,9 @@
 ﻿using System.Windows.Input;
+using ElasticSea.Wintile.Model.Managers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace App.Model
+namespace ElasticSea.Wintile.Model.Entities
 {
     public class Hotkey
     {
@@ -42,6 +43,16 @@ namespace App.Model
             {
                 return ((int) Key * 397) ^ (int) Modifiers;
             }
+        }
+
+        public static bool operator ==(Hotkey left, Hotkey right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(Hotkey left, Hotkey right)
+        {
+            return !Equals(left, right);
         }
     }
 }

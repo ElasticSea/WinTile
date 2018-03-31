@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using App.Model;
+using ElasticSea.Wintile.Model.Entities;
 
-namespace App.Utils
+namespace ElasticSea.Wintile.Model.Managers.Window
 {
     public class CompositeWindowManager : IWindowManager
     {
         public IWindowManager CurrentManager { get; set; }
 
-        public IntPtr FocusedWindow
+        public IntPtr? FocusedWindow
         {
             get => CurrentManager.FocusedWindow;
             set => CurrentManager.FocusedWindow = value;

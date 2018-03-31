@@ -1,6 +1,6 @@
 ﻿using PropertyChanged;
 
-namespace App.Model
+namespace ElasticSea.Wintile.Model.Entities
 {
     [ImplementPropertyChanged]
     public class HotkeyPair

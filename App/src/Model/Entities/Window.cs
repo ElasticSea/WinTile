@@ -1,16 +1,16 @@
 ﻿using PropertyChanged;
 
-namespace App.Model.Entities
+namespace ElasticSea.Wintile.Model.Entities
 {
     [ImplementPropertyChanged]
     public class Window
     {
-        public bool Selected { get; set; }
-        public Rect Rect { get; set; }
-
         public Window(Rect rect)
         {
             Rect = rect;
         }
+
+        public bool Selected { get; set; }
+        public Rect Rect { get; set; }
     }
 }

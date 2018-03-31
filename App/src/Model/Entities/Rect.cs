@@ -1,7 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using System.Windows;
+using Newtonsoft.Json;
 using PropertyChanged;
 
-namespace App.Model
+namespace ElasticSea.Wintile.Model.Entities
 {
     [ImplementPropertyChanged]
     public class Rect
@@ -11,7 +12,7 @@ namespace App.Model
         }
 
         [JsonConstructor]
-        public Rect(float left = 0, float top = 0, float right = 0, float bottom = 0)
+        public Rect(double left = 0, double top = 0, double right = 0, double bottom = 0)
         {
             Left = left;
             Top = top;
@@ -19,55 +20,43 @@ namespace App.Model
             Bottom = bottom;
         }
 
-        public float Left { get; set; }
-        public float Top { get; set; }
-        public float Right { get; set; }
-        public float Bottom { get; set; }
+        public double Left { get; set; }
+        public double Top { get; set; }
+        public double Right { get; set; }
+        public double Bottom { get; set; }
 
         [JsonIgnore]
-        public float Width
+        public Vector Size
         {
-            get => Right - Left;
-            set => Right = value + Left;
-        }
-
-        [JsonIgnore]
-        public float Height
-        {
-            get => Bottom - Top;
-            set => Bottom = value + Top;
-        }
-
-        [JsonIgnore]
-        public float Cx
-        {
-            get => Left + Width / 2;
+            get => new Vector(Right - Left, Bottom - Top);
             set
             {
-                Left = value - Width / 2;
-                Right = value + Width / 2;
+                Right = value.X + Left;
+                Bottom = value.Y + Top;
             }
         }
 
         [JsonIgnore]
-        public float Cy
+        public Vector Center
         {
-            get => Top + Height / 2;
+            get => new Vector(Left + Size.X / 2, Top + Size.Y / 2);
             set
             {
-                Top = value - Height / 2;
-                Bottom = value + Height / 2;
+                Left = value.X - Size.X / 2;
+                Right = value.X + Size.X / 2;
+                Top = value.Y - Size.Y / 2;
+                Bottom = value.Y + Size.Y / 2;
             }
         }
 
-        public Rect extend(float width, float height)
+        public Rect Extend(Vector size)
         {
-            return new Rect(Left * width, Top * height, Right * width, Bottom * height);
+            return new Rect(Left * size.X, Top * size.Y, Right * size.X, Bottom * size.Y);
         }
 
-        public Rect shrink(float width, float height)
+        public Rect Shrink(Vector size)
         {
-            return new Rect(Left / width, Top / height, Right / width, Bottom / height);
+            return new Rect(Left / size.X, Top / size.Y, Right / size.X, Bottom / size.Y);
         }
 
         protected bool Equals(Rect other)
@@ -79,7 +68,7 @@ namespace App.Model
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((Rect) obj);
         }
 
@@ -93,6 +82,16 @@ namespace App.Model
                 hashCode = (hashCode * 397) ^ Bottom.GetHashCode();
                 return hashCode;
             }
+        }
+
+        public static bool operator ==(Rect left, Rect right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(Rect left, Rect right)
+        {
+            return !Equals(left, right);
         }
     }
 }

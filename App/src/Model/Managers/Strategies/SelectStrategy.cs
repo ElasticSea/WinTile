@@ -1,28 +1,56 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+using ElasticSea.Wintile.Model.Entities;
+using ElasticSea.Wintile.Model.Managers.Window;
 
-namespace App.Model.Managers.Strategies
+namespace ElasticSea.Wintile.Model.Managers.Strategies
 {
-    public class SelectStrategy : AbstractClosestStrategy
+    public class SelectStrategy : ClosesRectToWindow
     {
-        public SelectStrategy(IList<Tile> tiles, IWindowManager windowManager) : base(tiles, windowManager)
+        public SelectStrategy(IWindowManager windowManager) : base(windowManager)
         {
         }
 
-        protected override void OnClosestTIle(Tile tile)
+        public void Left()
         {
-            var allwin = windowManager.GetVisibleWindows()
-                .Select(t => new {Rect = windowManager.GetWindowRect(t), Handle = t});
+            if (windowManager.FocusedWindow == null) return;
 
-            var closestWindowToRect = allwin.OrderBy(
-                t => Math.Abs(t.Rect.Left - tile.Rect.Left) +
-                     Math.Abs(t.Rect.Right - tile.Rect.Right) +
-                     Math.Abs(t.Rect.Top - tile.Rect.Top) +
-                     Math.Abs(t.Rect.Bottom - tile.Rect.Bottom)
-            ).First();
+            var windowRect = windowManager.GetWindowRect(windowManager.FocusedWindow.Value);
+            var rects = windowManager.GetVisibleWindows().Select(t => windowManager.GetWindowRect(t)).ToList();
+            ProcessRect(GetClosest(rects, windowRect, left));
+        }
 
-            windowManager.FocusedWindow = closestWindowToRect.Handle;
+        public void Right()
+        {
+            if (windowManager.FocusedWindow == null) return;
+
+            var windowRect = windowManager.GetWindowRect(windowManager.FocusedWindow.Value);
+            var rects = windowManager.GetVisibleWindows().Select(t => windowManager.GetWindowRect(t)).ToList();
+            ProcessRect(GetClosest(rects, windowRect, right));
+        }
+
+        public void Up()
+        {
+            if (windowManager.FocusedWindow == null) return;
+
+            var windowRect = windowManager.GetWindowRect(windowManager.FocusedWindow.Value);
+            var rects = windowManager.GetVisibleWindows().Select(t => windowManager.GetWindowRect(t)).ToList();
+            ProcessRect(GetClosest(rects, windowRect, up));
+        }
+
+        public void Down()
+        {
+            if (windowManager.FocusedWindow == null) return;
+
+            var windowRect = windowManager.GetWindowRect(windowManager.FocusedWindow.Value);
+            var rects = windowManager.GetVisibleWindows().Select(t => windowManager.GetWindowRect(t)).ToList();
+            ProcessRect(GetClosest(rects, windowRect, down));
+        }
+
+        private void ProcessRect(Rect rect)
+        {
+            if (rect != null)
+                windowManager.FocusedWindow =
+                    windowManager.GetVisibleWindows().First(handle => windowManager.GetWindowRect(handle) == rect);
         }
     }
 }

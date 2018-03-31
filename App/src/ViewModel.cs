@@ -3,22 +3,26 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using App.Model;
-using App.Model.Entities;
-using App.Model.Managers;
-using App.Model.Managers.Strategies;
-using App.Properties;
-using App.Utils;
+using System.Reflection;
+using System.Windows;
+using ElasticSea.Wintile.Model.Entities;
+using ElasticSea.Wintile.Model.Managers;
+using ElasticSea.Wintile.Model.Managers.Strategies;
+using ElasticSea.Wintile.Model.Managers.Window;
+using ElasticSea.Wintile.Properties;
+using Microsoft.Win32;
 using PropertyChanged;
+using Rect = ElasticSea.Wintile.Model.Entities.Rect;
+using Window = ElasticSea.Wintile.Model.Entities.Window;
 
-namespace App
+namespace ElasticSea.Wintile
 {
     [ImplementPropertyChanged]
     public class ViewModel : INotifyPropertyChanged
     {
         private readonly LayoutManager layoutManager = new LayoutManager();
         private bool _activeHotkeys;
-        private Tile _selected;
+        private Rect _selected;
         private HotkeyPair _selectedHotkeyPair;
         private SandboxWindowManager sandbox;
         private HotkeyManager hotkeyManager;
@@ -27,13 +31,18 @@ namespace App
         private CuttingManager cuttingManager;
         private bool _enterSandboxMode;
 
-        public IEnumerable<HotkeyType> HotkeyTypes
+        public ViewModel()
+        {
+            RegisterAppOnStartup(RunOnStartup);
+        }
+
+        public List<HotkeyType> HotkeyTypes
         {
             get
             {
                 var used = Hotkeys.Select(h => h.Type);
                 var types = Enum.GetValues(typeof(HotkeyType)).Cast<HotkeyType>();
-                return types.Except(used);
+                return types.Except(used).ToList();
             }
         }
 
@@ -47,6 +56,97 @@ namespace App
             }
         }
 
+        public Layout Layout => layoutManager.Layout;
+        public ObservableCollection<Handle> Rows => layoutManager.Layout.Grid.Rows;
+        public ObservableCollection<Handle> Columns => layoutManager.Layout.Grid.Columns;
+        public ObservableCollection<Rect> Tiles => cuttingManager.Tiles;
+        public ObservableCollection<HotkeyPair> Hotkeys => layoutManager.Layout.hotkeys;
+        public ObservableCollection<Window> Windows => sandbox.Windows;
+
+        public HotkeyPair SelectedHotkeyPair { private get; set; }
+        public HotkeyType AddHotkeyType { get; set; }
+        public Hotkey AddHotkeyHotkey { get; set; }
+
+        public string AddHotkeyTypeTooltip
+        {
+            get
+            {
+                switch (AddHotkeyType)
+                {
+                    case HotkeyType.MoveLeft:
+                        return "Moves current window left.";
+                    case HotkeyType.MoveRight:
+                        return "Moves current window right.";
+                    case HotkeyType.MoveUp:
+                        return "Moves current window up.";
+                    case HotkeyType.MoveDown:
+                        return "Moves current window down.";
+                    case HotkeyType.ExpandLeft:
+                        return "Expands current window left.";
+                    case HotkeyType.ExpandRight:
+                        return "Expands current window right.";
+                    case HotkeyType.ExpandUp:
+                        return "Expands current window up.";
+                    case HotkeyType.ExpandDown:
+                        return "Expands current window down.";
+//                    case HotkeyType.LayoutLeft:
+//                        return "";
+//                    case HotkeyType.LayoutRight:
+//                        return "";
+//                    case HotkeyType.LayoutUp:
+//                        return "";
+//                    case HotkeyType.LayoutDown:
+//                        return "";
+                    case HotkeyType.SelectLeft:
+                        return "Selects closest window that is left from current window.";
+                    case HotkeyType.SelectRight:
+                        return "Selects closest window that is right from current window.";
+                    case HotkeyType.SelectUp:
+                        return "Selects closest window that is up from current window.";
+                    case HotkeyType.SelectDown:
+                        return "Selects closest window that is down from current window.";
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+
+        public bool ActiveHotkeys
+        {
+            get => _activeHotkeys;
+            set
+            {
+                _activeHotkeys = value;
+
+                RegisterHotkeys(value);
+            }
+        }
+
+        public bool EnterSandboxMode
+        {
+            get => _enterSandboxMode;
+            set
+            {
+                _enterSandboxMode = value;
+
+                RegisterSandbox(value);
+            }
+        }
+
+        public bool RunOnStartup
+        {
+            get => Settings.Default.RunOnStartup;
+            set
+            {
+                Settings.Default.RunOnStartup = value;
+                Settings.Default.Save();
+
+                RegisterAppOnStartup(value);
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged = (sender, args) => { };
+
         private void Reload()
         {
             cuttingManager = new CuttingManager(layoutManager.Layout.Grid);
@@ -55,10 +155,11 @@ namespace App
             windowManager.CurrentManager = nativeWindowManager;
 
             var move = new MoveStrategy(Tiles, windowManager);
-            var select = new SelectStrategy(Tiles, windowManager);
+            var select = new SelectStrategy(windowManager);
             var extend = new ExtendStrategy(Tiles, windowManager);
-//                var layout = new LayoutStrategy(Tiles, windowManager);
+            //                var layout = new LayoutStrategy(Tiles, windowManager);
 
+            hotkeyManager?.UnbindHotkeys();
             hotkeyManager = new HotkeyManager(layoutManager.Layout.hotkeys,
                 new Dictionary<HotkeyType, Action<object>>
                 {
@@ -77,65 +178,38 @@ namespace App
 //                        {HotkeyType.LayoutUp, h1 => layout.Up()},
 //                        {HotkeyType.LayoutDown, h1 => layout.Down()},
 
-                    {HotkeyType.SelectLeft, h1 => @select.Left()},
-                    {HotkeyType.SelectRight, h1 => @select.Right()},
-                    {HotkeyType.SelectUp, h1 => @select.Up()},
-                    {HotkeyType.SelectDown, h1 => @select.Down()}
+                    {HotkeyType.SelectLeft, h1 => select.Left()},
+                    {HotkeyType.SelectRight, h1 => select.Right()},
+                    {HotkeyType.SelectUp, h1 => select.Up()},
+                    {HotkeyType.SelectDown, h1 => select.Down()}
                 });
 
-            ActiveHotkeys = ActiveHotkeys;
-            EnterSandboxMode = EnterSandboxMode;
+            RegisterHotkeys(ActiveHotkeys);
+            RegisterSandbox(EnterSandboxMode);
         }
 
-        public ObservableCollection<Handle> Rows => layoutManager.Layout.Grid.Rows;
-        public ObservableCollection<Handle> Columns => layoutManager.Layout.Grid.Columns;
-        public ObservableCollection<Tile> Tiles => cuttingManager.Tiles;
-        public ObservableCollection<HotkeyPair> Hotkeys => layoutManager.Layout.hotkeys;
-        public ObservableCollection<Window> Windows => sandbox.Windows;
-
-        public HotkeyPair SelectedHotkeyPair { private get; set; }
-        public HotkeyType AddHotkeyType { get; set; }
-        public Hotkey AddHotkeyHotkey { get; set; }
-
-        public bool ActiveHotkeys
+        private void RegisterHotkeys(bool active)
         {
-            get => _activeHotkeys;
-            set
-            {
-                _activeHotkeys = value;
+            if (active)
+                hotkeyManager.BindHotkeys();
+            else
+                hotkeyManager.UnbindHotkeys();
+        }
 
-                if (ActiveHotkeys)
-                    hotkeyManager.BindHotkeys();
-                else
-                    hotkeyManager.UnbindHotkeys();
+        private void RegisterSandbox(bool active)
+        {
+            if (active)
+            {
+                ActiveHotkeys = true;
+                windowManager.CurrentManager = sandbox;
+            }
+            else
+            {
+                windowManager.CurrentManager = nativeWindowManager;
             }
         }
 
-        public bool EnterSandboxMode
-        {
-            get => _enterSandboxMode;
-            set
-            {
-                _enterSandboxMode = value;
-
-                if (EnterSandboxMode)
-                {
-                    ActiveHotkeys = true;
-                    windowManager.CurrentManager = sandbox;
-                }
-                else
-                {
-                    windowManager.CurrentManager = nativeWindowManager;
-                }
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged = (sender, args) => { };
-
-        public void Load()
-        {
-            JsonLayout = Settings.Default.Layout ?? "{}";
-        }
+        public void DefaultLayout() => JsonLayout = Resources.defaultProfile;
 
         public void AddWindow()
         {
@@ -147,17 +221,21 @@ namespace App
             sandbox.RemoveWindow();
         }
 
-        internal void Save()
-        {
-            Settings.Default.Layout = layoutManager.Json;
-            Settings.Default.Save();
-        }
-
         public void AddHotkey()
         {
-            var htKey = new Hotkey(AddHotkeyHotkey.Key, AddHotkeyHotkey.Modifiers);
-            var pair = new HotkeyPair(AddHotkeyType, htKey);
-            Hotkeys.Add(pair);
+            if (AddHotkeyHotkey == null)
+            {
+                MessageBox.Show("Hotkey is empty. Click the Hotkey field and press desired hotkey combination.");
+                return;
+            }
+
+            if (Hotkeys.Any(p => p.Hotkey == AddHotkeyHotkey))
+            {
+                MessageBox.Show("This hotkey is already taken.");
+                return;
+            }
+
+            Hotkeys.Add(new HotkeyPair(AddHotkeyType, new Hotkey(AddHotkeyHotkey.Key, AddHotkeyHotkey.Modifiers)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HotkeyTypes)));
         }
 
@@ -169,5 +247,23 @@ namespace App
 
         public void CutVertical() => cuttingManager.CutVertical();
         public void CutHorizontal() => cuttingManager.CutHorizontal();
+
+        private void RegisterAppOnStartup(bool value)
+        {
+            using (var key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
+            {
+                var curAssembly = Assembly.GetExecutingAssembly();
+                var keyName = curAssembly.GetName().Name;
+
+                if (value)
+                {
+                    key.SetValue(keyName, "\"" + curAssembly.Location + "\" -minimized");
+                }
+                else if (key.GetValue(keyName) != null)
+                {
+                    key.DeleteValue(keyName);
+                }
+            }
+        }
     }
 }

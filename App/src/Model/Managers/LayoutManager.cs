@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using ElasticSea.Wintile.Model.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace App.Model.Managers
+namespace ElasticSea.Wintile.Model.Managers
 {
     public class LayoutManager
     {

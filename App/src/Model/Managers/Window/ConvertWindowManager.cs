@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using App.Model;
-using static System.Windows.SystemParameters;
+using System.Windows;
+using Rect = ElasticSea.Wintile.Model.Entities.Rect;
 
-namespace App
+namespace ElasticSea.Wintile.Model.Managers.Window
 {
     public class ConvertWindowManager : IWindowManager
     {
@@ -14,9 +14,9 @@ namespace App
             this.wrapped = wrapped;
         }
 
-        private Rect MonitorRect => new Rect(0, 0, (int) WorkArea.Width, (int) WorkArea.Height);
+        private Rect MonitorRect => new Rect(0, 0, (int) SystemParameters.WorkArea.Width, (int) SystemParameters.WorkArea.Height);
 
-        public IntPtr FocusedWindow
+        public IntPtr? FocusedWindow
         {
             get => wrapped.FocusedWindow;
             set => wrapped.FocusedWindow = value;
@@ -39,12 +39,12 @@ namespace App
 
         private Rect PxtoPercent(Rect rect)
         {
-            return rect.shrink(MonitorRect.Width, MonitorRect.Height);
+            return rect.Shrink(MonitorRect.Size);
         }
 
         private Rect PercentToPx(Rect rect)
         {
-            return rect.extend(MonitorRect.Width, MonitorRect.Height);
+            return rect.Extend(MonitorRect.Size);
         }
     }
 }

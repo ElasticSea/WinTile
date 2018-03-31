@@ -1,15 +1,15 @@
 ﻿using PropertyChanged;
 
-namespace App
+namespace ElasticSea.Wintile.Model.Entities
 {
     [ImplementPropertyChanged]
     public class Handle
     {
-        public float Position { get; set; }
-
-        public Handle(float position)
+        public Handle(double position)
         {
             Position = position;
         }
+
+        public double Position { get; set; }
     }
 }

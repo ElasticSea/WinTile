@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
+using ElasticSea.Wintile.Utils;
 
-namespace App.View.Convertors
+namespace ElasticSea.Wintile.View.Convertors
 {
-    [ValueConversion(typeof(float), typeof(string))]
+    [ValueConversion(typeof(double), typeof(string))]
     public class PercentConvertor : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter,
             CultureInfo culture)
         {
-            return Math.Round(((float)value).Clamp(0, 1) * 100);
+            return Math.Round(((double) value).Clamp(0, 1) * 100);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter,
             CultureInfo culture)
         {
-            return (((string)value).ToFloat(0).Value / 100).Clamp(0, 1);
+            return (((string) value).ToDouble(0).Value / 100).Clamp(0, 1);
         }
     }
 }

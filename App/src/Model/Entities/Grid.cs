@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 
-namespace App.Model.Entities
+namespace ElasticSea.Wintile.Model.Entities
 {
     public class Grid
     {

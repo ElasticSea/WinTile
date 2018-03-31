@@ -3,21 +3,21 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using App.Model.Entities;
+using ElasticSea.Wintile.Model.Entities;
+using ElasticSea.Wintile.Utils;
 
-namespace App.Model.Managers
+namespace ElasticSea.Wintile.Model.Managers
 {
     public class CuttingManager
     {
         private Grid grid;
 
-        public ObservableCollection<Tile> Tiles { get; set; } = new ObservableCollection<Tile>();
-
         public CuttingManager(Grid grid)
         {
             this.grid = grid;
             PropertyChangedEventHandler propertyChangedEventHandler = (o, eventArgs) => recalculate();
-            NotifyCollectionChangedEventHandler handlerChanged = (sender, args) => collectionPropertyChanged(sender, args, propertyChangedEventHandler);
+            NotifyCollectionChangedEventHandler handlerChanged = (sender, args) =>
+                collectionPropertyChanged(sender, args, propertyChangedEventHandler);
             grid.Rows.CollectionChanged += handlerChanged;
             grid.Columns.CollectionChanged += handlerChanged;
             grid.Rows.Cast<INotifyPropertyChanged>().ForEach(r => r.PropertyChanged += propertyChangedEventHandler);
@@ -26,7 +26,9 @@ namespace App.Model.Managers
             recalculate();
         }
 
-        void collectionPropertyChanged(object sender, NotifyCollectionChangedEventArgs e, PropertyChangedEventHandler handler)
+        public ObservableCollection<Rect> Tiles { get; set; } = new ObservableCollection<Rect>();
+
+        private void collectionPropertyChanged(object sender, NotifyCollectionChangedEventArgs e, PropertyChangedEventHandler handler)
         {
             if (e.OldItems != null)
                 foreach (INotifyPropertyChanged item in e.OldItems)
@@ -39,14 +41,14 @@ namespace App.Model.Managers
             handler(sender, new PropertyChangedEventArgs(nameof(sender)));
         }
 
-        public void CutVertical() => cut(grid.Rows);
-        public void CutHorizontal() => cut(grid.Columns);
+        public void CutVertical() => cut(grid.Columns);
+        public void CutHorizontal() => cut(grid.Rows);
 
         private void cut(IList<Handle> handles)
         {
-            var dist = 0f;
-            var start = 0f;
-            var end = 1f;
+            var dist = 0.0;
+            var start = 0.0;
+            var end = 1.0;
             var values = handleValues(handles);
             for (var index = 0; index < values.Count - 1; index++)
             {
@@ -61,6 +63,7 @@ namespace App.Model.Managers
                     end = next;
                 }
             }
+
             handles.Add(new Handle(start + (end - start) / 2));
         }
 
@@ -81,15 +84,15 @@ namespace App.Model.Managers
                     var bottom = ver[y + 1];
 
                     var rect = new Rect(left, top, right, bottom);
-                    var tile = new Tile(rect);
+                    var tile = new Rect(rect);
                     Tiles.Add(tile);
                 }
             }
         }
 
-        private List<float> handleValues(IEnumerable<Handle> handles)
+        private List<double> handleValues(IEnumerable<Handle> handles)
         {
-            var vals = new List<float>();
+            var vals = new List<double>();
             vals.Add(0);
             vals.AddRange(handles.Select(h => h.Position));
             vals.Add(1);

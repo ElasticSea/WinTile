@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using App.Model;
+using ElasticSea.Wintile.Model.Entities;
 
-namespace App.Utils
+namespace ElasticSea.Wintile.Model.Managers.Window
 {
     public class User32Manager : IWindowManager
     {
         private const short SWP_NOZORDER = 0X4;
         private const int SWP_SHOWWINDOW = 0x0040;
+        private const int SW_RESTORE = 9;
 
         public void PositionWindow(IntPtr handle, Rect rect)
         {
@@ -20,10 +21,11 @@ namespace App.Utils
             var winRect = rerct(nativeWinRect);
             var clientRect = rerct(nativeClientRect);
 
-            var dx = Math.Min(winRect.Width - clientRect.Right, 16);
-            var dy = Math.Min(winRect.Height - clientRect.Bottom, 8);
+            var dx = Math.Min(winRect.Size.X - clientRect.Right, 16);
+            var dy = Math.Min(winRect.Size.Y - clientRect.Bottom, 8);
 
-            SetWindowPos(handle, 0, (int) (rect.Left - dx / 2), (int) rect.Top, (int) (rect.Width + dx), (int) (rect.Height + dy),
+            ShowWindow(handle, SW_RESTORE);
+            SetWindowPos(handle, 0, (int) (rect.Left - dx / 2), (int) rect.Top, (int) (rect.Size.X + dx), (int) (rect.Size.Y + dy),
                 SWP_NOZORDER | SWP_SHOWWINDOW);
         }
 
@@ -37,8 +39,8 @@ namespace App.Utils
             var winRect = rerct(nativeWinRect);
             var clientRect = rerct(nativeClientRect);
 
-            var dx = Math.Min(winRect.Width - clientRect.Right, 16);
-            var dy = Math.Min(winRect.Height - clientRect.Bottom, 8);
+            var dx = Math.Min(winRect.Size.X - clientRect.Right, 16);
+            var dy = Math.Min(winRect.Size.Y - clientRect.Bottom, 8);
 
             winRect.Left += dx / 2;
             winRect.Right -= dx / 2;
@@ -48,10 +50,10 @@ namespace App.Utils
             return winRect;
         }
 
-        public IntPtr FocusedWindow
+        public IntPtr? FocusedWindow
         {
             get => GetForegroundWindow();
-            set => SetForegroundWindow(value);
+            set => SetForegroundWindow(value.Value);
         }
 
         public IEnumerable<IntPtr> GetVisibleWindows()
@@ -60,7 +62,9 @@ namespace App.Utils
 
             EnumWindows(delegate(IntPtr wnd, IntPtr param)
             {
-                if (IsWindowVisible(wnd)) windows.Add(wnd);
+                if (IsWindow(wnd) && IsWindowVisible(wnd) && !IsIconic(wnd))
+                    windows.Add(wnd);
+
                 return true;
             }, IntPtr.Zero);
 
@@ -78,6 +82,18 @@ namespace App.Utils
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool IsWindowVisible(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool IsWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool IsIconic(IntPtr hWnd);
 
         [DllImport("user32.dll")]
         private static extern bool GetWindowRect(IntPtr hwnd, ref NativeRect rectangle);
