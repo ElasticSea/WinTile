@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using App.Model.Managers.Window;
-using App.Utils;
-using Rect = App.Model.Entities.Rect;
+using ElasticSea.Wintile.Model.Managers.Window;
+using ElasticSea.Wintile.Utils;
+using Rect = ElasticSea.Wintile.Model.Entities.Rect;
 
-namespace App.Model.Managers.Strategies
+namespace ElasticSea.Wintile.Model.Managers.Strategies
 {
     public abstract class ClosesRectToWindow
     {
@@ -23,9 +23,8 @@ namespace App.Model.Managers.Strategies
 
         protected Rect GetClosest(IEnumerable<Rect> rects, Rect rect, Vector direction)
         {
-
             return rects
-                .Select(r => new { rect = r, Score = ComputeScore(direction, rect, r) })
+                .Select(r => new {rect = r, Score = ComputeScore(direction, rect, r)})
                 .OrderByDescending(a => a.Score)
                 .FirstOrDefault(a => a.Score > 0)?.rect;
         }

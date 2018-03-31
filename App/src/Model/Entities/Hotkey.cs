@@ -1,9 +1,9 @@
 ﻿using System.Windows.Input;
-using App.Model.Managers;
+using ElasticSea.Wintile.Model.Managers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace App.Model.Entities
+namespace ElasticSea.Wintile.Model.Entities
 {
     public class Hotkey
     {

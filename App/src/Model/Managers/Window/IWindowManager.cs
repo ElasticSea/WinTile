@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using App.Model.Entities;
+using ElasticSea.Wintile.Model.Entities;
 
-namespace App.Model.Managers.Window
+namespace ElasticSea.Wintile.Model.Managers.Window
 {
     public interface IWindowManager
     {

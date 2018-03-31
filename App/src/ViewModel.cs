@@ -5,18 +5,17 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
-using App.Model;
-using App.Model.Entities;
-using App.Model.Managers;
-using App.Model.Managers.Strategies;
-using App.Model.Managers.Window;
-using App.Properties;
+using ElasticSea.Wintile.Model.Entities;
+using ElasticSea.Wintile.Model.Managers;
+using ElasticSea.Wintile.Model.Managers.Strategies;
+using ElasticSea.Wintile.Model.Managers.Window;
+using ElasticSea.Wintile.Properties;
 using Microsoft.Win32;
 using PropertyChanged;
-using Rect = App.Model.Entities.Rect;
-using Window = App.Model.Entities.Window;
+using Rect = ElasticSea.Wintile.Model.Entities.Rect;
+using Window = ElasticSea.Wintile.Model.Entities.Window;
 
-namespace App
+namespace ElasticSea.Wintile
 {
     [ImplementPropertyChanged]
     public class ViewModel : INotifyPropertyChanged
@@ -55,47 +54,6 @@ namespace App
                 layoutManager.Json = value;
                 Reload();
             }
-        }
-
-        private void Reload()
-        {
-            cuttingManager = new CuttingManager(layoutManager.Layout.Grid);
-            nativeWindowManager = new ConvertWindowManager(new User32Manager());
-            sandbox = new SandboxWindowManager(Tiles);
-            windowManager.CurrentManager = nativeWindowManager;
-
-            var move = new MoveStrategy(Tiles, windowManager);
-            var select = new SelectStrategy(windowManager);
-            var extend = new ExtendStrategy(Tiles, windowManager);
-            //                var layout = new LayoutStrategy(Tiles, windowManager);
-
-            hotkeyManager?.UnbindHotkeys();
-            hotkeyManager = new HotkeyManager(layoutManager.Layout.hotkeys,
-                new Dictionary<HotkeyType, Action<object>>
-                {
-                    {HotkeyType.MoveLeft, h1 => move.Left()},
-                    {HotkeyType.MoveRight, h1 => move.Right()},
-                    {HotkeyType.MoveUp, h1 => move.Up()},
-                    {HotkeyType.MoveDown, h1 => move.Down()},
-
-                    {HotkeyType.ExpandLeft, h1 => extend.Left()},
-                    {HotkeyType.ExpandRight, h1 => extend.Right()},
-                    {HotkeyType.ExpandUp, h1 => extend.Up()},
-                    {HotkeyType.ExpandDown, h1 => extend.Down()},
-//
-//                        {HotkeyType.LayoutLeft, h1 => layout.Left()},
-//                        {HotkeyType.LayoutRight, h1 => layout.Right()},
-//                        {HotkeyType.LayoutUp, h1 => layout.Up()},
-//                        {HotkeyType.LayoutDown, h1 => layout.Down()},
-
-                    {HotkeyType.SelectLeft, h1 => @select.Left()},
-                    {HotkeyType.SelectRight, h1 => @select.Right()},
-                    {HotkeyType.SelectUp, h1 => @select.Up()},
-                    {HotkeyType.SelectDown, h1 => @select.Down()}
-                });
-
-            RegisterHotkeys(ActiveHotkeys);
-            RegisterSandbox(EnterSandboxMode);
         }
 
         public Layout Layout => layoutManager.Layout;
@@ -164,14 +122,6 @@ namespace App
             }
         }
 
-        private void RegisterHotkeys(bool active)
-        {
-            if (active)
-                hotkeyManager.BindHotkeys();
-            else
-                hotkeyManager.UnbindHotkeys();
-        }
-
         public bool EnterSandboxMode
         {
             get => _enterSandboxMode;
@@ -181,6 +131,69 @@ namespace App
 
                 RegisterSandbox(value);
             }
+        }
+
+        public bool RunOnStartup
+        {
+            get => Settings.Default.RunOnStartup;
+            set
+            {
+                Settings.Default.RunOnStartup = value;
+                Settings.Default.Save();
+
+                RegisterAppOnStartup(value);
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged = (sender, args) => { };
+
+        private void Reload()
+        {
+            cuttingManager = new CuttingManager(layoutManager.Layout.Grid);
+            nativeWindowManager = new ConvertWindowManager(new User32Manager());
+            sandbox = new SandboxWindowManager(Tiles);
+            windowManager.CurrentManager = nativeWindowManager;
+
+            var move = new MoveStrategy(Tiles, windowManager);
+            var select = new SelectStrategy(windowManager);
+            var extend = new ExtendStrategy(Tiles, windowManager);
+            //                var layout = new LayoutStrategy(Tiles, windowManager);
+
+            hotkeyManager?.UnbindHotkeys();
+            hotkeyManager = new HotkeyManager(layoutManager.Layout.hotkeys,
+                new Dictionary<HotkeyType, Action<object>>
+                {
+                    {HotkeyType.MoveLeft, h1 => move.Left()},
+                    {HotkeyType.MoveRight, h1 => move.Right()},
+                    {HotkeyType.MoveUp, h1 => move.Up()},
+                    {HotkeyType.MoveDown, h1 => move.Down()},
+
+                    {HotkeyType.ExpandLeft, h1 => extend.Left()},
+                    {HotkeyType.ExpandRight, h1 => extend.Right()},
+                    {HotkeyType.ExpandUp, h1 => extend.Up()},
+                    {HotkeyType.ExpandDown, h1 => extend.Down()},
+//
+//                        {HotkeyType.LayoutLeft, h1 => layout.Left()},
+//                        {HotkeyType.LayoutRight, h1 => layout.Right()},
+//                        {HotkeyType.LayoutUp, h1 => layout.Up()},
+//                        {HotkeyType.LayoutDown, h1 => layout.Down()},
+
+                    {HotkeyType.SelectLeft, h1 => select.Left()},
+                    {HotkeyType.SelectRight, h1 => select.Right()},
+                    {HotkeyType.SelectUp, h1 => select.Up()},
+                    {HotkeyType.SelectDown, h1 => select.Down()}
+                });
+
+            RegisterHotkeys(ActiveHotkeys);
+            RegisterSandbox(EnterSandboxMode);
+        }
+
+        private void RegisterHotkeys(bool active)
+        {
+            if (active)
+                hotkeyManager.BindHotkeys();
+            else
+                hotkeyManager.UnbindHotkeys();
         }
 
         private void RegisterSandbox(bool active)
@@ -197,8 +210,6 @@ namespace App
         }
 
         public void DefaultLayout() => JsonLayout = Resources.defaultProfile;
-
-        public event PropertyChangedEventHandler PropertyChanged = (sender, args) => { };
 
         public void AddWindow()
         {
@@ -236,18 +247,6 @@ namespace App
 
         public void CutVertical() => cuttingManager.CutVertical();
         public void CutHorizontal() => cuttingManager.CutHorizontal();
-
-        public bool RunOnStartup
-        {
-            get => Settings.Default.RunOnStartup;
-            set
-            {
-                Settings.Default.RunOnStartup = value;
-                Settings.Default.Save();
-
-                RegisterAppOnStartup(value);
-            }
-        }
 
         private void RegisterAppOnStartup(bool value)
         {

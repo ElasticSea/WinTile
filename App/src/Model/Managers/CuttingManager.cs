@@ -3,22 +3,21 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using App.Model.Entities;
-using App.Utils;
+using ElasticSea.Wintile.Model.Entities;
+using ElasticSea.Wintile.Utils;
 
-namespace App.Model.Managers
+namespace ElasticSea.Wintile.Model.Managers
 {
     public class CuttingManager
     {
         private Grid grid;
 
-        public ObservableCollection<Rect> Tiles { get; set; } = new ObservableCollection<Rect>();
-
         public CuttingManager(Grid grid)
         {
             this.grid = grid;
             PropertyChangedEventHandler propertyChangedEventHandler = (o, eventArgs) => recalculate();
-            NotifyCollectionChangedEventHandler handlerChanged = (sender, args) => collectionPropertyChanged(sender, args, propertyChangedEventHandler);
+            NotifyCollectionChangedEventHandler handlerChanged = (sender, args) =>
+                collectionPropertyChanged(sender, args, propertyChangedEventHandler);
             grid.Rows.CollectionChanged += handlerChanged;
             grid.Columns.CollectionChanged += handlerChanged;
             grid.Rows.Cast<INotifyPropertyChanged>().ForEach(r => r.PropertyChanged += propertyChangedEventHandler);
@@ -27,7 +26,9 @@ namespace App.Model.Managers
             recalculate();
         }
 
-        void collectionPropertyChanged(object sender, NotifyCollectionChangedEventArgs e, PropertyChangedEventHandler handler)
+        public ObservableCollection<Rect> Tiles { get; set; } = new ObservableCollection<Rect>();
+
+        private void collectionPropertyChanged(object sender, NotifyCollectionChangedEventArgs e, PropertyChangedEventHandler handler)
         {
             if (e.OldItems != null)
                 foreach (INotifyPropertyChanged item in e.OldItems)
@@ -62,6 +63,7 @@ namespace App.Model.Managers
                     end = next;
                 }
             }
+
             handles.Add(new Handle(start + (end - start) / 2));
         }
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 
-namespace App.Utils
+namespace ElasticSea.Wintile.Utils
 {
     internal static class Extensions
     {
@@ -18,13 +18,13 @@ namespace App.Utils
             return int.TryParse(s, out i) ? i : def;
         }
 
-        public static float? ToFloat(this string s, float? def = (int?)null)
+        public static float? ToFloat(this string s, float? def = (int?) null)
         {
             float i;
             return float.TryParse(s, out i) ? i : def;
         }
 
-        public static double? ToDouble(this string s, double? def = (int?)null)
+        public static double? ToDouble(this string s, double? def = (int?) null)
         {
             double i;
             return double.TryParse(s, out i) ? i : def;

@@ -5,10 +5,9 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Input;
 using System.Windows.Interop;
-using App.Model;
-using App.Model.Entities;
+using ElasticSea.Wintile.Model.Entities;
 
-namespace App.Model.Managers
+namespace ElasticSea.Wintile.Model.Managers
 {
     public class HotkeyBinding : IDisposable
     {
@@ -35,6 +34,7 @@ namespace App.Model.Managers
                     _dictHotKeyToCalBackProc = new Dictionary<int, HotkeyBinding>();
                     ComponentDispatcher.ThreadFilterMessage += ComponentDispatcherThreadFilterMessage;
                 }
+
                 return _dictHotKeyToCalBackProc;
             }
         }
@@ -43,7 +43,7 @@ namespace App.Model.Managers
         public KeyModifier KeyModifiers { get; }
         public Action<HotkeyBinding> Action { get; }
         public int virtualKeyCode => KeyInterop.VirtualKeyFromKey(Key);
-        public int Id => virtualKeyCode + (int)KeyModifiers * 0x10000;
+        public int Id => virtualKeyCode + (int) KeyModifiers * 0x10000;
 
         // ******************************************************************
         // Implement IDisposable.
@@ -147,6 +147,7 @@ namespace App.Model.Managers
                 case Key.RWin:
                     return KeyModifier.Win;
             }
+
             return KeyModifier.None;
         }
 

@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
 
-namespace App.View.Convertors
+namespace ElasticSea.Wintile.View.Convertors
 {
     public class SwitchBindingExtension : Binding
     {
@@ -22,15 +23,8 @@ namespace App.View.Convertors
             : base(path)
         {
             Initialize();
-            this.ValueIfTrue = valueIfTrue;
-            this.ValueIfFalse = valueIfFalse;
-        }
-
-        private void Initialize()
-        {
-            this.ValueIfTrue = Binding.DoNothing;
-            this.ValueIfFalse = Binding.DoNothing;
-            this.Converter = new SwitchConverter(this);
+            ValueIfTrue = valueIfTrue;
+            ValueIfFalse = valueIfFalse;
         }
 
         [ConstructorArgument("valueIfTrue")]
@@ -39,18 +33,25 @@ namespace App.View.Convertors
         [ConstructorArgument("valueIfFalse")]
         public object ValueIfFalse { get; set; }
 
+        private void Initialize()
+        {
+            ValueIfTrue = DoNothing;
+            ValueIfFalse = DoNothing;
+            Converter = new SwitchConverter(this);
+        }
+
         private class SwitchConverter : IValueConverter
         {
+            private SwitchBindingExtension _switch;
+
             public SwitchConverter(SwitchBindingExtension switchExtension)
             {
                 _switch = switchExtension;
             }
 
-            private SwitchBindingExtension _switch;
-
             #region IValueConverter Members
 
-            public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+            public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
             {
                 try
                 {
@@ -63,13 +64,12 @@ namespace App.View.Convertors
                 }
             }
 
-            public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+            public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
             {
-                return Binding.DoNothing;
+                return DoNothing;
             }
 
             #endregion
         }
-
     }
 }

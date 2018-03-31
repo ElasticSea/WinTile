@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using App.Model.Entities;
-using App.Utils;
+using ElasticSea.Wintile.Model.Entities;
+using ElasticSea.Wintile.Utils;
 
-namespace App.Model.Managers.Window
+namespace ElasticSea.Wintile.Model.Managers.Window
 {
     public class SandboxWindowManager : IWindowManager
     {
@@ -23,7 +23,7 @@ namespace App.Model.Managers.Window
             get
             {
                 var window = Windows.FirstOrDefault(w => w.Selected);
-                return window != null ? new IntPtr(window.GetHashCode()) : (IntPtr?)null;
+                return window != null ? new IntPtr(window.GetHashCode()) : (IntPtr?) null;
             }
             set
             {

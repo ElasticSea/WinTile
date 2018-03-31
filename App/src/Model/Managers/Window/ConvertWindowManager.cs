@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
-using Rect = App.Model.Entities.Rect;
+using Rect = ElasticSea.Wintile.Model.Entities.Rect;
 
-namespace App.Model.Managers.Window
+namespace ElasticSea.Wintile.Model.Managers.Window
 {
     public class ConvertWindowManager : IWindowManager
     {

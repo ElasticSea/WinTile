@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using App.Model.Managers.Window;
-using Rect = App.Model.Entities.Rect;
+using ElasticSea.Wintile.Model.Managers.Window;
+using Rect = ElasticSea.Wintile.Model.Entities.Rect;
 
-namespace App.Model.Managers.Strategies
+namespace ElasticSea.Wintile.Model.Managers.Strategies
 {
     public class MoveStrategy : ClosesRectToWindow
     {
@@ -31,10 +31,10 @@ namespace App.Model.Managers.Strategies
             {
                 windowManager.PositionWindow(windowManager.FocusedWindow.Value, rect);
             }
-            else if(tiles.Contains(windowRect) == false)
+            else if (tiles.Contains(windowRect) == false)
             {
                 var cent = windowRect.Center;
-                windowRect.Size = new Vector(0,0);
+                windowRect.Size = new Vector(0, 0);
                 windowRect.Center = cent;
 
                 var rect2 = GetClosest(tiles, windowRect, dir);

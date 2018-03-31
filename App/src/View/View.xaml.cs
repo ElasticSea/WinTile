@@ -5,16 +5,13 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
-using App.Model.Entities;
-using App.Model.Managers;
-using App.Utils;
-using KeyEventArgs = System.Windows.Input.KeyEventArgs;
-using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
-using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
-using TextBox = System.Windows.Controls.TextBox;
+using ElasticSea.Wintile.Model.Entities;
+using ElasticSea.Wintile.Model.Managers;
+using ElasticSea.Wintile.Utils;
+using Microsoft.Win32;
 using Window = System.Windows.Window;
 
-namespace App.View
+namespace ElasticSea.Wintile.View
 {
     public partial class MainWindow : Window
     {
@@ -36,7 +33,8 @@ namespace App.View
                         {
                             DataContext = null;
                             DataContext = value;
-                        } else if (args.PropertyName == nameof(ViewModel.EnterSandboxMode))
+                        }
+                        else if (args.PropertyName == nameof(ViewModel.EnterSandboxMode))
                         {
                             if (Vm.EnterSandboxMode)
                             {
@@ -51,6 +49,7 @@ namespace App.View
                         }
                     };
                 }
+
                 DataContext = value;
             }
         }
@@ -111,7 +110,7 @@ namespace App.View
         private void moveHandle(object sender, DragDeltaEventArgs e, double value)
         {
             var handle = (sender as FrameworkElement).DataContext as Handle;
-            handle.Position = (double) (handle.Position + value).Clamp(0, 1);
+            handle.Position = (handle.Position + value).Clamp(0, 1);
         }
 
         private void RemoveHandle(object sender, RoutedEventArgs e)

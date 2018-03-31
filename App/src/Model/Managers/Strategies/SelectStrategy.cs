@@ -1,8 +1,8 @@
 ﻿using System.Linq;
-using App.Model.Managers.Window;
-using Rect = App.Model.Entities.Rect;
+using ElasticSea.Wintile.Model.Entities;
+using ElasticSea.Wintile.Model.Managers.Window;
 
-namespace App.Model.Managers.Strategies
+namespace ElasticSea.Wintile.Model.Managers.Strategies
 {
     public class SelectStrategy : ClosesRectToWindow
     {
@@ -50,7 +50,7 @@ namespace App.Model.Managers.Strategies
         {
             if (rect != null)
                 windowManager.FocusedWindow =
-                windowManager.GetVisibleWindows().First(handle => windowManager.GetWindowRect(handle) == rect);
+                    windowManager.GetVisibleWindows().First(handle => windowManager.GetWindowRect(handle) == rect);
         }
     }
 }

@@ -1,22 +1,17 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Forms;
-using App.Properties;
-using Microsoft.Win32;
+using System.Windows.Threading;
+using ElasticSea.Wintile.Properties;
+using ElasticSea.Wintile.View;
 using MessageBox = System.Windows.MessageBox;
 
-namespace App
+namespace ElasticSea.Wintile
 {
-    /// <summary>
-    ///     Interaction logic for App.xaml
-    /// </summary>
     public partial class Application
     {
         private NotifyIcon notifyIcon;
@@ -29,11 +24,11 @@ namespace App
 
             base.OnStartup(e);
 
-            vm = new ViewModel { JsonLayout = Settings.Default.Layout ?? App.Properties.Resources.defaultProfile };
+            vm = new ViewModel {JsonLayout = Settings.Default.Layout ?? Wintile.Properties.Resources.defaultProfile};
 
             notifyIcon = new NotifyIcon();
             notifyIcon.DoubleClick += (s, args) => ShowMainWindow();
-            notifyIcon.Icon = Icon.FromHandle(App.Properties.Resources.icon_notification.Handle);
+            notifyIcon.Icon = Icon.FromHandle(Wintile.Properties.Resources.icon_notification.Handle);
             notifyIcon.Visible = true;
 
             CreateContextMenu();
@@ -111,9 +106,9 @@ namespace App
         {
             if (MainWindow == null)
             {
-                MainWindow = new View.MainWindow();
+                MainWindow = new MainWindow();
                 MainWindow.Closing += MainWindow_Closing;
-                ((View.MainWindow) MainWindow).Vm = vm;
+                ((MainWindow) MainWindow).Vm = vm;
             }
 
             if (MainWindow.IsVisible)
@@ -122,6 +117,7 @@ namespace App
                 {
                     MainWindow.WindowState = WindowState.Normal;
                 }
+
                 MainWindow.Activate();
             }
             else
@@ -130,7 +126,7 @@ namespace App
             }
         }
 
-        private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             MessageBox.Show(e.Exception.ToString());
         }

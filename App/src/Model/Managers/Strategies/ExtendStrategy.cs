@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using App.Model.Entities;
-using App.Model.Managers.Window;
+using ElasticSea.Wintile.Model.Entities;
+using ElasticSea.Wintile.Model.Managers.Window;
 
-namespace App.Model.Managers.Strategies
+namespace ElasticSea.Wintile.Model.Managers.Strategies
 {
     public class ExtendStrategy
     {
